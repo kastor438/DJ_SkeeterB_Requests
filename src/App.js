@@ -3,10 +3,26 @@ import './App.css';
 import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getDatabase, ref, set, child, get } from "firebase/database";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
+    authDomain: "dj-skeeterb.firebaseapp.com",
+    databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com",
+    projectId: "dj-skeeterb",
+    storageBucket: "dj-skeeterb.appspot.com",
+    messagingSenderId: "222672756825",
+    appId: "1:222672756825:web:974f65737776a233265148",
+    measurementId: "G-E5J0711GSP",
+    databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
+};
+  
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
 const analytics = getAnalytics(app);
+const database = getDatabase(app);
+  
 
 class App extends Component {
 
@@ -97,68 +113,106 @@ class App extends Component {
     }
 
     AddRequest(songName, authorName){
-        firebase.database.ref('Request').push().set({
-            Song: songName,
-            Author: authorName
-        })
-        .then((doc) => {
-            // nothing to do here since you already have a 
-            // connection pulling updates to Todos
-        })
-        .catch((error) => {
-            dispatch(todoActions.showError("Error adding Todo to database"));
-			console.error(error);
-		})
+        const dbRef = ref(getDatabase());
+        var nextSongID = 1;
+        var songIDs = [];
+        var songRequests = [];
+        var addRequestBool = true;
 
-        // Submit button animation
-        $('.button--bubble').each(function() {
-            var $circlesTopLeft = $(this).parent().find('.circle.top-left');
-            var $circlesBottomRight = $(this).parent().find('.circle.bottom-right');
-          
-            var tl = new TimelineLite();
-            var tl2 = new TimelineLite();
-          
-            var btTl = new TimelineLite({ paused: true });
-          
-            tl.to($circlesTopLeft, 1.2, { x: -25, y: -25, scaleY: 2, ease: SlowMo.ease.config(0.1, 0.7, false) });
-            tl.to($circlesTopLeft.eq(0), 0.1, { scale: 0.2, x: '+=6', y: '-=2' });
-            tl.to($circlesTopLeft.eq(1), 0.1, { scaleX: 1, scaleY: 0.8, x: '-=10', y: '-=7' }, '-=0.1');
-            tl.to($circlesTopLeft.eq(2), 0.1, { scale: 0.2, x: '-=15', y: '+=6' }, '-=0.1');
-            tl.to($circlesTopLeft.eq(0), 1, { scale: 0, x: '-=5', y: '-=15', opacity: 0 });
-            tl.to($circlesTopLeft.eq(1), 1, { scaleX: 0.4, scaleY: 0.4, x: '-=10', y: '-=10', opacity: 0 }, '-=1');
-            tl.to($circlesTopLeft.eq(2), 1, { scale: 0, x: '-=15', y: '+=5', opacity: 0 }, '-=1');
-          
-            var tlBt1 = new TimelineLite();
-            var tlBt2 = new TimelineLite();
-            
-            tlBt1.set($circlesTopLeft, { x: 0, y: 0, rotation: -45 });
-            tlBt1.add(tl);
-          
-            tl2.set($circlesBottomRight, { x: 0, y: 0 });
-            tl2.to($circlesBottomRight, 1.1, { x: 30, y: 30, ease: SlowMo.ease.config(0.1, 0.7, false) });
-            tl2.to($circlesBottomRight.eq(0), 0.1, { scale: 0.2, x: '-=6', y: '+=3' });
-            tl2.to($circlesBottomRight.eq(1), 0.1, { scale: 0.8, x: '+=7', y: '+=3' }, '-=0.1');
-            tl2.to($circlesBottomRight.eq(2), 0.1, { scale: 0.2, x: '+=15', y: '-=6' }, '-=0.2');
-            tl2.to($circlesBottomRight.eq(0), 1, { scale: 0, x: '+=5', y: '+=15', opacity: 0 });
-            tl2.to($circlesBottomRight.eq(1), 1, { scale: 0.4, x: '+=7', y: '+=7', opacity: 0 }, '-=1');
-            tl2.to($circlesBottomRight.eq(2), 1, { scale: 0, x: '+=15', y: '-=5', opacity: 0 }, '-=1');
-            
-            tlBt2.set($circlesBottomRight, { x: 0, y: 0, rotation: 45 });
-            tlBt2.add(tl2);
-          
-            btTl.add(tlBt1);
-            btTl.to($(this).parent().find('.button.effect-button'), 0.8, { scaleY: 1.1 }, 0.1);
-            btTl.add(tlBt2, 0.2);
-            btTl.to($(this).parent().find('.button.effect-button'), 1.8, { scale: 1, ease: Elastic.easeOut.config(1.2, 0.4) }, 1.2);
-          
-            btTl.timeScale(2.6);
-          
-            $(this).on('mouseover', function() {
-              btTl.restart();
-            });
-          });
+        get(child(dbRef, 'Requests/')).then((snapshot) => {
+            if (snapshot.exists()) {
+                console.log(snapshot.val());
+
+                Object.entries(snapshot.val()).forEach(([key, value]) => {
+                    songIDs.push(key);
+                    songRequests.push(value);
+                });
+                for(var i = 0; i < songRequests.length; i++){
+                    if(songRequests[i].SongName == songName && songRequests[i].AuthorName == authorName){
+                        addRequestBool = false;
+                    }
+                }
+
+                console.log(songRequests[0].AuthorName);
+                if(addRequestBool){
+                    for(i = 0; i < songIDs.length; i++){
+                        if(songIDs[i] >= nextSongID){
+                            nextSongID = parseInt(songIDs[i]) + 1;
+                        }
+                    }
+    
+                    const db = getDatabase();
+                    set(ref(db, 'Requests/' + nextSongID + '/'), {
+                        SongName: songName,
+                        AuthorName: authorName,
+                    });
+                    document.getElementById('submissionText').innerHTML = "Request Sent!";
+                }
+                else{
+                    document.getElementById('submissionText').innerHTML = "Request Already in Pool."
+                }
+            } 
+            else {
+                const db = getDatabase();
+                set(ref(db, 'Requests/1/'), {
+                    SongName: songName,
+                    AuthorName: authorName,
+                });
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
     
+    // Submit button animation
+    // $('.button--bubble').each(
+    BubbleButton() {
+        var $circlesTopLeft = $(this).parent().find('.circle.top-left');
+        var $circlesBottomRight = $(this).parent().find('.circle.bottom-right');
+      
+        var tl = new TimelineLite();
+        var tl2 = new TimelineLite();
+      
+        var btTl = new TimelineLite({ paused: true });
+      
+        tl.to($circlesTopLeft, 1.2, { x: -25, y: -25, scaleY: 2, ease: SlowMo.ease.config(0.1, 0.7, false) });
+        tl.to($circlesTopLeft.eq(0), 0.1, { scale: 0.2, x: '+=6', y: '-=2' });
+        tl.to($circlesTopLeft.eq(1), 0.1, { scaleX: 1, scaleY: 0.8, x: '-=10', y: '-=7' }, '-=0.1');
+        tl.to($circlesTopLeft.eq(2), 0.1, { scale: 0.2, x: '-=15', y: '+=6' }, '-=0.1');
+        tl.to($circlesTopLeft.eq(0), 1, { scale: 0, x: '-=5', y: '-=15', opacity: 0 });
+        tl.to($circlesTopLeft.eq(1), 1, { scaleX: 0.4, scaleY: 0.4, x: '-=10', y: '-=10', opacity: 0 }, '-=1');
+        tl.to($circlesTopLeft.eq(2), 1, { scale: 0, x: '-=15', y: '+=5', opacity: 0 }, '-=1');
+      
+        var tlBt1 = new TimelineLite();
+        var tlBt2 = new TimelineLite();
+        
+        tlBt1.set($circlesTopLeft, { x: 0, y: 0, rotation: -45 });
+        tlBt1.add(tl);
+      
+        tl2.set($circlesBottomRight, { x: 0, y: 0 });
+        tl2.to($circlesBottomRight, 1.1, { x: 30, y: 30, ease: SlowMo.ease.config(0.1, 0.7, false) });
+        tl2.to($circlesBottomRight.eq(0), 0.1, { scale: 0.2, x: '-=6', y: '+=3' });
+        tl2.to($circlesBottomRight.eq(1), 0.1, { scale: 0.8, x: '+=7', y: '+=3' }, '-=0.1');
+        tl2.to($circlesBottomRight.eq(2), 0.1, { scale: 0.2, x: '+=15', y: '-=6' }, '-=0.2');
+        tl2.to($circlesBottomRight.eq(0), 1, { scale: 0, x: '+=5', y: '+=15', opacity: 0 });
+        tl2.to($circlesBottomRight.eq(1), 1, { scale: 0.4, x: '+=7', y: '+=7', opacity: 0 }, '-=1');
+        tl2.to($circlesBottomRight.eq(2), 1, { scale: 0, x: '+=15', y: '-=5', opacity: 0 }, '-=1');
+        
+        tlBt2.set($circlesBottomRight, { x: 0, y: 0, rotation: 45 });
+        tlBt2.add(tl2);
+      
+        btTl.add(tlBt1);
+        btTl.to($(this).parent().find('.button.effect-button'), 0.8, { scaleY: 1.1 }, 0.1);
+        btTl.add(tlBt2, 0.2);
+        btTl.to($(this).parent().find('.button.effect-button'), 1.8, { scale: 1, ease: Elastic.easeOut.config(1.2, 0.4) }, 1.2);
+      
+        btTl.timeScale(2.6);
+      
+        $(this).on('mouseover', function() {
+          btTl.restart();
+        });
+    }
+
     render(){
         return (
             <div>
@@ -174,33 +228,37 @@ class App extends Component {
                             <input id='authorNameInput' name='authorNameInput' type='text' onChange={this.UpdateAuthorName}/>
                         </div>
                         <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="goo">
-                            <defs>
-                                <filter id="goo">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
-                                <feComposite in="SourceGraphic" in2="goo"/>
-                                </filter>
-                            </defs>
-                            </svg>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="goo">
+                                    <defs>
+                                        <filter id="goo">
+                                        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                                        <feComposite in="SourceGraphic" in2="goo"/>
+                                        </filter>
+                                    </defs>
+                                </svg>
 
-                            <span class="button--bubble__container">
-                            <a href="#campaign" class="button button--bubble">
-                                Hover me
-                            </a>
-                            <span class="button--bubble__effect-container">
-                                <span class="circle top-left"></span>
-                                <span class="circle top-left"></span>
-                                <span class="circle top-left"></span>
+                                <span class="button--bubble__container">
+                                    <a href="#campaign" class="button button--bubble">Hover me</a>
+                                    <span class="button--bubble__effect-container">
+                                        <span class="circle top-left"></span>
+                                        <span class="circle top-left"></span>
+                                        <span class="circle top-left"></span>
 
-                                <span class="button effect-button"></span>
+                                        <span class="button effect-button"></span>
 
-                                <span class="circle bottom-right"></span>
-                                <span class="circle bottom-right"></span>
-                                <span class="circle bottom-right"></span>
-                            </span>
-                            </span>
+                                        <span class="circle bottom-right"></span>
+                                        <span class="circle bottom-right"></span>
+                                        <span class="circle bottom-right"></span>
+                                    </span>
+                                </span>
                             </div>
+                            <input type="submit" id="submitBtn" disabled></input>
+                        </div>
+                        <div>
+                            <h4 id='submissionText'></h4>
+                        </div>
                     </header>
                 </div>
             </div>

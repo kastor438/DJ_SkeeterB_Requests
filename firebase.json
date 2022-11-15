@@ -10,10 +10,17 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+<<<<<<< HEAD
       {
         "source": "**",
         "destination": "index.html"
       }
+=======
+        {
+          "source": "**",
+          "destination": "index.html"
+        }
+>>>>>>> origin/master
     ]
   }
 }
