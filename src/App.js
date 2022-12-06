@@ -31,7 +31,7 @@ const clientSecret = '4aae0065891841c197af65473ac00b49';
 
 const App = () => {
     const [accessToken, SetAccessToken] = useState("");
-    const [canSubmit, SetCanSubmit] = useState("");
+    const [canSubmit, SetCanSubmit] = useState(false);
     const [invalidChars, SetInvalidChars] = useState("");
     const [songName, SetSongName] = useState("");
     const [artistName, SetArtistName] = useState("");
@@ -43,6 +43,9 @@ const App = () => {
         InitializeSpotify();
     }, [])
 
+    useEffect(() => {
+        CheckValidInput();
+    }, [songName, artistName])
     function InitializeSpotify(){
         var authParams = {
             method: 'POST',
@@ -58,36 +61,43 @@ const App = () => {
     }
 
     function UpdateSongName(value){
+        console.log(value + " " + songName);
         SetSongName(value);
-        CheckValidInput();
-        console.log(songName + " " + artistName);
     }
 
     function UpdateArtistName(value){
         SetArtistName(value);
-        CheckValidInput();
     }
 
     function CheckValidInput(){
         if(songName.length <= 1 || artistName.length <= 1){
             SetCanSubmit(false);
+            document.getElementById('submitBtn').setAttribute("disabled", "disabled");
             return;
         }
         else{
             for(var i = 0; i < songName.length; i++){
                 if(invalidChars.includes(songName.substring(i, i+1))){
                     SetCanSubmit(false);
+                    document.getElementById('submitBtn').setAttribute("disabled", "disabled");
                     return;
                 }
             }
             for(i = 0; i < artistName.length; i++){
                 if(invalidChars.includes(artistName.substring(i, i+1))){
                     SetCanSubmit(false);
+                    document.getElementById('submitBtn').setAttribute("disabled", "disabled");
                     return;
                 }
             }
         }
+
         SetCanSubmit(true);
+        document.getElementById('submitBtn').removeAttribute("disabled");
+        if (hasListener === false) {
+            document.getElementById('submitBtn').addEventListener("click", () => SubmitRequest());
+            SetHasListener(true);
+        }
         FetchSpotifySongs();
     }
 
@@ -95,12 +105,12 @@ const App = () => {
         if(canSubmit){
             console.log('Your input value is: ' + songName + ", " + artistName);
             
-            this.AddRequest(songName, artistName);
+            AddRequest(songName, artistName);
             
             document.getElementById('songNameInput').value = '';
             document.getElementById('artistNameInput').value = '';
 
-            this.AddRequest(songName, artistName);
+            AddRequest(songName, artistName);
 
             SetSongName('');
             SetArtistName('');
@@ -163,7 +173,18 @@ const App = () => {
     }
 
     async function FetchSpotifySongs(){
-
+        var songParams = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            }
+        }
+        var songID = await fetch('https://api.spotify.com/v1/search?q=' + songName + '&type=track', songParams)
+            .then(response => response.json())
+            .then(data => console.log(data));
+        
+        
     }
 
     return (
@@ -234,7 +255,7 @@ const App = () => {
                             <div>
                                 <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 400 }} title="Must provide a song and artist name." placement="right-start">
                                     <span>
-                                        <button type='submit' id='submitBtn' disabled='disabled' onSubmit={SubmitRequest}>Submit Request</button>
+                                        <button type='submit' id='submitBtn' disabled='disabled'>Submit Request</button>
                                     </span>
                                 </Tooltip>
                             </div>
