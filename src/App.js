@@ -181,6 +181,9 @@ class App extends Component {
                         <div>
                             <input type="submit" id="submitBtn" disabled></input>
                         </div>
+                        <div id='spotifySearchScroll'>
+                            
+                        </div>
                         <div>
                             <h4 id='submissionText'></h4>
                         </div>

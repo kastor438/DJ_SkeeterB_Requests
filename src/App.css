@@ -36,3 +36,9 @@
         transform: rotate(360deg);
     }
 }
+
+#spotifySearchScroll{
+  width: 200px;
+  height: 200px;
+  background-color: #36393f;
+}
