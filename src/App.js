@@ -33,7 +33,7 @@ const clientSecret = '4aae0065891841c197af65473ac00b49';
 const App = () => {
     const [accessToken, SetAccessToken] = useState("");
     const [canSubmit, SetCanSubmit] = useState(false);
-    const [invalidChars, SetInvalidChars] = useState("");
+    const [invalidChars, SetInvalidChars] = useState('\'"\\/');
     const [inputSongName, SetInputSongName] = useState("");
     const [inputArtistName, SetInputArtistName] = useState("");
     const [hasListener, SetHasListener] = useState(false);
