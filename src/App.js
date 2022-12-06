@@ -4,6 +4,9 @@ import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, set, child, get } from "firebase/database";
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import Fade from '@mui/material/Zoom';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -33,12 +36,12 @@ class App extends Component {
             canSubmit : false,
             invalidChars : '\'"\\/',
             songName : '',
-            authorName : '',
+            artistName : '',
             hasListener : false
         }
         
         this.UpdateSongName = this.UpdateSongName.bind(this);
-        this.UpdateAuthorName = this.UpdateAuthorName.bind(this);
+        this.UpdateartistName = this.UpdateartistName.bind(this);
         this.CheckValidInput = this.CheckValidInput.bind(this);
         this.SubmitRequest = this.SubmitRequest.bind(this);
         this.AddRequest = this.AddRequest.bind(this);
@@ -48,12 +51,12 @@ class App extends Component {
         this.setState({songName : event.target.value});
     }
 
-    UpdateAuthorName(event){
-        this.setState({authorName : event.target.value});
+    UpdateartistName(event){
+        this.setState({artistName : event.target.value});
     }
 
     CheckValidInput(){
-        if(this.state.songName.length <= 1 || this.state.authorName.length <= 1){
+        if(this.state.songName.length <= 1 || this.state.artistName.length <= 1){
             this.setState({canSubmit : false});
             return;
         }
@@ -64,8 +67,8 @@ class App extends Component {
                     return;
                 }
             }
-            for(i = 0; i < this.state.authorName.length; i++){
-                if(this.state.invalidChars.includes(this.state.authorName.substring(i, i+1))){
+            for(i = 0; i < this.state.artistName.length; i++){
+                if(this.state.invalidChars.includes(this.state.artistName.substring(i, i+1))){
                     this.setState({canSubmit : false});
                     return;
                 }
@@ -88,31 +91,31 @@ class App extends Component {
             }
         }
 
-        if(prevState.songName !== this.state.songName || prevState.authorName !== this.state.authorName){
+        if(prevState.songName !== this.state.songName || prevState.artistName !== this.state.artistName){
             this.CheckValidInput();
         }
     }
 
     SubmitRequest(){
         if(this.state.canSubmit){
-            console.log('Your input value is: ' + this.state.songName + ", " + this.state.authorName);
+            console.log('Your input value is: ' + this.state.songName + ", " + this.state.artistName);
             
-            this.AddRequest(this.state.songName, this.state.authorName);
+            this.AddRequest(this.state.songName, this.state.artistName);
             
             document.getElementById('songNameInput').value = '';
-            document.getElementById('authorNameInput').value = '';
+            document.getElementById('artistNameInput').value = '';
 
-            this.AddRequest(this.state.songName, this.state.authorName);
+            this.AddRequest(this.state.songName, this.state.artistName);
 
             this.setState({songName : ''});
-            this.setState({authorName : ''});
+            this.setState({artistName : ''});
         }
         else{
-            console.log('Your input is invalid! (' + this.state.songName + ", " + this.state.authorName + ')');
+            console.log('Your input is invalid! (' + this.state.songName + ", " + this.state.artistName + ')');
         }
     }
 
-    AddRequest(songName, authorName){
+    AddRequest(songName, artistName){
         const dbRef = ref(getDatabase());
         var nextSongID = 1;
         var songIDs = [];
@@ -128,12 +131,12 @@ class App extends Component {
                     songRequests.push(value);
                 });
                 for(var i = 0; i < songRequests.length; i++){
-                    if(songRequests[i].SongName == songName && songRequests[i].AuthorName == authorName){
+                    if(songRequests[i].SongName == songName && songRequests[i].artistName == artistName){
                         addRequestBool = false;
                     }
                 }
 
-                console.log(songRequests[0].AuthorName);
+                console.log(songRequests[0].artistName);
                 if(addRequestBool){
                     for(i = 0; i < songIDs.length; i++){
                         if(songIDs[i] >= nextSongID){
@@ -144,7 +147,7 @@ class App extends Component {
                     const db = getDatabase();
                     set(ref(db, 'Requests/' + nextSongID + '/'), {
                         SongName: songName,
-                        AuthorName: authorName,
+                        artistName: artistName,
                     });
                     document.getElementById('submissionText').innerHTML = "Request Sent!";
                 }
@@ -156,7 +159,7 @@ class App extends Component {
                 const db = getDatabase();
                 set(ref(db, 'Requests/1/'), {
                     SongName: songName,
-                    AuthorName: authorName,
+                    artistName: artistName,
                 });
             }
         }).catch((error) => {
@@ -169,20 +172,38 @@ class App extends Component {
             <div>
                 <div className="App">
                     <header className="App-header">
-                        <img src={logo} className="App-logo" alt="logo" />
-                        <div>
-                            <label>Song Name: </label>
-                            <input id='songNameInput' name='songNameInput' type='text' onChange={this.UpdateSongName}/>
-                        </div>
-                        <div>
-                            <label>Author Name: </label>
-                            <input id='authorNameInput' name='authorNameInput' type='text' onChange={this.UpdateAuthorName}/>
-                        </div>
-                        <div>
-                            <input type="submit" id="submitBtn" disabled></input>
-                        </div>
-                        <div>
-                            <h4 id='submissionText'></h4>
+                        <h2 id='pageHeader'>Song Requests</h2>
+                        <div id='gridContainer'>
+                            <div id='logoDiv'>
+                                <div id="imageEffects"></div>
+                                <img src={logo} className="App-logo" alt="logo" />
+                            </div>
+                            <div id='formDiv'>
+                                <div id='songDiv'>
+                                    <label for='songNameInput' className='requestLabel'>
+                                        <input id='songNameInput' className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" onChange={this.UpdateSongName}/>
+                                        <span className='label'>Song</span>
+                                        <span className='focus-bg'></span>
+                                    </label>
+                                </div>
+                                <div id='artistDiv'>
+                                    <label for='artistNameInput' className='requestLabel'>
+                                        <input id='artistNameInput' className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" onChange={this.UpdateartistName}/>
+                                        <span className='label'>Artist</span>
+                                        <span className='focus-bg'></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 400 }} title="Must provide a song and artist name." placement="right-start">
+                                        <span>
+                                            <button type='submit' id='submitBtn' disabled='disabled'>Submit Request</button>
+                                        </span>
+                                    </Tooltip>
+                                </div>
+                                <div>
+                                    <h4 id='submissionText'></h4>
+                                </div>
+                            </div>
                         </div>
                     </header>
                 </div>
