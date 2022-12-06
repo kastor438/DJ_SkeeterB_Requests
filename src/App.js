@@ -1,12 +1,13 @@
 import logo from './skeeterB-Logo.png';
 import './App.css';
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, set, child, get } from "firebase/database";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
+import { render } from '@testing-library/react';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -33,19 +34,35 @@ const App = () => {
     const [accessToken, SetAccessToken] = useState("");
     const [canSubmit, SetCanSubmit] = useState(false);
     const [invalidChars, SetInvalidChars] = useState("");
-    const [songName, SetSongName] = useState("");
-    const [artistName, SetArtistName] = useState("");
+    const [inputSongName, SetInputSongName] = useState("");
+    const [inputArtistName, SetInputArtistName] = useState("");
     const [hasListener, SetHasListener] = useState(false);
-    const [spotifySongs, SetSpotifySongs] = useState([]);
-    const [spotifyArtists, SetSpotifyArtists] = useState([]);
+    const [renderedTracks, SetRenderedTracks] = useState([]);
+    const [trackName, SetTrackName] = useState('');
+    const [artistName, SetArtistName] = useState('');
+
 
     useEffect(() => {
         InitializeSpotify();
-    }, [])
+    }, []);
 
     useEffect(() => {
         CheckValidInput();
-    }, [songName, artistName])
+    }, [inputSongName, inputArtistName]);
+
+    useEffect(() => {
+        if(!canSubmit){
+            document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+        }
+        else{
+            document.getElementById('submitBtn').removeAttribute("disabled");
+        }
+    }, [canSubmit]);
+
+    useEffect(() => {
+        console.log(trackName + ", " + artistName);
+    }, [trackName, artistName]);
+    
     function InitializeSpotify(){
         var authParams = {
             method: 'POST',
@@ -57,43 +74,48 @@ const App = () => {
 
         fetch('https://accounts.spotify.com/api/token', authParams)
             .then(result => result.json())
-            .then(data => SetAccessToken(data.accessToken));
+            .then(data => SetAccessToken(data.access_token));
     }
 
     function UpdateSongName(value){
-        console.log(value + " " + songName);
-        SetSongName(value);
+        SetInputSongName(value);
     }
 
     function UpdateArtistName(value){
-        SetArtistName(value);
+        SetInputArtistName(value);
     }
 
     function CheckValidInput(){
-        if(songName.length <= 1 || artistName.length <= 1){
-            SetCanSubmit(false);
-            document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+        for(var i = 0; i < 10; i++){
+            var option = document.getElementById("option" + i);
+            if(option){
+                option.style.color = "white";
+            }
+            else{
+                break;
+            }
+        }
+        SetTrackName("");
+        SetArtistName("");
+        document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+        SetCanSubmit(false);
+
+        if(inputSongName.length <= 1 || inputArtistName.length <= 1){
             return;
         }
         else{
-            for(var i = 0; i < songName.length; i++){
-                if(invalidChars.includes(songName.substring(i, i+1))){
-                    SetCanSubmit(false);
-                    document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+            for(var i = 0; i < inputSongName.length; i++){
+                if(invalidChars.includes(inputSongName.substring(i, i+1))){
                     return;
                 }
             }
-            for(i = 0; i < artistName.length; i++){
-                if(invalidChars.includes(artistName.substring(i, i+1))){
-                    SetCanSubmit(false);
-                    document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+            for(i = 0; i < inputArtistName.length; i++){
+                if(invalidChars.includes(inputArtistName.substring(i, i+1))){
                     return;
                 }
             }
         }
 
-        SetCanSubmit(true);
-        document.getElementById('submitBtn').removeAttribute("disabled");
         if (hasListener === false) {
             document.getElementById('submitBtn').addEventListener("click", () => SubmitRequest());
             SetHasListener(true);
@@ -103,20 +125,18 @@ const App = () => {
 
     function SubmitRequest(){
         if(canSubmit){
-            console.log('Your input value is: ' + songName + ", " + artistName);
+            console.log('Your input value is: ' + trackName + ", " + artistName);
             
-            AddRequest(songName, artistName);
+            AddRequest(trackName, artistName);
             
             document.getElementById('songNameInput').value = '';
             document.getElementById('artistNameInput').value = '';
 
-            AddRequest(songName, artistName);
-
-            SetSongName('');
-            SetArtistName('');
+            SetInputSongName('');
+            SetInputArtistName('');
         }
         else{
-            console.log('Your input is invalid! (' + songName + ", " + artistName + ')');
+            console.log('Your input is invalid! (' + inputSongName + ", " + inputArtistName + ')');
         }
     }
 
@@ -180,11 +200,56 @@ const App = () => {
                 'Authorization': 'Bearer ' + accessToken
             }
         }
-        var songID = await fetch('https://api.spotify.com/v1/search?q=' + songName + '&type=track', songParams)
+
+        var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track', songParams)
             .then(response => response.json())
-            .then(data => console.log(data));
-        
-        
+            .then(data => {
+                // console.log(data);
+                var tracks = [];
+                var searchedTracks = data.tracks.items;
+                for(var i = 0; i < 10; i++){
+                    if(searchedTracks[i] == null)
+                        break;
+                    var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
+                        React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
+                        React.createElement('div', {className : 'songOptionInfo'},
+                            React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
+                            React.createElement('p', {id : 'artistName' + i}, searchedTracks[i].artists[0].name)
+                        )
+                    );
+                    tracks.push(track);
+                }
+                SetRenderedTracks(tracks);
+            });        
+    }
+
+    function SelectSong(e){
+        var element = e.target;
+        while(element.nodeName !== "DIV" || element.className != "songOption"){
+            element = element.parentNode;
+        }
+
+        for(var i = 0; i < 10; i++){
+            var option = document.getElementById("option" + i);
+            if(option){
+                option.style.color = "white";
+            }
+            else{
+                break;
+            }
+        }
+        console.log("trackName: " + trackName + " artistsName: " + artistName + ", eleTrack: " + element.children[1].children[0].innerHTML + ", eleArtist: " + element.children[1].children[1].innerHTML)
+        if(trackName != element.children[1].children[0].innerHTML && artistName != element.children[1].children[1].innerHTML){
+            element.style.color = "red";    
+            SetTrackName(element.children[1].children[0].innerHTML);
+            SetArtistName(element.children[1].children[1].innerHTML);
+            SetCanSubmit(true);
+        }
+        else{
+            SetTrackName("");
+            SetArtistName("");
+            SetCanSubmit(false);
+        }
     }
 
     return (
@@ -217,39 +282,12 @@ const App = () => {
                                     <div id='spotifyTab'>
                                         <img id='spotifyImage' src='Spotify_Logo_CMYK_Green.png'/>
                                     </div>
-                                    {/* <div id='appleMusicTab'>
+                                    <div id='appleMusicTab'>
                                         <img id='appleMusicImage' src='Spotify_Logo_CMYK_Green.png'/>
-                                    </div> */}
+                                    </div>
                                 </div>
                                 <div id='spotifySearchDiv'>
-                                    <div className='songOption'>
-                                        <img className='songOptionImage' src='' alt='Song Image'></img>
-                                        <div className='songOptionInfo'>
-                                            <p>Song Title</p>
-                                            <p>Artist Name</p>
-                                        </div>
-                                    </div>
-                                    <div className='songOption'>
-                                        <img className='songOptionImage' src='' alt='Song Image'></img>
-                                        <div className='songOptionInfo'>
-                                            <p>Song Title</p>
-                                            <p>Artist Name</p>
-                                        </div>
-                                    </div>
-                                    <div className='songOption'>
-                                        <img className='songOptionImage' src='' alt='Song Image'></img>
-                                        <div className='songOptionInfo'>
-                                            <p>Song Title</p>
-                                            <p>Artist Name</p>
-                                        </div>
-                                    </div>
-                                    <div className='songOption'>
-                                        <img className='songOptionImage' src='' alt='Song Image'></img>
-                                        <div className='songOptionInfo'>
-                                            <p>Song Title</p>
-                                            <p>Artist Name</p>
-                                        </div>
-                                    </div>
+                                    {renderedTracks}
                                 </div>
                             </div>
                             <div>

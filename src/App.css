@@ -46,42 +46,44 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr;
-  width: 70%;
+  width: 80%;
   margin-left: 10%;
 }
 
 #spotifyTab{
-  border-width: 1px;
+  border-width: 1px 1px 0 1px;
   border-color: black;
   border-style: solid;
-  border-radius: 10% 10% 0 0 / 60% 15%;
+  border-radius: 10% 20% 0 0 / 40% 100%;
   height: 6vmax;
-  margin-left: 15%;
-  background-color: #484646;
+  margin-left: -1%;
+  background-color: #36393f;
 }
 
 #appleMusicTab{
-  border-width: 1px;
+  border-width: 1px 1px 0 1px;
   border-color: black;
   border-style: solid;
-  border-radius: 10% 10% 0 0 / 60% 15%;
+  border-radius: 20% 10% 0 0 / 100% 40%;
   height: 6vmax;
-  margin-left: 15%;
-  background-color: #484646;
+  margin-left: -5%;
+  background-color: #36393f;
+  z-index: -1;
+  background-color: #2e2f32;
 }
 
 #spotifyImage{
-  width: 70%;
+  width: 50%;
   margin-top: 1vmax;
 }
 
 #appleMusicImage{
-  width: 70%;
+  width: 50%;
   margin-top: 1vmax;
 }
 
 #spotifySearchDiv{
-  padding: 8px 0 8px 0;
+  padding: 0px 0 8px 0;
   margin-left: 10%;
   width: 80%;
   height: 250px;
@@ -115,14 +117,18 @@
 
 .songOptionImage{
   border: 1px solid black;
-  width: 100%;
-  height: 100%;
-  margin: auto;
+  width: 90%;
+  height: 90%;
+  margin: 1%;
 }
 
 .songOptionInfo{
+  margin-top: 5%;
   margin-left: 5%;
   text-align: left;
+  justify-content: center;
+  height: 70%;
+  line-height: 17px;
 }
 
 #pageHeader{
