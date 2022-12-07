@@ -201,122 +201,131 @@ function App() {
     }
 
     function AddRequest(songName, artistName){
-        const dbRef = ref(getDatabase());
-        var nextSongID = 1;
-        var songIDs = [];
-        var songRequests = [];
-        var addRequestBool = true;
-        get(child(dbRef, 'Requests/')).then((snapshot) => {
-            if (snapshot.exists()) {
-                //console.log(snapshot.val());
+      const dbRef = ref(getDatabase());
+      var nextSongID = 1;
+      var songIDs = [];
+      var songRequests = [];
+      var addRequestBool = true;
+      var songExistsID = -1;
+      var prevRequestCount = 0;
 
-                Object.entries(snapshot.val()).forEach(([key, value]) => {
-                    songIDs.push(key);
-                    songRequests.push(value);
-                });
+      get(child(dbRef, 'Requests/')).then((snapshot) => {
+        if (snapshot.exists()) {
+          //console.log(snapshot.val());
 
-                for(var i = 0; i < songRequests.length; i++){
-                    if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
-                        addRequestBool = false;
-                    }
-                }
+          Object.entries(snapshot.val()).forEach(([key, value]) => {
+            songIDs.push(key);
+            songRequests.push(value);
+          });
 
-                if(addRequestBool){
-                    for(i = 0; i < songIDs.length; i++){
-                        if(songIDs[i] >= nextSongID){
-                            nextSongID = parseInt(songIDs[i]) + 1;
-                        }
-                    }
-    
-                    const db = getDatabase();
-                    set(ref(db, 'Requests/' + nextSongID + '/'), {
-                        SongName: songName,
-                        ArtistName: artistName,
-                    });
-                    document.getElementById('submissionText').innerHTML = "Request Sent!";
-                }
-                else{
-                    document.getElementById('submissionText').innerHTML = "Request Already in Pool."
-                }
-            } 
-            else {
-                const db = getDatabase();
-                set(ref(db, 'Requests/1/'), {
-                    SongName: songName,
-                    ArtistName: artistName,
-                });
+          for(var i = 0; i < songRequests.length; i++){
+            if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
+              addRequestBool = false;
+              prevRequestCount = songRequests[i].RequestCount;
+              songExistsID = songIDs[i];
             }
-        }).catch((error) => {
-            console.error(error);
-        });
+          }
+
+          if(addRequestBool){
+            for(i = 0; i < songIDs.length; i++){
+              if(songIDs[i] >= nextSongID){
+                nextSongID = parseInt(songIDs[i]) + 1;
+              }
+            }
+            const db = getDatabase();
+            set(ref(db, 'Requests/' + nextSongID + '/'), {
+              SongName: songName,
+              ArtistName: artistName,
+              RequestCount: 1
+            });
+            document.getElementById('submissionText').innerHTML = "Request Sent!";
+          }
+          else{
+            const db = getDatabase();
+            console.log("prevRequestCount:" + prevRequestCount);
+            set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
+            document.getElementById('submissionText').innerHTML = "Request Already in Pool."
+          }
+        } 
+        else {
+          const db = getDatabase();
+          set(ref(db, 'Requests/1/'), {
+            SongName: songName,
+            ArtistName: artistName,
+            RequestCount: 1
+          });
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
     }
 
     async function FetchSpotifySongs(){
-        var songParams = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
-            }
+      var songParams = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken
         }
+      }
 
-        var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                var tracks = [];
-                var searchedTracks = data.tracks.items;
-                for(var i = 0; i < 50; i++){
-                    if(searchedTracks[i] == null)
-                        break;
+      var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          var tracks = [];
+          var searchedTracks = data.tracks.items;
+          for(var i = 0; i < 50; i++){
+            if(searchedTracks[i] == null)
+              break;
 
-                    var artistFound = false;
-                    var searchingArtist = inputArtistName.length > 0 ? true : false;
-                    if(searchingArtist){
-                        for(var j = 0; j < searchedTracks[i].artists.length; j++){
-                            var currArtistName = searchedTracks[i].artists[j].name;
-                            var inputArtistNameIndex = 0;
-                            for(var k = 0; k < currArtistName.length; k++){
-                                if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
-                                    inputArtistNameIndex++;
-                                    if(inputArtistNameIndex == inputArtistName.length){
-                                        artistFound = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if(artistFound){
-                                break;
-                            }
-                        }
-                    }
-                    var artistNames = searchedTracks[i].artists[0].name;
-                    for(var j = 1; j < searchedTracks[i].artists.length; j++){
-                        artistNames += ", " + searchedTracks[i].artists[j].name;
-                    }
-                    if(artistFound || !searchingArtist){
-                        var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
-                            React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
-                            React.createElement('div', {className : 'songOptionInfo'},
-                                React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
-                                React.createElement('p', {id : 'artistName' + i}, artistNames)
-                            )
-                        );
-                        tracks.push(track);
-                    }
-                    if(tracks.length >= 10)
+            var artistFound = false;
+            var searchingArtist = inputArtistName.length > 0 ? true : false;
+            if(searchingArtist){
+              for(var j = 0; j < searchedTracks[i].artists.length; j++){
+                var currArtistName = searchedTracks[i].artists[j].name;
+                var inputArtistNameIndex = 0;
+                for(var k = 0; k < currArtistName.length; k++){
+                  if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
+                    inputArtistNameIndex++;
+                    if(inputArtistNameIndex == inputArtistName.length){
+                      artistFound = true;
                       break;
+                    }
+                  }
                 }
-                SetRenderedTracks(tracks);
-            });        
+                if(artistFound){
+                  break;
+                }
+              }
+            }
+            var artistNames = searchedTracks[i].artists[0].name;
+            for(var j = 1; j < searchedTracks[i].artists.length; j++){
+              artistNames += ", " + searchedTracks[i].artists[j].name;
+            }
+            if(artistFound || !searchingArtist){
+              var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
+                React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
+                React.createElement('div', {className : 'songOptionInfo'},
+                  React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
+                  React.createElement('p', {id : 'artistName' + i}, artistNames)
+                )
+              );
+              tracks.push(track);
+            }
+            if(tracks.length >= 10)
+              break;
+          }
+          SetRenderedTracks(tracks);
+        });        
     }
 
     async function FetchAppleMusicSongs(){
       var songParams = {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken
         }
       }
 
