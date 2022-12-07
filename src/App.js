@@ -260,13 +260,13 @@ function App() {
             }
         }
 
-        var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track', songParams)
+        var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
             .then(response => response.json())
             .then(data => {
-                // console.log(data);
+                console.log(data);
                 var tracks = [];
                 var searchedTracks = data.tracks.items;
-                for(var i = 0; i < 10; i++){
+                for(var i = 0; i < 50; i++){
                     if(searchedTracks[i] == null)
                         break;
 
@@ -304,13 +304,69 @@ function App() {
                         );
                         tracks.push(track);
                     }
+                    if(tracks.length >= 10)
+                      break;
                 }
                 SetRenderedTracks(tracks);
             });        
     }
 
     async function FetchAppleMusicSongs(){
+      var songParams = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+        }
+      }
 
+      var songID = await fetch('https://api.music.apple.com/v1/catalog/ca/search?types=songs&term=' + inputSongName, songParams)
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data);
+          var tracks = [];
+          var searchedTracks = data.tracks.items;
+          for(var i = 0; i < 10; i++){
+            if(searchedTracks[i] == null)
+                break;
+
+            var artistFound = false;
+            var searchingArtist = inputArtistName.length > 0 ? true : false;
+            if(searchingArtist){
+              for(var j = 0; j < searchedTracks[i].artists.length; j++){
+                var currArtistName = searchedTracks[i].artists[j].name;
+                var inputArtistNameIndex = 0;
+                for(var k = 0; k < currArtistName.length; k++){
+                  if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
+                    inputArtistNameIndex++;
+                    if(inputArtistNameIndex == inputArtistName.length){
+                      artistFound = true;
+                      break;
+                    }
+                  }
+                }
+                if(artistFound){
+                  break;
+                }
+              }
+            }
+            var artistNames = searchedTracks[i].artists[0].name;
+            for(var j = 1; j < searchedTracks[i].artists.length; j++){
+              artistNames += ", " + searchedTracks[i].artists[j].name;
+            }
+            if(artistFound || !searchingArtist){
+              var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
+                  React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
+                  React.createElement('div', {className : 'songOptionInfo'},
+                      React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
+                      React.createElement('p', {id : 'artistName' + i}, artistNames)
+                  )
+              );
+              tracks.push(track);
+            }
+          }
+          SetRenderedTracks(tracks);
+        });        
     }
 
     function SelectSong(e){
@@ -369,9 +425,9 @@ function App() {
                                     <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
                                         <img id='spotifyImage' src='SpotifyLogo.png'/>
                                     </div>
-                                    <div id='appleMusicTab' onClick={e => SwitchToAppleMusic(e)}>
+                                    {/* <div id='appleMusicTab' onClick={e => SwitchToAppleMusic(e)}>
                                         <img id='appleMusicImage' src='AppleMusicLogo.png'/>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div id='renderedTracksDiv'>
                                     {renderedTracksRef.current}
