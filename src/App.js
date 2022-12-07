@@ -188,9 +188,7 @@ function App() {
     }
 
     function SubmitRequest(){
-        if(canSubmitRef.current){
-            console.log('Your input value is: ' + trackNameRef.current + ", " + artistNameRef.current);
-            
+        if(canSubmitRef.current){            
             AddRequest(trackNameRef.current, artistNameRef.current);
             
             document.getElementById('songNameInput').value = '';
@@ -200,9 +198,6 @@ function App() {
             SetInputArtistName('');
             SetRenderedTracks([]);
         }
-        else{
-            console.log('Your input is invalid! (' + inputSongName + ", " + inputArtistName + ')');
-        }
     }
 
     function AddRequest(songName, artistName){
@@ -211,17 +206,17 @@ function App() {
         var songIDs = [];
         var songRequests = [];
         var addRequestBool = true;
-
         get(child(dbRef, 'Requests/')).then((snapshot) => {
             if (snapshot.exists()) {
-                console.log(snapshot.val());
+                //console.log(snapshot.val());
 
                 Object.entries(snapshot.val()).forEach(([key, value]) => {
                     songIDs.push(key);
                     songRequests.push(value);
                 });
+
                 for(var i = 0; i < songRequests.length; i++){
-                    if(songRequests[i].SongName == songName && songRequests[i].artistName == artistName){
+                    if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
                         addRequestBool = false;
                     }
                 }
