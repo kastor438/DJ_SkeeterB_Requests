@@ -97,21 +97,14 @@ class App extends Component {
     }
 
     SubmitRequest(){
-        if(this.state.canSubmit){
-            console.log('Your input value is: ' + this.state.songName + ", " + this.state.artistName);
-            
+        if(this.state.canSubmit){            
             this.AddRequest(this.state.songName, this.state.artistName);
             
             document.getElementById('songNameInput').value = '';
             document.getElementById('artistNameInput').value = '';
 
-            this.AddRequest(this.state.songName, this.state.artistName);
-
             this.setState({songName : ''});
             this.setState({artistName : ''});
-        }
-        else{
-            console.log('Your input is invalid! (' + this.state.songName + ", " + this.state.artistName + ')');
         }
     }
 
@@ -131,7 +124,7 @@ class App extends Component {
                     songRequests.push(value);
                 });
                 for(var i = 0; i < songRequests.length; i++){
-                    if(songRequests[i].SongName == songName && songRequests[i].artistName == artistName){
+                    if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
                         addRequestBool = false;
                     }
                 }
@@ -147,7 +140,7 @@ class App extends Component {
                     const db = getDatabase();
                     set(ref(db, 'Requests/' + nextSongID + '/'), {
                         SongName: songName,
-                        artistName: artistName,
+                        ArtistName: artistName,
                     });
                     document.getElementById('submissionText').innerHTML = "Request Sent!";
                 }
@@ -159,7 +152,7 @@ class App extends Component {
                 const db = getDatabase();
                 set(ref(db, 'Requests/1/'), {
                     SongName: songName,
-                    artistName: artistName,
+                    ArtistName: artistName,
                 });
             }
         }).catch((error) => {
