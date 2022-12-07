@@ -46,7 +46,7 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr;
-  width: 80%;
+  width: 80.3765%;
   margin-left: 10%;
 }
 
@@ -56,8 +56,8 @@
   border-style: solid;
   border-radius: 10% 20% 0 0 / 40% 100%;
   height: 6vmax;
-  margin-left: -1%;
   background-color: #36393f;
+  z-index: 3;
 }
 
 #appleMusicTab{
@@ -67,39 +67,41 @@
   border-radius: 20% 10% 0 0 / 100% 40%;
   height: 6vmax;
   margin-left: -5%;
-  background-color: #36393f;
-  z-index: -1;
+  z-index: 2;
   background-color: #2e2f32;
 }
 
 #spotifyImage{
-  width: 50%;
-  margin-top: 1vmax;
+  width: 60%;
+  margin-top: 7%;
 }
 
 #appleMusicImage{
-  width: 50%;
-  margin-top: 1vmax;
+  width: 40%;
+  margin-top: 10%;
 }
 
-#spotifySearchDiv{
-  padding: 0px 0 8px 0;
+#renderedTracksDiv{
+  padding: 2px 0 2px 0;
   margin-left: 10%;
   width: 80%;
   height: 250px;
   overflow-y: scroll;
   background-color: #36393f;
+  border-width: 0 1px 1px 1px;
+  border-color: black;
+  border-style: solid;
 }
 
-::-webkit-scrollbar-track {
-  background: #484646; 
+#renderedTracksDiv::-webkit-scrollbar-track {
+  background: #484646;
 }
 
-::-webkit-scrollbar{
-  width: 10px;
+#renderedTracksDiv::-webkit-scrollbar{
+  width: 8px;
 }
 
-::-webkit-scrollbar-thumb {
+#renderedTracksDiv::-webkit-scrollbar-thumb {
   background: #847d7d; 
 }
 
@@ -119,7 +121,7 @@
   border: 1px solid black;
   width: 90%;
   height: 90%;
-  margin: 1%;
+  margin: 3% 2.5%;
 }
 
 .songOptionInfo{
@@ -129,6 +131,25 @@
   justify-content: center;
   height: 70%;
   line-height: 17px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  
+}
+
+.songOptionInfo::-webkit-scrollbar {
+    display: none;
+}
+
+.songOptionInfo p {
+    margin-top: 0;
+    vertical-align: middle;
+    width: 90%;
+    line-height: 200%;
+    height: 40%;
+    font-size: 1.6vmax;
+    white-space: nowrap;
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
 }
 
 #pageHeader{
@@ -155,7 +176,7 @@
 }
 
 #songDiv{
-margin-top: 2.5vmax;
+    margin-top: 2.5vmax;
 }
 
 #artistDiv{

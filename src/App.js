@@ -1,6 +1,6 @@
 import logo from './skeeterB-Logo.png';
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, set, child, get } from "firebase/database";
@@ -30,7 +30,7 @@ const database = getDatabase(app);
 const clientID = '822b607fa31944ca91f198b9f5e31613';
 const clientSecret = '4aae0065891841c197af65473ac00b49';
 
-const App = () => {
+function App() {
     const [accessToken, SetAccessToken] = useState("");
     const [canSubmit, SetCanSubmit] = useState(false);
     const [invalidChars, SetInvalidChars] = useState('\'"\\/');
@@ -40,7 +40,26 @@ const App = () => {
     const [renderedTracks, SetRenderedTracks] = useState([]);
     const [trackName, SetTrackName] = useState('');
     const [artistName, SetArtistName] = useState('');
+    const [spotifyActive, SetSpotifyActive] = useState(true);
+    const [appleMusicActive, SetAppleMusicActive] = useState(false);
 
+    const spotifyActiveRef = useRef(true);
+    spotifyActiveRef.current = spotifyActive;
+
+    const appleMusicActiveRef = useRef(false);
+    appleMusicActiveRef.current = appleMusicActive;
+
+    const renderedTracksRef = useRef([]);
+    renderedTracksRef.current = renderedTracks;
+
+    const canSubmitRef = useRef(false);
+    canSubmitRef.current = canSubmit;
+
+    const trackNameRef = useRef("");
+    trackNameRef.current = trackName;
+
+    const artistNameRef = useRef("");
+    artistNameRef.current = artistName;
 
     useEffect(() => {
         InitializeSpotify();
@@ -48,20 +67,16 @@ const App = () => {
 
     useEffect(() => {
         CheckValidInput();
-    }, [inputSongName, inputArtistName]);
+    }, [inputSongName, inputArtistName, spotifyActive, appleMusicActive]);
 
     useEffect(() => {
-        if(!canSubmit){
+        if(!canSubmitRef.current){
             document.getElementById('submitBtn').setAttribute("disabled", "disabled");
         }
         else{
             document.getElementById('submitBtn').removeAttribute("disabled");
         }
     }, [canSubmit]);
-
-    useEffect(() => {
-        console.log(trackName + ", " + artistName);
-    }, [trackName, artistName]);
     
     function InitializeSpotify(){
         var authParams = {
@@ -75,6 +90,52 @@ const App = () => {
         fetch('https://accounts.spotify.com/api/token', authParams)
             .then(result => result.json())
             .then(data => SetAccessToken(data.access_token));
+    }
+
+    function InitializeAppleMusic(){
+
+    }
+
+    function SwitchToSpotify(e){
+      if(!spotifyActiveRef.current){
+        var spotifyTab = document.getElementById("spotifyTab");
+        spotifyTab.style.backgroundColor = "#36393f";
+        spotifyTab.style.zIndex = "3";
+        // spotifyTab.style.borderWidth = "1px 1px 0 1px";
+        spotifyTab.children[0].style.width = "60%";
+        spotifyTab.children[0].style.marginTop = "7%";
+
+        var appleMusicTab = document.getElementById("appleMusicTab");
+        appleMusicTab.style.backgroundColor = "#2e2f32";
+        appleMusicTab.style.zIndex = "2";
+        // appleMusicTab.style.borderWidth = "1px";
+        appleMusicTab.children[0].style.width = "40%";
+        appleMusicTab.children[0].style.marginTop = "10%";
+
+        SetSpotifyActive(true);
+        SetAppleMusicActive(false);
+      }
+    }
+
+    function SwitchToAppleMusic(e){
+      if(!appleMusicActiveRef.current){
+        var spotifyTab = document.getElementById("spotifyTab");
+        spotifyTab.style.backgroundColor = "#2e2f32";
+        spotifyTab.style.zIndex = "2";
+        // spotifyTab.style.borderWidth = "1px";
+        spotifyTab.children[0].style.width = "40%";
+        spotifyTab.children[0].style.marginTop = "10%";
+
+        var appleMusicTab = document.getElementById("appleMusicTab");
+        appleMusicTab.style.backgroundColor = "#36393f";
+        appleMusicTab.style.zIndex = "3";
+        // appleMusicTab.style.borderWidth = "1px 1px 0 1px";
+        appleMusicTab.children[0].style.width = "60%";
+        appleMusicTab.children[0].style.marginTop = "7%";
+
+        SetSpotifyActive(false);
+        SetAppleMusicActive(true);
+      }
     }
 
     function UpdateSongName(value){
@@ -91,16 +152,14 @@ const App = () => {
             if(option){
                 option.style.color = "white";
             }
-            else{
-                break;
-            }
         }
         SetTrackName("");
         SetArtistName("");
         document.getElementById('submitBtn').setAttribute("disabled", "disabled");
         SetCanSubmit(false);
+        SetRenderedTracks([]);
 
-        if(inputSongName.length <= 1 || inputArtistName.length <= 1){
+        if(inputSongName.length <= 1){
             return;
         }
         else{
@@ -120,20 +179,26 @@ const App = () => {
             document.getElementById('submitBtn').addEventListener("click", () => SubmitRequest());
             SetHasListener(true);
         }
-        FetchSpotifySongs();
+        if(spotifyActiveRef.current){
+          FetchSpotifySongs();
+        }
+        else if(appleMusicActiveRef.current){
+          FetchAppleMusicSongs();
+        }
     }
 
     function SubmitRequest(){
-        if(canSubmit){
-            console.log('Your input value is: ' + trackName + ", " + artistName);
+        if(canSubmitRef.current){
+            console.log('Your input value is: ' + trackNameRef.current + ", " + artistNameRef.current);
             
-            AddRequest(trackName, artistName);
+            AddRequest(trackNameRef.current, artistNameRef.current);
             
             document.getElementById('songNameInput').value = '';
             document.getElementById('artistNameInput').value = '';
 
             SetInputSongName('');
             SetInputArtistName('');
+            SetRenderedTracks([]);
         }
         else{
             console.log('Your input is invalid! (' + inputSongName + ", " + inputArtistName + ')');
@@ -161,7 +226,6 @@ const App = () => {
                     }
                 }
 
-                console.log(songRequests[0].artistName);
                 if(addRequestBool){
                     for(i = 0; i < songIDs.length; i++){
                         if(songIDs[i] >= nextSongID){
@@ -210,17 +274,48 @@ const App = () => {
                 for(var i = 0; i < 10; i++){
                     if(searchedTracks[i] == null)
                         break;
-                    var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
-                        React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
-                        React.createElement('div', {className : 'songOptionInfo'},
-                            React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
-                            React.createElement('p', {id : 'artistName' + i}, searchedTracks[i].artists[0].name)
-                        )
-                    );
-                    tracks.push(track);
+
+                    var artistFound = false;
+                    var searchingArtist = inputArtistName.length > 0 ? true : false;
+                    if(searchingArtist){
+                        for(var j = 0; j < searchedTracks[i].artists.length; j++){
+                            var currArtistName = searchedTracks[i].artists[j].name;
+                            var inputArtistNameIndex = 0;
+                            for(var k = 0; k < currArtistName.length; k++){
+                                if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
+                                    inputArtistNameIndex++;
+                                    if(inputArtistNameIndex == inputArtistName.length){
+                                        artistFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(artistFound){
+                                break;
+                            }
+                        }
+                    }
+                    var artistNames = searchedTracks[i].artists[0].name;
+                    for(var j = 1; j < searchedTracks[i].artists.length; j++){
+                        artistNames += ", " + searchedTracks[i].artists[j].name;
+                    }
+                    if(artistFound || !searchingArtist){
+                        var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
+                            React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
+                            React.createElement('div', {className : 'songOptionInfo'},
+                                React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
+                                React.createElement('p', {id : 'artistName' + i}, artistNames)
+                            )
+                        );
+                        tracks.push(track);
+                    }
                 }
                 SetRenderedTracks(tracks);
             });        
+    }
+
+    async function FetchAppleMusicSongs(){
+
     }
 
     function SelectSong(e){
@@ -234,12 +329,9 @@ const App = () => {
             if(option){
                 option.style.color = "white";
             }
-            else{
-                break;
-            }
         }
-        console.log("trackName: " + trackName + " artistsName: " + artistName + ", eleTrack: " + element.children[1].children[0].innerHTML + ", eleArtist: " + element.children[1].children[1].innerHTML)
-        if(trackName != element.children[1].children[0].innerHTML && artistName != element.children[1].children[1].innerHTML){
+
+        if(trackNameRef.current != element.children[1].children[0].innerHTML && artistNameRef.current != element.children[1].children[1].innerHTML){
             element.style.color = "red";    
             SetTrackName(element.children[1].children[0].innerHTML);
             SetArtistName(element.children[1].children[1].innerHTML);
@@ -265,29 +357,29 @@ const App = () => {
                         <div id='formDiv'>
                             <div id='songDiv'>
                                 <label htmlFor='songNameInput' className='requestLabel'>
-                                    <input id='songNameInput' className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" onChange={e => UpdateSongName(e.target.value)}/>
+                                    <input id='songNameInput' className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateSongName(e.target.value)}/>
                                     <span className='label'>Song</span>
                                     <span className='focus-bg'></span>
                                 </label>
                             </div>
                             <div id='artistDiv'>
                                 <label htmlFor='artistNameInput' className='requestLabel'>
-                                    <input id='artistNameInput' className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" onChange={e => UpdateArtistName(e.target.value)}/>
+                                    <input id='artistNameInput' className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateArtistName(e.target.value)}/>
                                     <span className='label'>Artist</span>
                                     <span className='focus-bg'></span>
                                 </label>
                             </div>
                             <div id='songSearchDiv'>
                                 <div id='songSearchTabs'>
-                                    <div id='spotifyTab'>
-                                        <img id='spotifyImage' src='Spotify_Logo_CMYK_Green.png'/>
+                                    <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
+                                        <img id='spotifyImage' src='SpotifyLogo.png'/>
                                     </div>
-                                    <div id='appleMusicTab'>
-                                        <img id='appleMusicImage' src='Spotify_Logo_CMYK_Green.png'/>
+                                    <div id='appleMusicTab' onClick={e => SwitchToAppleMusic(e)}>
+                                        <img id='appleMusicImage' src='AppleMusicLogo.png'/>
                                     </div>
                                 </div>
-                                <div id='spotifySearchDiv'>
-                                    {renderedTracks}
+                                <div id='renderedTracksDiv'>
+                                    {renderedTracksRef.current}
                                 </div>
                             </div>
                             <div>
