@@ -78,9 +78,9 @@
 
 #customTag{
   width: 40%;
-  margin-top: 15%;
+  margin-top: 10%;
   margin-left: 30%;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 #renderedTracksDiv{
@@ -321,6 +321,11 @@
   .songOptionInfo p{
     font-size: 1.2vw;
   }
+
+  #customTag{
+    margin-top: 11%;
+    font-size: 20px;
+  }
 }
 
 @media only screen and (max-width: 1250px){
@@ -423,7 +428,11 @@
   .songOptionInfo{
     margin-left: -15%;
   }
-  
+
+  #customTag{
+    margin-top: 10%;
+    font-size: 20px;
+  }
 }
 
 @media only screen and (max-width: 1100px){
@@ -495,6 +504,11 @@
   .songOptionInfo p {
     font-size: 1.6vw;
   }
+
+  #customTag{
+    margin-top: 6%;
+    font-size: 18px;
+  }
 }
 
 @media only screen and (max-width: 660px){
@@ -558,5 +572,10 @@
       height: 40%;
       font-size: 2.3vw;
       line-height: calc(1.5 * 2.3vw);
+    }
+
+    #customTag{
+      margin-top: 7%;
+      font-size: 20px;
     }
 }

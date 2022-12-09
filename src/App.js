@@ -43,10 +43,10 @@ function App() {
     const [spotifyActive, SetSpotifyActive] = useState(true);
     const [customActive, SetCustomActive] = useState(false);
 
-    const inputSongNameRef = useRef(true);
+    const inputSongNameRef = useRef("");
     inputSongNameRef.current = inputSongName;
 
-    const inputArtistNameRef = useRef(false);
+    const inputArtistNameRef = useRef("");
     inputArtistNameRef.current = inputArtistName;
 
     const spotifyActiveRef = useRef(true);
@@ -104,6 +104,7 @@ function App() {
 
     function SwitchToSpotify(e){
       if(!spotifyActiveRef.current){
+        let screenWidth = window.innerWidth;
         var spotifyTab = document.getElementById("spotifyTab");
         spotifyTab.style.backgroundColor = "#36393f";
         spotifyTab.style.zIndex = "3";
@@ -115,9 +116,22 @@ function App() {
         customTab.style.backgroundColor = "#2e2f32";
         customTab.style.zIndex = "2";
         // appleMusicTab.style.borderWidth = "1px";
-        customTab.children[0].style.width = "40%";
-        customTab.children[0].style.marginTop = "15%";
-        customTab.children[0].style.fontSize = "24px";
+        // if(screenWidth >= 1465){
+        //   customTab.children[0].style.marginTop = "10%";
+        //   customTab.children[0].style.fontSize = "24px";
+        // }
+        // else if(screenWidth >= 1250){
+        //   customTab.children[0].style.marginTop = "8%";
+        //   customTab.children[0].style.fontSize = "20px";
+        // }
+        // else if(screenWidth >= 1100){
+        //   customTab.children[0].style.marginTop = "5%";
+        //   customTab.children[0].style.fontSize = "18px";
+        // }
+        // else if(screenWidth >= 660){
+        //   customTab.children[0].style.marginTop = "0%";
+        //   customTab.children[0].style.fontSize = "16px";
+        // }
 
         document.getElementById("renderedTracksDiv").style.height = "250px";
 
@@ -127,7 +141,10 @@ function App() {
     }
 
     function SwitchToCustom(e){
+      console.log("Heh");
       if(!customActiveRef.current){
+        let screenWidth = window.innerWidth;
+        console.log(screenWidth);
         var spotifyTab = document.getElementById("spotifyTab");
         spotifyTab.style.backgroundColor = "#2e2f32";
         spotifyTab.style.zIndex = "2";
@@ -139,13 +156,27 @@ function App() {
         customTab.style.backgroundColor = "#36393f";
         customTab.style.zIndex = "3";
         // appleMusicTab.style.borderWidth = "1px 1px 0 1px";
-        // customTab.children[0].style.width = "60%";
-        customTab.children[0].style.marginTop = "7%";
-        customTab.children[0].style.fontSize = "32px";
+        // if(screenWidth >= 1465){
+        //   customTab.children[0].style.marginTop = "10%";
+        //   customTab.children[0].style.fontSize = "28px";
+        // }
+        // else if(screenWidth >= 1250){
+        //   // customTab.children[0].style.marginTop = "10%";
+        //   customTab.children[0].style.fontSize = "26px";
+        // }
+        // else if(screenWidth >= 1100){
+        //   customTab.children[0].style.marginTop = "6%";
+        //   customTab.children[0].style.fontSize = "20px";
+        // }
+        // else if(screenWidth >= 660){
+        //   customTab.children[0].style.marginTop = "6%";
+        //   customTab.children[0].style.fontSize = "18px";
+        // }
 
         document.getElementById("renderedTracksDiv").style.height = "0";
         SetSpotifyActive(false);
         SetCustomActive(true);
+        CheckValidInput();
       }
     }
 
@@ -158,44 +189,46 @@ function App() {
     }
 
     function CheckValidInput(){
-        for(var i = 0; i < 10; i++){
-            var option = document.getElementById("option" + i);
-            if(option){
-                option.style.color = "white";
-            }
+      for(var i = 0; i < 10; i++){
+        var option = document.getElementById("option" + i);
+        if(option){
+            option.style.color = "white";
         }
+      }
+      
+      if(!customActiveRef.current || inputSongNameRef.current.length <= 1){
         SetTrackName("");
         SetArtistName("");
         document.getElementById('submitBtn').setAttribute("disabled", "disabled");
         SetCanSubmit(false);
         SetRenderedTracks([]);
+      }
 
-        if(inputSongNameRef.current.length <= 1){
-            return;
-        }
-        else{
-            for(var i = 0; i < inputSongName.length; i++){
-                if(invalidChars.includes(inputSongNameRef.current.substring(i, i+1))){
-                    return;
-                }
-            }
-            for(i = 0; i < inputArtistNameRef.current.length; i++){
-                if(invalidChars.includes(inputArtistNameRef.current.substring(i, i+1))){
-                    return;
-                }
+      if(inputSongNameRef.current.length <= 1){
+        return;
+      }
+      else{
+        for(var i = 0; i < inputSongNameRef.current.length; i++){
+            if(invalidChars.includes(inputSongNameRef.current.substring(i, i+1))){
+                return;
             }
         }
-
-        if (hasListener === false) {
-            document.getElementById('submitBtn').addEventListener("click", () => SubmitRequest());
-            SetHasListener(true);
+        for(i = 0; i < inputArtistNameRef.current.length; i++){
+            if(invalidChars.includes(inputArtistNameRef.current.substring(i, i+1))){
+                return;
+            }
         }
-        if(spotifyActiveRef.current){
-          FetchSpotifySongs();
-        }
-        else if(customActiveRef.current && inputArtistNameRef.current.length > 1){
-          CustomSetup();
-        }
+      }
+      if (hasListener === false) {
+        document.getElementById('submitBtn').addEventListener("click", () => SubmitRequest());
+        SetHasListener(true);
+      }
+      if(spotifyActiveRef.current){
+        FetchSpotifySongs();
+      }
+      else if(customActiveRef.current && inputArtistNameRef.current.length > 1){
+        CustomSetup();
+      }
     }
 
     function SubmitRequest(){
@@ -215,40 +248,6 @@ function App() {
         }
     }
 
-<<<<<<< HEAD
-    SubmitRequest(){
-        if(this.state.canSubmit){            
-            this.AddRequest(this.state.songName, this.state.artistName);
-            
-            document.getElementById('songNameInput').value = '';
-            document.getElementById('artistNameInput').value = '';
-
-            this.setState({songName : ''});
-            this.setState({artistName : ''});
-        }
-    }
-
-    AddRequest(songName, artistName){
-        const dbRef = ref(getDatabase());
-        var nextSongID = 1;
-        var songIDs = [];
-        var songRequests = [];
-        var addRequestBool = true;
-
-        get(child(dbRef, 'Requests/')).then((snapshot) => {
-            if (snapshot.exists()) {
-                console.log(snapshot.val());
-
-                Object.entries(snapshot.val()).forEach(([key, value]) => {
-                    songIDs.push(key);
-                    songRequests.push(value);
-                });
-                for(var i = 0; i < songRequests.length; i++){
-                    if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
-                        addRequestBool = false;
-                    }
-                }
-=======
     function AddRequest(songName, artistName){
       const dbRef = ref(getDatabase());
       var nextSongID = 1;
@@ -291,7 +290,6 @@ function App() {
           }
           else{
             const db = getDatabase();
-            console.log("prevRequestCount:" + prevRequestCount);
             set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
             document.getElementById('submissionText').innerHTML = "Request Already in Pool."
           }
@@ -327,7 +325,6 @@ function App() {
           for(var i = 0; i < 50; i++){
             if(searchedTracks[i] == null)
               break;
->>>>>>> e70cd9082f26e81e8e625fcfc3fcc494d3c70b16
 
             var artistFound = false;
             var searchingArtist = inputArtistName.length > 0 ? true : false;
@@ -342,30 +339,11 @@ function App() {
                       artistFound = true;
                       break;
                     }
-<<<<<<< HEAD
-    
-                    const db = getDatabase();
-                    set(ref(db, 'Requests/' + nextSongID + '/'), {
-                        SongName: songName,
-                        ArtistName: artistName,
-                    });
-                    document.getElementById('submissionText').innerHTML = "Request Sent!";
-=======
                   }
->>>>>>> e70cd9082f26e81e8e625fcfc3fcc494d3c70b16
                 }
                 if(artistFound){
                   break;
                 }
-<<<<<<< HEAD
-            } 
-            else {
-                const db = getDatabase();
-                set(ref(db, 'Requests/1/'), {
-                    SongName: songName,
-                    ArtistName: artistName,
-                });
-=======
               }
             }
             var artistNames = searchedTracks[i].artists[0].name;
@@ -461,7 +439,6 @@ function App() {
             var option = document.getElementById("option" + i);
             if(option){
                 option.style.color = "white";
->>>>>>> e70cd9082f26e81e8e625fcfc3fcc494d3c70b16
             }
         }
 
