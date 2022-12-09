@@ -1,9 +1,5 @@
 {
   "projects": {
-<<<<<<< HEAD
-    "default": "dj-skeeterb-requests"
-=======
     "default": "dj-skeeterb"
->>>>>>> origin/master
   }
 }
