@@ -41,13 +41,19 @@ function App() {
     const [trackName, SetTrackName] = useState('');
     const [artistName, SetArtistName] = useState('');
     const [spotifyActive, SetSpotifyActive] = useState(true);
-    const [appleMusicActive, SetAppleMusicActive] = useState(false);
+    const [customActive, SetCustomActive] = useState(false);
+
+    const inputSongNameRef = useRef(true);
+    inputSongNameRef.current = inputSongName;
+
+    const inputArtistNameRef = useRef(false);
+    inputArtistNameRef.current = inputArtistName;
 
     const spotifyActiveRef = useRef(true);
     spotifyActiveRef.current = spotifyActive;
 
-    const appleMusicActiveRef = useRef(false);
-    appleMusicActiveRef.current = appleMusicActive;
+    const customActiveRef = useRef(false);
+    customActiveRef.current = customActive;
 
     const renderedTracksRef = useRef([]);
     renderedTracksRef.current = renderedTracks;
@@ -67,7 +73,7 @@ function App() {
 
     useEffect(() => {
         CheckValidInput();
-    }, [inputSongName, inputArtistName, spotifyActive, appleMusicActive]);
+    }, [inputSongName, inputArtistName, spotifyActive, customActive]);
 
     useEffect(() => {
         if(!canSubmitRef.current){
@@ -105,20 +111,23 @@ function App() {
         spotifyTab.children[0].style.width = "60%";
         spotifyTab.children[0].style.marginTop = "7%";
 
-        var appleMusicTab = document.getElementById("appleMusicTab");
-        appleMusicTab.style.backgroundColor = "#2e2f32";
-        appleMusicTab.style.zIndex = "2";
+        var customTab = document.getElementById("customTab");
+        customTab.style.backgroundColor = "#2e2f32";
+        customTab.style.zIndex = "2";
         // appleMusicTab.style.borderWidth = "1px";
-        appleMusicTab.children[0].style.width = "40%";
-        appleMusicTab.children[0].style.marginTop = "10%";
+        customTab.children[0].style.width = "40%";
+        customTab.children[0].style.marginTop = "15%";
+        customTab.children[0].style.fontSize = "24px";
+
+        document.getElementById("renderedTracksDiv").style.height = "250px";
 
         SetSpotifyActive(true);
-        SetAppleMusicActive(false);
+        SetCustomActive(false);
       }
     }
 
-    function SwitchToAppleMusic(e){
-      if(!appleMusicActiveRef.current){
+    function SwitchToCustom(e){
+      if(!customActiveRef.current){
         var spotifyTab = document.getElementById("spotifyTab");
         spotifyTab.style.backgroundColor = "#2e2f32";
         spotifyTab.style.zIndex = "2";
@@ -126,15 +135,17 @@ function App() {
         spotifyTab.children[0].style.width = "40%";
         spotifyTab.children[0].style.marginTop = "10%";
 
-        var appleMusicTab = document.getElementById("appleMusicTab");
-        appleMusicTab.style.backgroundColor = "#36393f";
-        appleMusicTab.style.zIndex = "3";
+        var customTab = document.getElementById("customTab");
+        customTab.style.backgroundColor = "#36393f";
+        customTab.style.zIndex = "3";
         // appleMusicTab.style.borderWidth = "1px 1px 0 1px";
-        appleMusicTab.children[0].style.width = "60%";
-        appleMusicTab.children[0].style.marginTop = "7%";
+        // customTab.children[0].style.width = "60%";
+        customTab.children[0].style.marginTop = "7%";
+        customTab.children[0].style.fontSize = "32px";
 
+        document.getElementById("renderedTracksDiv").style.height = "0";
         SetSpotifyActive(false);
-        SetAppleMusicActive(true);
+        SetCustomActive(true);
       }
     }
 
@@ -159,17 +170,17 @@ function App() {
         SetCanSubmit(false);
         SetRenderedTracks([]);
 
-        if(inputSongName.length <= 1){
+        if(inputSongNameRef.current.length <= 1){
             return;
         }
         else{
             for(var i = 0; i < inputSongName.length; i++){
-                if(invalidChars.includes(inputSongName.substring(i, i+1))){
+                if(invalidChars.includes(inputSongNameRef.current.substring(i, i+1))){
                     return;
                 }
             }
-            for(i = 0; i < inputArtistName.length; i++){
-                if(invalidChars.includes(inputArtistName.substring(i, i+1))){
+            for(i = 0; i < inputArtistNameRef.current.length; i++){
+                if(invalidChars.includes(inputArtistNameRef.current.substring(i, i+1))){
                     return;
                 }
             }
@@ -182,21 +193,25 @@ function App() {
         if(spotifyActiveRef.current){
           FetchSpotifySongs();
         }
-        else if(appleMusicActiveRef.current){
-          FetchAppleMusicSongs();
+        else if(customActiveRef.current && inputArtistNameRef.current.length > 1){
+          CustomSetup();
         }
     }
 
     function SubmitRequest(){
-        if(canSubmitRef.current){            
+        if(canSubmitRef.current){        
+          if(spotifyActiveRef.current){ 
             AddRequest(trackNameRef.current, artistNameRef.current);
-            
-            document.getElementById('songNameInput').value = '';
-            document.getElementById('artistNameInput').value = '';
+          }
+          else if(customActiveRef.current){
+            AddRequest(inputSongNameRef.current, inputArtistNameRef.current);
+          }
+          document.getElementById('songNameInput').value = '';
+          document.getElementById('artistNameInput').value = '';
 
-            SetInputSongName('');
-            SetInputArtistName('');
-            SetRenderedTracks([]);
+          SetInputSongName('');
+          SetInputArtistName('');
+          SetRenderedTracks([]);
         }
     }
 
@@ -320,62 +335,66 @@ function App() {
         });        
     }
 
-    async function FetchAppleMusicSongs(){
-      var songParams = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + accessToken
-        }
-      }
+    // async function FetchAppleMusicSongs(){
+    //   var songParams = {
+    //     method: 'GET',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': 'Bearer ' + accessToken
+    //     }
+    //   }
 
-      var songID = await fetch('https://api.music.apple.com/v1/catalog/ca/search?types=songs&term=' + inputSongName, songParams)
-        .then(response => response.json())
-        .then(data => {
-          // console.log(data);
-          var tracks = [];
-          var searchedTracks = data.tracks.items;
-          for(var i = 0; i < 10; i++){
-            if(searchedTracks[i] == null)
-                break;
+    //   var songID = await fetch('https://api.music.apple.com/v1/catalog/ca/search?types=songs&term=' + inputSongName, songParams)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       // console.log(data);
+    //       var tracks = [];
+    //       var searchedTracks = data.tracks.items;
+    //       for(var i = 0; i < 10; i++){
+    //         if(searchedTracks[i] == null)
+    //             break;
 
-            var artistFound = false;
-            var searchingArtist = inputArtistName.length > 0 ? true : false;
-            if(searchingArtist){
-              for(var j = 0; j < searchedTracks[i].artists.length; j++){
-                var currArtistName = searchedTracks[i].artists[j].name;
-                var inputArtistNameIndex = 0;
-                for(var k = 0; k < currArtistName.length; k++){
-                  if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
-                    inputArtistNameIndex++;
-                    if(inputArtistNameIndex == inputArtistName.length){
-                      artistFound = true;
-                      break;
-                    }
-                  }
-                }
-                if(artistFound){
-                  break;
-                }
-              }
-            }
-            var artistNames = searchedTracks[i].artists[0].name;
-            for(var j = 1; j < searchedTracks[i].artists.length; j++){
-              artistNames += ", " + searchedTracks[i].artists[j].name;
-            }
-            if(artistFound || !searchingArtist){
-              var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
-                  React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
-                  React.createElement('div', {className : 'songOptionInfo'},
-                      React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
-                      React.createElement('p', {id : 'artistName' + i}, artistNames)
-                  )
-              );
-              tracks.push(track);
-            }
-          }
-          SetRenderedTracks(tracks);
-        });        
+    //         var artistFound = false;
+    //         var searchingArtist = inputArtistName.length > 0 ? true : false;
+    //         if(searchingArtist){
+    //           for(var j = 0; j < searchedTracks[i].artists.length; j++){
+    //             var currArtistName = searchedTracks[i].artists[j].name;
+    //             var inputArtistNameIndex = 0;
+    //             for(var k = 0; k < currArtistName.length; k++){
+    //               if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
+    //                 inputArtistNameIndex++;
+    //                 if(inputArtistNameIndex == inputArtistName.length){
+    //                   artistFound = true;
+    //                   break;
+    //                 }
+    //               }
+    //             }
+    //             if(artistFound){
+    //               break;
+    //             }
+    //           }
+    //         }
+    //         var artistNames = searchedTracks[i].artists[0].name;
+    //         for(var j = 1; j < searchedTracks[i].artists.length; j++){
+    //           artistNames += ", " + searchedTracks[i].artists[j].name;
+    //         }
+    //         if(artistFound || !searchingArtist){
+    //           var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
+    //               React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
+    //               React.createElement('div', {className : 'songOptionInfo'},
+    //                   React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
+    //                   React.createElement('p', {id : 'artistName' + i}, artistNames)
+    //               )
+    //           );
+    //           tracks.push(track);
+    //         }
+    //       }
+    //       SetRenderedTracks(tracks);
+    //     });        
+    // }
+
+    function CustomSetup(){
+      SetCanSubmit(true);
     }
 
     function SelectSong(e){
@@ -434,9 +453,9 @@ function App() {
                                     <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
                                         <img id='spotifyImage' src='SpotifyLogo.png'/>
                                     </div>
-                                    {/* <div id='appleMusicTab' onClick={e => SwitchToAppleMusic(e)}>
-                                        <img id='appleMusicImage' src='AppleMusicLogo.png'/>
-                                    </div> */}
+                                    <div id='customTab' onClick={e => SwitchToCustom(e)}>
+                                        <h4 id='customTag'>Custom</h4>
+                                    </div>
                                 </div>
                                 <div id='renderedTracksDiv'>
                                     {renderedTracksRef.current}
