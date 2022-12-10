@@ -38,7 +38,7 @@
     }
 }
 
-#songSearchDiv{
+#tracksDiv{
   margin-top: 2.5vmax;
 }
 
@@ -46,8 +46,8 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr;
-  width: 80.3765%;
-  margin-left: 10%;
+  width: 100%;
+  /* margin-left: 5%; */
 }
 
 #spotifyTab{
@@ -55,7 +55,7 @@
   border-color: black;
   border-style: solid;
   border-radius: 10% 20% 0 0 / 40% 100%;
-  height: 6vmax;
+  height: 100%;
   background-color: #36393f;
   z-index: 3;
 }
@@ -65,7 +65,7 @@
   border-color: black;
   border-style: solid;
   border-radius: 20% 10% 0 0 / 100% 40%;
-  height: 6vmax;
+  /* height: 6.5vmax; */
   margin-left: -5%;
   z-index: 2;
   background-color: #2e2f32;
@@ -83,16 +83,22 @@
   font-size: 20px;
 }
 
-#renderedTracksDiv{
-  padding: 2px 0 2px 0;
-  margin-left: 10%;
-  width: 80%;
-  height: 250px;
-  overflow-y: scroll;
+#searchDiv{
   background-color: #36393f;
   border-width: 0 1px 1px 1px;
   border-color: black;
   border-style: solid;
+  border-radius: 0 0 20px 20px;
+}
+
+#renderedTracksDiv{
+  display: none;
+  padding: 0px 0 0px 0;
+  /* margin-left: 5%; */
+  width: 100%;
+  height: 250px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #renderedTracksDiv::-webkit-scrollbar-track {
@@ -108,10 +114,10 @@
 }
 
 .songOption{
-  margin: 2px 0 2px 0;
+  margin: 0px 0 0px 0;
   display: grid;
   grid-template-columns: 1fr 2fr;
-  width: 95%;
+  /* width: 100%; */
   height: 7vmax;
   margin-left: 2.5%;
   background-color: #4c4d4e;
@@ -144,9 +150,8 @@
 .songOptionInfo p {
   margin-top: 0;
   vertical-align: middle;
-  width: fit-content;
   line-height: calc(1.5 * 1.6vmax);
-  font-size: 0.8vw;
+  font-size: 1.2vw;
   white-space: nowrap;
   margin-bottom: 4%;
 }
@@ -170,12 +175,12 @@
 }
 
 #formDiv{
-  height: 55vmin;
+  /* min-height: 100%; */
   margin-top: 5vmax;
 }
 
 #songDiv{
-  margin-top: 2.5vmax;
+  padding-top: 2.5vmax;
 }
 
 #artistDiv{
@@ -292,12 +297,13 @@
   #gridContainer{
     height: 50vmin;
   }
-  
-  #logoDiv{
-    height: 45vmin;
+
+  #renderedTracksDiv{
+    width: 90%;
+    margin-left: 5%;
   }
 
-  #formDiv{
+  #logoDiv{
     height: 45vmin;
   }
   
@@ -323,8 +329,8 @@
   }
 
   #customTag{
-    margin-top: 11%;
-    font-size: 20px;
+    margin-top: 10%;
+    font-size: 21px;
   }
 }
 
@@ -341,7 +347,7 @@
   }
 
   #logoDiv{
-    margin-top: -4vmax;
+    margin-top: 0;
     height: 40vmin;
   }
 
@@ -351,8 +357,7 @@
   }
 
   #formDiv{
-    margin-top: -1vmax;
-    height: 40vmin;
+    margin-top: -2vmax;
   }
 
   #songDiv{
@@ -429,9 +434,14 @@
     margin-left: -15%;
   }
 
+  #spotifyImage{
+    width: 55%;
+    margin-top: 6%;
+  }
+
   #customTag{
-    margin-top: 10%;
-    font-size: 20px;
+    margin-top: 9%;
+    font-size: 22px;
   }
 }
 
@@ -447,10 +457,6 @@
 
   .App-logo {
     height: 45vmin;
-  }
-
-  #formDiv{
-    height: 30vmax;
   }
 
   #artistDiv{
@@ -506,7 +512,7 @@
   }
 
   #customTag{
-    margin-top: 6%;
+    margin-top: 8%;
     font-size: 18px;
   }
 }
@@ -527,38 +533,39 @@
     }
 
     .App-logo {
-      height:65vmin;
+      height: 65vmin;
     }
 
     #formDiv{
-      margin-top: -4.5vmax;
-      height: 65vmin;
+      margin-top: -1.5vmax;
+      margin-left: 0;
+      width: 100%;
     }
 
     .requestLabel input:not(:-moz-placeholder-shown) + .label {
       color: #0077FFCF;
-      transform: translate3d(0, -4.2vmax, 0) scale(0.75);
+      transform: translate3d(0, -3.3vmax, 0) scale(0.75);
     }
     .requestLabel input:not(:-ms-input-placeholder) + .label {
       color: #0077FFCF;
-      transform: translate3d(0, -4.2vmax, 0) scale(0.75);
+      transform: translate3d(0, -3.3vmax, 0) scale(0.75);
     }
     .requestLabel input:not(:placeholder-shown) + .label {
       color: #0077FFCF;
-      transform: translate3d(0, -4.2vmax, 0) scale(0.75);
+      transform: translate3d(0, -3.3vmax, 0) scale(0.75);
     }
     .requestLabel .label {
-      font-size: 2.2vmax;
+      font-size: 2vmax;
     }
 
     .requestLabel input:focus + .label {
       color: #2e8cf7;
-      font-size: 2.8vmax;
-      transform: translate3d(0, -6vmax, 0) scale(0.75);
+      font-size: 2.4vmax;
+      transform: translate3d(0, -5.1vmax, 0) scale(0.75);
     }
 
     .requestLabel input {
-      font-size: 3vmax;
+      font-size: 2.4vmax;
       width: 70%;
       height: 5.5vmax;
     }
@@ -566,16 +573,17 @@
     #submitBtn{
       width: 180px;
       font-size: 20px;
+      padding-bottom: 5px;
     }
 
     .songOptionInfo p {
       height: 40%;
-      font-size: 2.3vw;
+      font-size: 2.4vw;
       line-height: calc(1.5 * 2.3vw);
     }
 
     #customTag{
-      margin-top: 7%;
-      font-size: 20px;
+      margin-top: 7.6%;
+      font-size: 2vmax;
     }
 }

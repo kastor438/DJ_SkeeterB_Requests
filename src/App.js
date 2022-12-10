@@ -110,7 +110,7 @@ function App() {
         spotifyTab.style.zIndex = "3";
         // spotifyTab.style.borderWidth = "1px 1px 0 1px";
         spotifyTab.children[0].style.width = "60%";
-        spotifyTab.children[0].style.marginTop = "7%";
+        spotifyTab.children[0].style.marginTop = "5%";
 
         var customTab = document.getElementById("customTab");
         customTab.style.backgroundColor = "#2e2f32";
@@ -141,7 +141,6 @@ function App() {
     }
 
     function SwitchToCustom(e){
-      console.log("Heh");
       if(!customActiveRef.current){
         let screenWidth = window.innerWidth;
         console.log(screenWidth);
@@ -150,7 +149,7 @@ function App() {
         spotifyTab.style.zIndex = "2";
         // spotifyTab.style.borderWidth = "1px";
         spotifyTab.children[0].style.width = "40%";
-        spotifyTab.children[0].style.marginTop = "10%";
+        spotifyTab.children[0].style.marginTop = "9%";
 
         var customTab = document.getElementById("customTab");
         customTab.style.backgroundColor = "#36393f";
@@ -204,19 +203,24 @@ function App() {
         SetRenderedTracks([]);
       }
 
+      document.getElementById("renderedTracksDiv").style.overflowY = "hidden";
+
       if(inputSongNameRef.current.length <= 1){
+        document.getElementById("renderedTracksDiv").style.display = "none";
         return;
       }
       else{
         for(var i = 0; i < inputSongNameRef.current.length; i++){
-            if(invalidChars.includes(inputSongNameRef.current.substring(i, i+1))){
-                return;
-            }
+          if(invalidChars.includes(inputSongNameRef.current.substring(i, i+1))){
+            document.getElementById("renderedTracksDiv").style.display = "none";
+            return;
+          }
         }
         for(i = 0; i < inputArtistNameRef.current.length; i++){
-            if(invalidChars.includes(inputArtistNameRef.current.substring(i, i+1))){
-                return;
-            }
+          if(invalidChars.includes(inputArtistNameRef.current.substring(i, i+1))){
+            document.getElementById("renderedTracksDiv").style.display = "none";
+            return;
+          }
         }
       }
       if (hasListener === false) {
@@ -364,6 +368,8 @@ function App() {
               break;
           }
           SetRenderedTracks(tracks);
+          document.getElementById("renderedTracksDiv").style.display = "block";
+          document.getElementById("renderedTracksDiv").style.overflowY = "scroll";
         });        
     }
 
@@ -455,60 +461,62 @@ function App() {
         }
     }
 
-    return (
-        <div>
-            <div className="App">
-                <header className="App-header">
-                    <h2 id='pageHeader'>Song Requests</h2>
-                    <div id='gridContainer'>
-                        <div id='logoDiv'>
-                            <div id="imageEffects"></div>
-                            <img src={logo} className="App-logo" alt="logo" />
-                        </div>
-                        <div id='formDiv'>
-                            <div id='songDiv'>
-                                <label htmlFor='songNameInput' className='requestLabel'>
-                                    <input id='songNameInput' className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateSongName(e.target.value)}/>
-                                    <span className='label'>Song</span>
-                                    <span className='focus-bg'></span>
-                                </label>
-                            </div>
-                            <div id='artistDiv'>
-                                <label htmlFor='artistNameInput' className='requestLabel'>
-                                    <input id='artistNameInput' className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateArtistName(e.target.value)}/>
-                                    <span className='label'>Artist</span>
-                                    <span className='focus-bg'></span>
-                                </label>
-                            </div>
-                            <div id='songSearchDiv'>
-                                <div id='songSearchTabs'>
-                                    <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
-                                        <img id='spotifyImage' src='SpotifyLogo.png'/>
-                                    </div>
-                                    <div id='customTab' onClick={e => SwitchToCustom(e)}>
-                                        <h4 id='customTag'>Custom</h4>
-                                    </div>
-                                </div>
-                                <div id='renderedTracksDiv'>
-                                    {renderedTracksRef.current}
-                                </div>
-                            </div>
-                            <div>
-                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 400 }} title="Must provide a song and artist name." placement="right-start">
-                                    <span>
-                                        <button type='submit' id='submitBtn' disabled='disabled'>Submit Request</button>
-                                    </span>
-                                </Tooltip>
-                            </div>
-                            <div>
-                                <h4 id='submissionText'></h4>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+  return (
+    <div>
+      <div className="App">
+        <header className="App-header">
+        <h2 id='pageHeader'>Song Requests</h2>
+          <div id='gridContainer'>
+            <div id='logoDiv'>
+              <div id="imageEffects"></div>
+              <img src={logo} className="App-logo" alt="logo" />
             </div>
-        </div>
-    );
+            <div id='formDiv'>
+              <div id='songSearchTabs'>
+                <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
+                  <img id='spotifyImage' src='SpotifyLogo.png'/>
+                </div>
+                <div id='customTab' onClick={e => SwitchToCustom(e)}>
+                  <h4 id='customTag'>Custom</h4>
+                </div>
+              </div>
+              <div id='searchDiv'>
+                <div id='songDiv'>
+                  <label htmlFor='songNameInput' className='requestLabel'>
+                    <input id='songNameInput' className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateSongName(e.target.value)}/>
+                    <span className='label'>Song</span>
+                    <span className='focus-bg'></span>
+                  </label>
+                </div>
+                <div id='artistDiv'>
+                  <label htmlFor='artistNameInput' className='requestLabel'>
+                    <input id='artistNameInput' className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateArtistName(e.target.value)}/>
+                    <span className='label'>Artist</span>
+                    <span className='focus-bg'></span>
+                  </label>
+                </div>
+                <div id='tracksDiv'>
+                  <div id='renderedTracksDiv'>
+                    {renderedTracksRef.current}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 300 }} title="Must provide a song and artist name." placement="top-start">
+                    <span>
+                      <button type='submit' id='submitBtn' disabled='disabled'>Submit Request</button>
+                    </span>
+                </Tooltip>
+              </div>
+              <div>
+                <h4 id='submissionText'></h4>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+    </div>
+  );
 }
 
 export default App;
