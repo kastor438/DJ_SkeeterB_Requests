@@ -42,6 +42,7 @@ function App() {
     const [artistName, SetArtistName] = useState('');
     const [spotifyActive, SetSpotifyActive] = useState(true);
     const [customActive, SetCustomActive] = useState(false);
+    const [trackStats, SetTrackStats] = useState(false);
 
     const inputSongNameRef = useRef("");
     inputSongNameRef.current = inputSongName;
@@ -67,8 +68,14 @@ function App() {
     const artistNameRef = useRef("");
     artistNameRef.current = artistName;
 
+    const trackStatsRef = useRef(false);
+    trackStatsRef.current = trackStats;
     useEffect(() => {
-        InitializeSpotify();
+      var currentUrl = window.location.href;
+      if(currentUrl.includes("dj")){
+        SetTrackStats(true);
+      }
+      InitializeSpotify();
     }, []);
 
     useEffect(() => {
@@ -312,6 +319,40 @@ function App() {
       }).catch((error) => {
         console.error(error);
       });
+
+      if(trackStatsRef.current){
+        get(child(dbRef, 'SongStatistics/')).then((snapshot) => {
+          const db = getDatabase();
+          var songKey = -1;
+          var newKeyIndex = 0;
+          var statsSong;
+          if (snapshot.exists()) {  
+            Object.entries(snapshot.val()).forEach(([key, value]) => {
+              var currKey = parseInt(key);
+              if(value.SongName == songName){
+                songKey = currKey;
+                statsSong = value;
+              }
+              else if(newKeyIndex <= currKey){
+                newKeyIndex = currKey+1;
+              }
+            });
+          }
+
+          if(songKey > -1){
+            set(ref(db, 'SongStatistics/' + songKey + '/RequestCount'), (statsSong.RequestCount+1));
+          }
+          else{
+            set(ref(db, 'SongStatistics/' + newKeyIndex + '/'), {
+              SongName: songName,
+              ArtistName: artistName,
+              RequestCount: 1
+            });
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
     }
 
     async function FetchSpotifySongs(){
