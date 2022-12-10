@@ -109,8 +109,13 @@ function App() {
         spotifyTab.style.backgroundColor = "#36393f";
         spotifyTab.style.zIndex = "3";
         // spotifyTab.style.borderWidth = "1px 1px 0 1px";
-        spotifyTab.children[0].style.width = "60%";
-        spotifyTab.children[0].style.marginTop = "5%";
+        spotifyTab.children[0].style.width = "55%";
+        spotifyTab.children[0].style.marginTop = "8%";
+
+        if(screenWidth <= 660){
+          spotifyTab.children[0].style.marginTop = "6%";
+          spotifyTab.children[0].style.width = "50%";
+        }
 
         var customTab = document.getElementById("customTab");
         customTab.style.backgroundColor = "#2e2f32";
@@ -132,6 +137,7 @@ function App() {
         //   customTab.children[0].style.marginTop = "0%";
         //   customTab.children[0].style.fontSize = "16px";
         // }
+        
 
         document.getElementById("renderedTracksDiv").style.height = "250px";
 

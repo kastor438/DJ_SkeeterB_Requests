@@ -65,15 +65,15 @@
   border-color: black;
   border-style: solid;
   border-radius: 20% 10% 0 0 / 100% 40%;
-  /* height: 6.5vmax; */
+  height: 100%;
   margin-left: -5%;
   z-index: 2;
   background-color: #2e2f32;
 }
 
 #spotifyImage{
-  width: 60%;
-  margin-top: 7%;
+  width: 55%;
+  margin-top: 8%;
 }
 
 #customTag{
@@ -89,6 +89,7 @@
   border-color: black;
   border-style: solid;
   border-radius: 0 0 20px 20px;
+  padding-bottom: 2%;
 }
 
 #renderedTracksDiv{
@@ -460,7 +461,7 @@
   }
 
   #artistDiv{
-    margin-top: 3.5vmax;
+    margin-top: 1vmax;
   }
 
   .requestLabel .label {
@@ -482,6 +483,7 @@
     box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.3);
     color: rgb(255, 255, 255);
     transition: all 0.15s ease;
+    margin-top: 1vmax;
   }
 
   .requestLabel input:not(:-moz-placeholder-shown) + .label {
@@ -520,26 +522,27 @@
 @media only screen and (max-width: 660px){
 
     #pageHeader{
-      font-size: 5.5vmax;
+      font-size: 4.6vmax;
     }
 
     #gridContainer{
-      height: 135vmin
+      height: 115vmin
     }
 
     #logoDiv{
       margin-top: 1vmax;
-      height: 65vmin;
+      height: 50vmin;
     }
 
     .App-logo {
-      height: 65vmin;
+      height: 50vmin;
     }
 
     #formDiv{
       margin-top: -1.5vmax;
-      margin-left: 0;
-      width: 100%;
+      margin-left: 5%;
+      width: 90%;
+      padding-bottom: 10vh;
     }
 
     .requestLabel input:not(:-moz-placeholder-shown) + .label {
@@ -555,19 +558,19 @@
       transform: translate3d(0, -3.3vmax, 0) scale(0.75);
     }
     .requestLabel .label {
-      font-size: 2vmax;
+      font-size: 1.6vmax;
     }
 
     .requestLabel input:focus + .label {
       color: #2e8cf7;
       font-size: 2.4vmax;
-      transform: translate3d(0, -5.1vmax, 0) scale(0.75);
+      transform: translate3d(0, -4.2vmax, 0) scale(0.75);
     }
 
     .requestLabel input {
-      font-size: 2.4vmax;
+      font-size: 2.2vmax;
       width: 70%;
-      height: 5.5vmax;
+      height: 3.2vmax;
     }
 
     #submitBtn{
@@ -576,14 +579,36 @@
       padding-bottom: 5px;
     }
 
-    .songOptionInfo p {
+    #renderedTracksDiv{
+      margin-left: 2%;
+      width: 95%;
+    }
+
+    .songOption{
       height: 40%;
-      font-size: 2.4vw;
+    }
+
+    .songOptionImage{
+      width: 80%;
+      height: 90%;
+      margin: 2.5% 2%;
+    }
+
+    .songOptionInfo{
+      margin-top: 10%;
+      height: 9vmax;
+    }
+
+    .songOptionInfo p {
+      margin-left: 10%;
+      height: 40%;
+      font-size: 90%;
       line-height: calc(1.5 * 2.3vw);
     }
 
     #customTag{
-      margin-top: 7.6%;
-      font-size: 2vmax;
+      margin-top: 10%;
+      font-size: 1.7vmax;
+      border: 1px solid rebeccapurple;
     }
 }
