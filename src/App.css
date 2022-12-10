@@ -44,7 +44,7 @@
 
 #songSearchTabs{
   display: grid;
-  grid-template-rows: 1fr;
+  /* grid-template-rows: 1fr; */
   grid-template-columns: 1fr 1fr;
   width: 100%;
   /* margin-left: 5%; */
@@ -97,7 +97,7 @@
   padding: 0px 0 0px 0;
   /* margin-left: 5%; */
   width: 100%;
-  height: 250px;
+  height: 200px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -461,7 +461,7 @@
   }
 
   #artistDiv{
-    margin-top: 1vmax;
+    margin-top: 1.8vmax;
   }
 
   .requestLabel .label {
@@ -522,7 +522,8 @@
 @media only screen and (max-width: 660px){
 
     #pageHeader{
-      font-size: 4.6vmax;
+      font-size: 4vmax;
+      margin-top: 10px;
     }
 
     #gridContainer{
@@ -563,7 +564,7 @@
 
     .requestLabel input:focus + .label {
       color: #2e8cf7;
-      font-size: 2.4vmax;
+      font-size: 2.3vmax;
       transform: translate3d(0, -4.2vmax, 0) scale(0.75);
     }
 
@@ -577,11 +578,13 @@
       width: 180px;
       font-size: 20px;
       padding-bottom: 5px;
+      margin-top: 1.5vmax;
     }
 
     #renderedTracksDiv{
       margin-left: 2%;
       width: 95%;
+      height: 200px;
     }
 
     .songOption{
@@ -589,25 +592,36 @@
     }
 
     .songOptionImage{
-      width: 80%;
-      height: 90%;
+      width: 65%;
+      height: 85%;
       margin: 2.5% 2%;
     }
 
     .songOptionInfo{
-      margin-top: 10%;
-      height: 9vmax;
+      margin-left: -15%;
+      margin-top: 4%;
+      height: 70%;
     }
 
     .songOptionInfo p {
       margin-left: 10%;
       height: 40%;
+      margin-top: 3%;
       font-size: 90%;
-      line-height: calc(1.5 * 2.3vw);
+      line-height: 100%;
+    }
+
+    #spotifyImage{
+      width: 50%;
+      margin-top: 6%;
     }
 
     #customTag{
-      margin-top: 10%;
+      margin-top: 7%;
       font-size: 1.7vmax;
+    }
+
+    #spotifyTab, #customTab{
+      height: 100%;
     }
 }
