@@ -305,8 +305,9 @@ function App() {
           else{
             const db = getDatabase();
             set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
-            document.getElementById('submissionText').innerHTML = "Request Already in Pool."
+            document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
           }
+          setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
         } 
         else {
           const db = getDatabase();
