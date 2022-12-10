@@ -511,7 +511,7 @@ function App() {
                     </span>
                 </Tooltip>
               </div>
-              <div>
+              <div id='submissionTextDiv'>
                 <h4 id='submissionText'></h4>
               </div>
             </div>

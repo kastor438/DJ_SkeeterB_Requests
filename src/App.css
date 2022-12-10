@@ -619,9 +619,11 @@
     #customTag{
       margin-top: 7%;
       font-size: 1.7vmax;
+      height: 0%;
+      line-height: 100%;
     }
 
-    #spotifyTab, #customTab{
-      height: 100%;
+    #submissionTextDiv{
+      margin-top: -4%;
     }
 }
