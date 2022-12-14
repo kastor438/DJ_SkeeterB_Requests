@@ -520,110 +520,112 @@
 }
 
 @media only screen and (max-width: 660px){
+  .App {
+    overflow: hidden;
+  }
 
-    #pageHeader{
-      font-size: 4vmax;
-      margin-top: 10px;
-    }
+  #pageHeader{
+    font-size: 4vmax;
+    margin-top: 10px;
+  }
 
-    #gridContainer{
-      height: 115vmin
-    }
+  #gridContainer{
+    height: 115vmin
+  }
 
-    #logoDiv{
-      margin-top: 1vmax;
-      height: 50vmin;
-    }
+  #logoDiv{
+    margin-top: 1vmax;
+    height: 50vmin;
+  }
 
-    .App-logo {
-      height: 50vmin;
-    }
+  .App-logo {
+    height: 50vmin;
+  }
 
-    #formDiv{
-      margin-top: -1.5vmax;
-      margin-left: 5%;
-      width: 90%;
-      padding-bottom: 10vh;
-    }
+  #formDiv{
+    margin-top: -1.5vmax;
+    margin-left: 5%;
+    width: 90%;
+    padding-bottom: 10vh;
+  }
 
-    .requestLabel input:not(:-moz-placeholder-shown) + .label {
-      color: #0077FFCF;
-      transform: translate3d(0, -3.3vmax, 0) scale(0.75);
-    }
-    .requestLabel input:not(:-ms-input-placeholder) + .label {
-      color: #0077FFCF;
-      transform: translate3d(0, -3.3vmax, 0) scale(0.75);
-    }
-    .requestLabel input:not(:placeholder-shown) + .label {
-      color: #0077FFCF;
-      transform: translate3d(0, -3.3vmax, 0) scale(0.75);
-    }
-    .requestLabel .label {
-      font-size: 1.6vmax;
-    }
+  .requestLabel input:not(:-moz-placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -3.3vmax, 0) scale(0.75);
+  }
+  .requestLabel input:not(:-ms-input-placeholder) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -3.3vmax, 0) scale(0.75);
+  }
+  .requestLabel input:not(:placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -3.3vmax, 0) scale(0.75);
+  }
+  .requestLabel .label {
+    font-size: 1.6vmax;
+  }
 
-    .requestLabel input:focus + .label {
-      color: #2e8cf7;
-      font-size: 2.3vmax;
-      transform: translate3d(0, -4.2vmax, 0) scale(0.75);
-    }
+  .requestLabel input:focus + .label {
+    color: #2e8cf7;
+    font-size: 2.3vmax;
+    transform: translate3d(0, -4.2vmax, 0) scale(0.75);
+  }
 
-    .requestLabel input {
-      font-size: 2.2vmax;
-      width: 70%;
-      height: 3.2vmax;
-    }
+  .requestLabel input {
+    font-size: 2.2vmax;
+    width: 70%;
+    height: 3.2vmax;
+  }
 
-    #submitBtn{
-      width: 180px;
-      font-size: 20px;
-      padding-bottom: 5px;
-      margin-top: 1.5vmax;
-    }
+  #submitBtn{
+    width: 180px;
+    font-size: 20px;
+    padding-bottom: 5px;
+    margin-top: 1.5vmax;
+  }
 
-    #renderedTracksDiv{
-      margin-left: 2%;
-      width: 95%;
-      height: 200px;
-    }
+  #renderedTracksDiv{
+    margin-left: 2%;
+    width: 95%;
+    height: 200px;
+  }
 
-    .songOption{
-      height: 40%;
-    }
+  .songOption{
+    height: 40%;
+  }
 
-    .songOptionImage{
-      width: 65%;
-      height: 85%;
-      margin: 2.5% 2%;
-    }
+  .songOptionImage{
+    width: 65%;
+    height: 85%;
+    margin: 2.5% 2%;
+  }
 
-    .songOptionInfo{
-      margin-left: -15%;
-      margin-top: 4%;
-      height: 70%;
-    }
+  .songOptionInfo{
+    margin-left: -15%;
+    margin-top: 4%;
+    height: 70%;
+  }
 
-    .songOptionInfo p {
-      margin-left: 10%;
-      height: 40%;
-      margin-top: 3%;
-      font-size: 90%;
-      line-height: 100%;
-    }
+  .songOptionInfo p {
+    margin-left: 10%;
+    height: 40%;
+    margin-top: 3%;
+    font-size: 90%;
+    line-height: 100%;
+  }
 
-    #spotifyImage{
-      width: 50%;
-      margin-top: 6%;
-    }
+  #spotifyImage{
+    width: 50%;
+    margin-top: 6%;
+  }
 
-    #customTag{
-      margin-top: 7%;
-      font-size: 1.7vmax;
-      height: 0%;
-      line-height: 100%;
-    }
+  #customTag{
+    margin-top: 7%;
+    font-size: 1.7vmax;
+    line-height: 100%;
+  }
 
-    #submissionTextDiv{
-      margin-top: -6%;
-    }
+  #submissionTextDiv{
+    margin-top: -6%;
+  }
 }

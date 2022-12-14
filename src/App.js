@@ -40,6 +40,7 @@ function App() {
     const [renderedTracks, SetRenderedTracks] = useState([]);
     const [trackName, SetTrackName] = useState('');
     const [artistName, SetArtistName] = useState('');
+    const [trackSpotifyURL, SetTrackSpotifyURL] = useState("");
     const [spotifyActive, SetSpotifyActive] = useState(true);
     const [customActive, SetCustomActive] = useState(false);
     const [trackStats, SetTrackStats] = useState(false);
@@ -67,6 +68,9 @@ function App() {
 
     const artistNameRef = useRef("");
     artistNameRef.current = artistName;
+
+    const trackSpotifyURLRef = useRef("");
+    trackSpotifyURLRef.current = trackSpotifyURL;
 
     const trackStatsRef = useRef(false);
     trackStatsRef.current = trackStats;
@@ -298,7 +302,8 @@ function App() {
             set(ref(db, 'Requests/' + nextSongID + '/'), {
               SongName: songName,
               ArtistName: artistName,
-              RequestCount: 1
+              RequestCount: 1,
+              SpotifyURL: trackSpotifyURLRef.current
             });
             document.getElementById('submissionText').innerHTML = "Request Sent!";
           }
@@ -314,7 +319,8 @@ function App() {
           set(ref(db, 'Requests/1/'), {
             SongName: songName,
             ArtistName: artistName,
-            RequestCount: 1
+            RequestCount: 1,
+            SpotifyURL: trackSpotifyURLRef.current.toString()
           });
         }
       }).catch((error) => {
@@ -347,7 +353,8 @@ function App() {
             set(ref(db, 'SongStatistics/' + newKeyIndex + '/'), {
               SongName: songName,
               ArtistName: artistName,
-              RequestCount: 1
+              RequestCount: 1,
+              SpotifyURL: trackSpotifyURLRef.current.toString()
             });
           }
         }).catch((error) => {
@@ -403,7 +410,7 @@ function App() {
               var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
                 React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
                 React.createElement('div', {className : 'songOptionInfo'},
-                  React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
+                  React.createElement('p', {id : 'trackName' + i, 'data-spotifyurl' : searchedTracks[i].external_urls.spotify}, searchedTracks[i].name),
                   React.createElement('p', {id : 'artistName' + i}, artistNames)
                 )
               );
@@ -497,6 +504,8 @@ function App() {
             element.style.color = "red";    
             SetTrackName(element.children[1].children[0].innerHTML);
             SetArtistName(element.children[1].children[1].innerHTML);
+            SetTrackSpotifyURL(element.children[1].children[0].dataset.spotifyurl);
+            console.log(trackSpotifyURLRef.current + " " + element.children[1].children[0].dataset.spotifyurl);
             SetCanSubmit(true);
         }
         else{
