@@ -1,5 +1,6 @@
 import logo from './skeeterB-Logo.png';
 import './App.css';
+import './RequestLineup.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -76,6 +77,13 @@ function App() {
     trackStatsRef.current = trackStats;
     useEffect(() => {
       var currentUrl = window.location.href;
+      var requestSongButton = document.getElementById("navRequestSongButton");
+      requestSongButton.style.borderBottom = "1px solid white";
+      requestSongButton.style.color = "#b1afaf";
+
+      var lineupButton = document.getElementById("navLineupButton");
+      lineupButton.style.borderBottom = "none";
+      lineupButton.style.color = "white";
       if(currentUrl.includes("dj")){
         SetTrackStats(true);
       }
@@ -111,6 +119,30 @@ function App() {
 
     function InitializeAppleMusic(){
 
+    }
+
+    function SwitchToRequestSong(){
+      var requestSongButton = document.getElementById("navRequestSongButton");
+      requestSongButton.style.borderBottom = "1px solid white";
+      requestSongButton.style.color = "#b1afaf";
+      document.getElementById("requestGridContainer").style.display = "block";
+
+      var lineupButton = document.getElementById("navLineupButton");
+      lineupButton.style.borderBottom = "none";
+      lineupButton.style.color = "white";
+      document.getElementById("lineupGridContainer").style.display = "none"
+    }
+
+    function SwitchToCurrentLineup(){
+      var requestSongButton = document.getElementById("navRequestSongButton");
+      requestSongButton.style.borderBottom = "none";
+      requestSongButton.style.color = "white";
+      document.getElementById("requestGridContainer").style.display = "none";
+
+      var lineupButton = document.getElementById("navLineupButton");
+      lineupButton.style.borderBottom = "1px solid white";
+      lineupButton.style.color = "#b1afaf";
+      document.getElementById("lineupGridContainer").style.display = "block";
     }
 
     function SwitchToSpotify(e){
@@ -156,8 +188,6 @@ function App() {
 
     function SwitchToCustom(e){
       if(!customActiveRef.current){
-        let screenWidth = window.innerWidth;
-        console.log(screenWidth);
         var spotifyTab = document.getElementById("spotifyTab");
         spotifyTab.style.backgroundColor = "#2e2f32";
         spotifyTab.style.zIndex = "2";
@@ -519,8 +549,14 @@ function App() {
     <div>
       <div className="App">
         <header className="App-header">
-        <h2 id='pageHeader'>Song Requests</h2>
-          <div id='gridContainer'>
+        {/* <h2 id='pageHeader'>Song Requests</h2> */}
+          <nav id='navBar'>
+            <ul id='navBarList'>
+              <li id='requestSongOption' className='navBarOption'><button id='navRequestSongButton' onClick={SwitchToRequestSong}>Request A Song</button></li>
+              <li id='lineupOption' className='navBarOption'><button id='navLineupButton' onClick={SwitchToCurrentLineup}>Current Lineup</button></li>
+            </ul>
+          </nav>
+          <div id='requestGridContainer'>
             <div id='logoDiv'>
               <div id="imageEffects"></div>
               <img src={logo} className="App-logo" alt="logo" />
@@ -566,6 +602,9 @@ function App() {
                 <h4 id='submissionText'></h4>
               </div>
             </div>
+          </div>
+          <div id='lineupGridContainer'>
+            <p>merp</p>
           </div>
         </header>
       </div>

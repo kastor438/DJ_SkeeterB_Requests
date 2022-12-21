@@ -31,10 +31,10 @@
 
 @keyframes App-logo-spin {
     from {
-        transform: rotate(0deg);
+        /* transform: rotate(0deg); */
     }
     to {
-        transform: rotate(360deg);
+        /* transform: rotate(360deg); */
     }
 }
 
@@ -163,7 +163,7 @@
   margin-right: 0;
 }
 
-#gridContainer{
+#requestGridContainer{
   margin-top: -7vmax;
   display: grid;
   width: 70vmax;
@@ -295,7 +295,7 @@
 }
 
 @media only screen and (max-width: 1465px){
-  #gridContainer{
+  #requestGridContainer{
     height: 50vmin;
   }
 
@@ -340,7 +340,7 @@
     justify-content: start;
   }
 
-  #gridContainer{
+  #requestGridContainer{
     display: grid;
     width: 50vmax;
     height: 40vmin;
@@ -529,12 +529,59 @@
     margin-top: 10px;
   }
 
-  #gridContainer{
+  #navBar{
+    /* margin-left: 7.5vw; */
+    width: 100vw;
+    z-index: 100;
+  }
+
+  #navBarList{
+    margin-left: -7.5%;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* border: 1px solid red; */
+    line-height: 200%;
+  }
+
+  #requestSongOption{
+    padding-right: 15%;
+    
+    border-width: 0 1px 0 0;
+    border-color: white;
+    border-style: solid;
+  }
+
+  #requestSongOption button{
+    float: right;
+  }
+
+  #lineupOption{
+    padding-left: 10%;
+  }
+
+  .navBarOption{
+    /* width: fit-content; */
+    /* border: 5px solid black; */
+  }
+
+  .navBarOption button{
+    /* text-decoration: none; */
+    
+    color: white;
+    display: block;
+    font-size: 2.2vmax;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+  }
+
+  #requestGridContainer{
     height: 115vmin
   }
 
   #logoDiv{
-    margin-top: 1vmax;
+    margin-top: 2.8vmax;
     height: 50vmin;
   }
 
