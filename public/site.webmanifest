@@ -1,0 +1,14 @@
+{
+    "name": "DJ SkeeterB",
+    "short_name": "DJ SkeeterB",
+    "icons": [
+        {
+            "src": "/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#63a5c9",
+    "background_color": "#63a5c9",
+    "display": "standalone"
+}
