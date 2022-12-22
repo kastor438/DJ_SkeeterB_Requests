@@ -38,6 +38,67 @@
   }
 }
 
+#navBar{
+  /* margin-left: 7.5vw; */
+  width: 100vw;
+  z-index: 100;
+}
+
+#logoTitleDiv{
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  width: 60%;
+  height: fit-content;
+  line-height: 200%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #navBarLogo {
+    animation: App-logo-spin infinite 10s linear;
+  }
+}
+
+#navBarList{
+  margin-left: -7.5%;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+#requestSongOption{
+  padding-right: 15%;
+  
+  border-width: 0 1px 0 0;
+  border-color: rgb(255, 255, 255);
+  border-style: solid;
+}
+
+#requestSongOption button{
+  float: right;
+}
+
+#lineupOption{
+  padding-left: 10%;
+}
+
+.navBarOption button{
+  color: white;
+  display: block;
+  font-size: 2.2vmax;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+}
+
+.navBarOption button{
+  color: white;
+  display: block;
+  font-size: 2.2vmax;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+}
+
 #tracksDiv{
   margin-top: 2.5vmax;
 }
@@ -94,7 +155,7 @@
 
 #renderedTracksDiv{
   display: none;
-  padding: 0px 0 0px 0;
+  padding: 0 1%;
   /* margin-left: 5%; */
   width: 100%;
   height: 200px;
@@ -524,30 +585,57 @@
     overflow: hidden;
   }
 
+  #logoTitleDiv{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    width: 100vw;
+    height: fit-content;
+    line-height: 200%;
+    /* border: 1px solid red; */
+  }
+
+  #navBarLogo{
+    width: 100%;
+    /* display: inline-block; */
+  }
+
   #pageHeader{
+    display: inline;
+    /* margin-left: 15%; */
     font-size: 4vmax;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    text-align: left;
   }
 
   #navBar{
     /* margin-left: 7.5vw; */
+    /* margin-top: -7%; */
     width: 100vw;
     z-index: 100;
   }
 
   #navBarList{
-    margin-left: -7.5%;
+    margin-top: 0%;
+    margin-left: -10%;
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* border: 1px solid red; */
     line-height: 200%;
+  }
+
+  .navBarOption button{
+    color: white;
+    display: block;
+    font-size: 2.2vmax;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
   }
 
   #requestSongOption{
     padding-right: 15%;
     
-    border-width: 0 1px 0 0;
+    border-width: 0 2px 0 0;
     border-color: white;
     border-style: solid;
   }
@@ -557,17 +645,10 @@
   }
 
   #lineupOption{
-    padding-left: 10%;
-  }
-
-  .navBarOption{
-    /* width: fit-content; */
-    /* border: 5px solid black; */
+    padding-left: 15%;
   }
 
   .navBarOption button{
-    /* text-decoration: none; */
-    
     color: white;
     display: block;
     font-size: 2.2vmax;
@@ -590,7 +671,7 @@
   }
 
   #formDiv{
-    margin-top: -1.5vmax;
+    margin-top: 6.5vmax;
     margin-left: 5%;
     width: 90%;
     padding-bottom: 10vh;

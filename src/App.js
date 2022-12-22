@@ -4,12 +4,13 @@ import './RequestLineup.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getDatabase, ref, set, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
-import { render } from '@testing-library/react';
-import { integerPropType } from '@mui/utils';
+import axios from 'axios';
+import { data } from 'jquery';
+
 require('upvote/lib/jquery.upvote.js');
 // require('upvote/lib/jquery.upvote.css');
 require('upvote/lib/images/sprites-stackoverflow.png');
@@ -36,6 +37,8 @@ const clientID = '822b607fa31944ca91f198b9f5e31613';
 const clientSecret = '4aae0065891841c197af65473ac00b49';
 
 function App() {
+  const [ip, setIP] = useState('');
+  const [sortChoice, SetSortChoice] = useState('Chronological');
   const [accessToken, SetAccessToken] = useState("");
   const [canSubmit, SetCanSubmit] = useState(false);
   const [invalidChars, SetInvalidChars] = useState('\'"\\/');
@@ -51,6 +54,16 @@ function App() {
   const [spotifyActive, SetSpotifyActive] = useState(true);
   const [customActive, SetCustomActive] = useState(false);
   const [trackStats, SetTrackStats] = useState(false);
+  const [requestSnapshot, SetRequestSnapShot] = useState({});
+
+  const ipRef = useRef("");
+  ipRef.current = ip;
+
+  const requestSnapshotRef = useRef({});
+  requestSnapshotRef.current = requestSnapshot;
+
+  const sortChoiceRef = useRef("Chronological");
+  sortChoiceRef.current = sortChoice;
 
   const inputSongNameRef = useRef("");
   inputSongNameRef.current = inputSongName;
@@ -88,6 +101,9 @@ function App() {
   const trackStatsRef = useRef(false);
   trackStatsRef.current = trackStats;
 
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
+
   useEffect(() => {
     var currentUrl = window.location.href;
     var requestSongButton = document.getElementById("navRequestSongButton");
@@ -103,13 +119,20 @@ function App() {
     if(currentUrl.includes("dj")){
       SetTrackStats(true);
     }
+
+    getData();
+
     InitializeSpotify();
 
-    const db = getDatabase();
-    const requestsRef = ref(db, 'Requests/');
+    const requestsRef = ref(db, '/');
     onValue(requestsRef, (snapshot) => {
       const data = snapshot.val();
-      UpdateLineup(data);
+      if(data){
+        if(!data.Requests || !requestSnapshotRef.current || !requestSnapshotRef.current.Requests || data.Requests != requestSnapshotRef.current.Requests){
+          SetRequestSnapShot(data);
+          UpdateLineup(data.Requests);
+        }
+      } 
     });
   }, []);
 
@@ -126,6 +149,20 @@ function App() {
     }
   }, [canSubmit]);
   
+  useEffect(() => {
+    if(requestSnapshotRef.current && requestSnapshotRef.current.Requests){
+      UpdateLineup(requestSnapshotRef.current.Requests);
+    }
+  }, [sortChoice])
+  const getData = async () => {
+    const res = await axios.get('https://geolocation-db.com/json/');
+    console.log(res.data);
+    var IPv4 = (res.data.IPv4).replace('.', '-');
+    var IPv4 = (IPv4).replace('.', '-');
+    var IPv4 = (IPv4).replace('.', '-');
+    setIP(IPv4);
+  }
+
   function InitializeSpotify(){
     var authParams = {
       method: 'POST',
@@ -320,7 +357,6 @@ function App() {
   }
 
   function AddRequest(songName, artistName){
-    const dbRef = ref(getDatabase());
     var nextSongID = 1;
     var songIDs = [];
     var songRequests = [];
@@ -351,7 +387,6 @@ function App() {
               nextSongID = parseInt(songIDs[i]) + 1;
             }
           }
-          const db = getDatabase();
           set(ref(db, 'Requests/' + nextSongID + '/'), {
             SongName: songName,
             ArtistName: artistName,
@@ -359,19 +394,17 @@ function App() {
             SpotifyURL: trackSpotifyURLRef.current,
             SpotifyImageURL: trackImageLinkRef.current.toString(),
             Upvotes: 0,
-            Downvotes: 0
+            Downvotes: 0,
+            Voters : {}
           });
           document.getElementById('submissionText').innerHTML = "Request Sent!";
         }
         else{
-          const db = getDatabase();
           set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
           document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
         }
-        setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
       } 
       else {
-        const db = getDatabase();
         set(ref(db, 'Requests/1/'), {
           SongName: songName,
           ArtistName: artistName,
@@ -379,17 +412,18 @@ function App() {
           SpotifyURL: trackSpotifyURLRef.current.toString(),
           SpotifyImageURL: trackImageLinkRef.current.toString(),
           Upvotes: 0,
-          Downvotes: 0
+          Downvotes: 0,
+          Voters : {}
         });
         document.getElementById('submissionText').innerHTML = "Request Sent!";
       }
+      setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
     }).catch((error) => {
       console.error(error);
     });
 
     if(trackStatsRef.current){
       get(child(dbRef, 'SongStatistics/')).then((snapshot) => {
-        const db = getDatabase();
         var songKey = -1;
         var newKeyIndex = 0;
         var statsSong;
@@ -580,54 +614,69 @@ function App() {
   function UpdateLineup(data){
     var lineup = [];
     SetLineupTracks([]);
+    var dataKeys = [];
     if(data != null){
-      for(var i = 0; i < data.length; i++){
-        if(data[i] != null){
-          // console.log(data[i]);
-          var storageVote = localStorage.getItem('voted' + i);
+      console.log("Data Before: " + data['1'].SongName);
+      data = SortLineup(data);
+      console.log("Data After: " + data['1'].SongName);
+      Object.entries(data).forEach(([key, value]) => {
+        if(value != null){
+          dataKeys.push(parseInt(key));
+          // console.log(value);
+          // Storage check if already voted.
+          var storageVote = localStorage.getItem('voted' + key);
           var upvoteOn = false;
           var downvoteOn = false;
           if(!storageVote){
-            storageVote = 'none';
+            // IP address check
+            if(value.Voters != null && value.Voters[ipRef.current]){
+              storageVote = value.Voters[ipRef.current];
+            }
+            else if(!storageVote){
+              storageVote = 'none';
+            }
           }
-          else if(storageVote == 'up'){
+
+          if(storageVote == 'up'){
             upvoteOn = true;
           }
           else if(storageVote == 'down'){
             downvoteOn = true;
           }
-          // console.log("Upvote: " + upvoteOn + ", downvote: " + downvoteOn);
 
           var track = 
-          React.createElement('div', {key : 'lineup' + i, id : 'lineup' + i, className : 'lineupSong'},
-            React.createElement('img', {className : 'lineupSongImage', src : data[i].SpotifyImageURL, alt : ''}),
+          React.createElement('div', {key : 'lineup' + key, id : 'lineup' + key, className : 'lineupSong'},
+            React.createElement('img', {className : 'lineupSongImage', src : value.SpotifyImageURL, alt : ''}),
             React.createElement('div', {className : 'lineupSongInfo'},
-              React.createElement('p', {id : 'lineupSongName' + i}, data[i].SongName),
-              React.createElement('p', {id : 'lineupArtistName' + i}, data[i].ArtistName),
-              React.createElement('p', {id : 'lineupRequestCount' + i}, "Requests: " + data[i].RequestCount.toString()),
+              React.createElement('p', {id : 'lineupSongName' + key}, value.SongName),
+              React.createElement('p', {id : 'lineupArtistName' + key}, value.ArtistName),
+              React.createElement('p', {id : 'lineupRequestCount' + key}, "Requests: " + value.RequestCount),
                 
             ),
-            React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : i, 'data-currvote' : storageVote},
-              React.createElement('a', {id : 'lineup' + i + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
-              React.createElement('span', {className : 'count lineupVoteCount'}, data[i].Upvotes - data[i].Downvotes),
-              React.createElement('a', {id : 'lineup' + i + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
+            React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : key, 'data-currvote' : storageVote},
+              React.createElement('a', {id : 'lineup' + key + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
+              React.createElement('span', {className : 'count lineupVoteCount'}, value.Upvotes - value.Downvotes),
+              React.createElement('a', {id : 'lineup' + key + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
             )
           );
           lineup.push(track);
         }
-        else if(localStorage.getItem('voted' + i)){
-          localStorage.removeItem('voted' + i);
+        else if(localStorage.getItem('voted' + key)){
+          localStorage.removeItem('voted' + key);
         }
-      }
+      });
     }
-
+    else{
+      var noLineup = 
+        React.createElement('p', {id : 'noLineup', key : 'noLineup'}, 'No requests yet!');
+        lineup.push(noLineup);
+    }
     // Cleaning Storage of upper song request IDs.
     const items = { ...localStorage };
-    console.log(items);
     Object.entries(items).forEach(([key, value]) => {
       if(key.includes('voted')){
         var id = parseInt(key.substring(5));
-        if(id >= data.length){
+        if(!dataKeys.includes(id)){
           localStorage.removeItem(key);
         }
       }
@@ -636,25 +685,7 @@ function App() {
     // console.log(lineupTracksRef.current);
   }
 
-  // function GetUser(){
-  //   var user = 1;
-  //   const dbRef = ref(getDatabase());
-  //   get(child(dbRef, 'Voters/')).then((snapshot) => {
-  //     if(snapshot != null){
-  //       Object.entries(snapshot.val()).forEach(([key, value]) => {
-          
-  //       });
-  //     }
-  //   }).catch((error) => {
-  //     console.error(error);
-  //   });
-  //   return user;
-  // }
-
   function UpvoteSong(element){
-    // var user = GetUser();
-    const db = getDatabase();
-    const dbRef = ref(getDatabase());
     var currUpvotes = 0;
     var parent = element.parentNode;
     var voteChange = 0;
@@ -663,20 +694,23 @@ function App() {
       element.classList.remove('upvote-on');
       parent.dataset.currvote = 'none';
       voteChange = -1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'none')
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
+      remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current));
     }
     else if(parent.dataset.currvote === 'down'){
       element.classList.add('upvote-on');
       parent.children[2].classList.remove('downvote-on');
       parent.dataset.currvote = 'up';
       voteChange = 2;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'up')
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
+      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'up');
     }
     else if(parent.dataset.currvote === 'none'){
       element.classList.add('upvote-on');
       parent.dataset.currvote = 'up';
       voteChange = 1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'up')
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
+      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'up');
     }
 
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
@@ -688,9 +722,6 @@ function App() {
   }
 
   function DownvoteSong(element){
-    // var user = GetUser();
-    const db = getDatabase();
-    const dbRef = ref(getDatabase());
     var currDownvotes = 0;
     var parent = element.parentNode;
     var voteChange = 0;
@@ -699,20 +730,23 @@ function App() {
       element.classList.remove('downvote-on');
       parent.dataset.currvote = 'none';
       voteChange = -1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'none')
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
+      remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current));
     }
     else if(parent.dataset.currvote === 'up'){
       element.classList.add('downvote-on');
       parent.children[0].classList.remove('upvote-on');
       parent.dataset.currvote = 'down';
       voteChange = 2;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'down')
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
+      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'down');
     }
     else if(parent.dataset.currvote === 'none'){
       element.classList.add('downvote-on');
       parent.dataset.currvote = 'down';
       voteChange = 1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'down')
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
+      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'down');
     }
 
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
@@ -723,22 +757,66 @@ function App() {
     });
   }
 
+  function SortMethodOnChange(e){
+    SetSortChoice(e.target.value);
+  }
+
+  function SortLineup(data){
+    const sortedData = {};
+    console.log(sortChoiceRef.current + " " + [...data])
+    if(sortChoiceRef.current != 'Chronological'){
+      if(sortChoiceRef.current == 'SongName'){
+        Object.entries(data).forEach(([key, value]) => {
+          if(sortedData != null){
+            Object.entries(sortedData).forEach(([sortedKey, sortedValue]) => {
+              console.log(sortedValue.SongName + " : " + value.SongName + " " + sortedValue.SongName)
+              if(sortedValue.SongName > value.SongName){
+                sortedData[key] = value;
+              }
+            });
+          }
+          else{
+            sortedData[key] = value;
+          }
+        });
+      }
+      else if(sortChoiceRef.current == 'ArtistName'){
+
+      }
+      // else if(sortChoiceRef.current.includes('Rev')){
+      //   console.log("we here")
+      //   if(sortChoiceRef.current.includes('SongName'))
+      //     data = [...data].sort((a, b) => a['SongName'] - b['SongName']);
+      //   else if(sortChoiceRef.current.includes('ArtistName'))
+      //     data = [...data].sort((a, b) => a['ArtistName'] - b['ArtistName']);
+      // }
+      // else if(sortChoiceRef.current == 'TopRated')
+      //   data = [...data].sort((a, b) => a['Upvotes'] + a['Downvotes'] - b['Upvotes'] - b['Downvotes']);
+      // else if(sortChoiceRef.current == 'MostHated')
+        // data = [...data].sort((a, b) => b['Upvotes'] + b['Downvotes'] - a['Upvotes'] - a['Downvotes']);
+    }
+
+    return data;
+  }
+
   return (
     <div>
       <div className="App">
         <header className="App-header">
-        {/* <h2 id='pageHeader'>Song Requests</h2> */}
           <nav id='navBar'>
+            <div id='logoTitleDiv'>
+              <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
+              <h2 id='pageHeader'>DJSkeeterB</h2>
+            </div>
             <ul id='navBarList'>
               <li id='requestSongOption' className='navBarOption'><button id='navRequestSongButton' onClick={SwitchToRequestSong}>Request A Song</button></li>
               <li id='lineupOption' className='navBarOption'><button id='navLineupButton' onClick={SwitchToCurrentLineup}>Current Lineup</button></li>
             </ul>
           </nav>
           <div id='requestGridContainer'>
-            <div id='logoDiv'>
-              <div id="imageEffects"></div>
+            {/* <div id='logoDiv'>
               <img src={logo} className="App-logo" alt="logo" />
-            </div>
+            </div> */}
             <div id='formDiv'>
               <div id='songSearchTabs'>
                 <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
@@ -782,11 +860,15 @@ function App() {
             </div>
           </div>
           <div id='lineupGridContainer'>
-            <select>
-              <option>Chronological Order</option>
-              <option>Alphabetical</option>
-              <option>Top Voted</option>
-              <option>Everyone Hates This</option>
+            <p id='comingSoonP'>Coming Soon!</p>
+            <select id='sortSelect' defaultValue={'Chronological'} onChange={SortMethodOnChange} disabled>
+              <option value='Chronological'>Chronological</option>
+              <option value='SongName'>Song A&#8594;Z</option>
+              <option value='RevSongName'>Song Z&#8594;A</option>
+              <option value='ArtistName'>Artist A&#8594;Z</option>
+              <option value='RevArtistName'>Artist Z&#8594;A</option>
+              <option value='TopRated'>Top Rated</option>
+              <option value='MostHated'>Most Hated</option>
             </select>
             <div id='lineupDiv'>
               <div id='lineupTracksDiv'>

@@ -82,26 +82,31 @@
 .lineupVoteDiv{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  margin: 2.5% 4% 0 0;
+  margin: 5% 4% 0 0;
   height: 80%;
   grid-gap: 7.5%;
 }
 
 .lineupVoteCount{
-  /* min-height: 100%; */
   text-align: right;
   color: #ce8149;
   font-weight: 400;
-  /* font-size: 12px; */
-  border: 1px solid red;
 }
 
 .lineupUpvoteButton{
-  border: 1px solid red;
+
 }
 
 .lineupDownVoteButton{
-  border: 1px solid red;
+
+}
+
+#comingSoonP{
+  display: inline-block;
+  margin-left: 50%;
+  width: 40%;
+  line-height: 0%;
+  text-align: right;
 }
 
 @media only screen and (max-width: 1465px){
@@ -149,9 +154,20 @@
 }
 
 @media only screen and (max-width: 660px){
+  #sortSelect{
+    width: 45%;
+    text-align: center;
+    margin-left: 45%;
+    border-radius: 20px;
+  }
+
   #lineupGridContainer{
    height: max-content;
    width: 90%;
+  }
+
+  #lineupDiv{
+    margin-top: 1vmax;
   }
 
   #lineupTracksDiv{
@@ -185,12 +201,10 @@
   }
 
   .lineupVoteCount{
-    /* min-height: 100%; */
     text-align: right;
     color: #ce8149;
     font-size: 1200px;
     font-weight: 700;
-    border: 1px solid red;
   }
 
   .lineupUpvoteButton{
