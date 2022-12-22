@@ -9,6 +9,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
 import { render } from '@testing-library/react';
+import { integerPropType } from '@mui/utils';
+require('upvote/lib/jquery.upvote.js');
+// require('upvote/lib/jquery.upvote.css');
+require('upvote/lib/images/sprites-stackoverflow.png');
 
 const firebaseConfig = {
     apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -579,52 +583,141 @@ function App() {
     if(data != null){
       for(var i = 0; i < data.length; i++){
         if(data[i] != null){
-          console.log(data[i]);
-          var track = React.createElement('div', {key : 'lineup' + i, id : 'lineup' + i, className : 'lineupSong'},
+          // console.log(data[i]);
+          var storageVote = localStorage.getItem('voted' + i);
+          var upvoteOn = false;
+          var downvoteOn = false;
+          if(!storageVote){
+            storageVote = 'none';
+          }
+          else if(storageVote == 'up'){
+            upvoteOn = true;
+          }
+          else if(storageVote == 'down'){
+            downvoteOn = true;
+          }
+          // console.log("Upvote: " + upvoteOn + ", downvote: " + downvoteOn);
+
+          var track = 
+          React.createElement('div', {key : 'lineup' + i, id : 'lineup' + i, className : 'lineupSong'},
             React.createElement('img', {className : 'lineupSongImage', src : data[i].SpotifyImageURL, alt : ''}),
             React.createElement('div', {className : 'lineupSongInfo'},
               React.createElement('p', {id : 'lineupSongName' + i}, data[i].SongName),
               React.createElement('p', {id : 'lineupArtistName' + i}, data[i].ArtistName),
               React.createElement('p', {id : 'lineupRequestCount' + i}, "Requests: " + data[i].RequestCount.toString()),
-              React.createElement('div', {className : 'lineupVoteDiv', 'data-requestkey' : i},
-                React.createElement('p', {className : 'lineupVoteCount'}, data[i].Upvotes - data[i].Downvotes),
-                React.createElement('button', {className : 'lineupUpvoteButton', onClick : (e) => UpvoteSong(e.target)}, "Upvote"),
-                React.createElement('button', {className : 'lineupDownVoteButton', onClick : (e) => DownvoteSong(e.target)}, "Downvote")
-              )
+                
+            ),
+            React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : i, 'data-currvote' : storageVote},
+              React.createElement('a', {id : 'lineup' + i + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
+              React.createElement('span', {className : 'count lineupVoteCount'}, data[i].Upvotes - data[i].Downvotes),
+              React.createElement('a', {id : 'lineup' + i + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
             )
           );
           lineup.push(track);
         }
+        else if(localStorage.getItem('voted' + i)){
+          localStorage.removeItem('voted' + i);
+        }
       }
     }
 
+    // Cleaning Storage of upper song request IDs.
+    const items = { ...localStorage };
+    console.log(items);
+    Object.entries(items).forEach(([key, value]) => {
+      if(key.includes('voted')){
+        var id = parseInt(key.substring(5));
+        if(id >= data.length){
+          localStorage.removeItem(key);
+        }
+      }
+    });
     SetLineupTracks(lineup);
-    console.log(lineupTracksRef.current);
+    // console.log(lineupTracksRef.current);
   }
 
+  // function GetUser(){
+  //   var user = 1;
+  //   const dbRef = ref(getDatabase());
+  //   get(child(dbRef, 'Voters/')).then((snapshot) => {
+  //     if(snapshot != null){
+  //       Object.entries(snapshot.val()).forEach(([key, value]) => {
+          
+  //       });
+  //     }
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+  //   return user;
+  // }
+
   function UpvoteSong(element){
+    // var user = GetUser();
     const db = getDatabase();
     const dbRef = ref(getDatabase());
     var currUpvotes = 0;
     var parent = element.parentNode;
+    var voteChange = 0;
+
+    if(parent.dataset.currvote === 'up'){
+      element.classList.remove('upvote-on');
+      parent.dataset.currvote = 'none';
+      voteChange = -1;
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'none')
+    }
+    else if(parent.dataset.currvote === 'down'){
+      element.classList.add('upvote-on');
+      parent.children[2].classList.remove('downvote-on');
+      parent.dataset.currvote = 'up';
+      voteChange = 2;
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'up')
+    }
+    else if(parent.dataset.currvote === 'none'){
+      element.classList.add('upvote-on');
+      parent.dataset.currvote = 'up';
+      voteChange = 1;
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'up')
+    }
+
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
       currUpvotes = snapshot.val().Upvotes;
-      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Upvotes'), currUpvotes + 1);
-      // parent.children[0].innerHTML = snapshot.val().Upvotes - snapshot.val().Downvotes + 1;
+      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Upvotes'), currUpvotes + voteChange);
     }).catch((error) => {
       console.error(error);
     });
   }
 
   function DownvoteSong(element){
+    // var user = GetUser();
     const db = getDatabase();
     const dbRef = ref(getDatabase());
     var currDownvotes = 0;
     var parent = element.parentNode;
+    var voteChange = 0;
+
+    if(parent.dataset.currvote === 'down'){
+      element.classList.remove('downvote-on');
+      parent.dataset.currvote = 'none';
+      voteChange = -1;
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'none')
+    }
+    else if(parent.dataset.currvote === 'up'){
+      element.classList.add('downvote-on');
+      parent.children[0].classList.remove('upvote-on');
+      parent.dataset.currvote = 'down';
+      voteChange = 2;
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'down')
+    }
+    else if(parent.dataset.currvote === 'none'){
+      element.classList.add('downvote-on');
+      parent.dataset.currvote = 'down';
+      voteChange = 1;
+      localStorage.setItem('voted' + parent.dataset.requestkey, 'down')
+    }
+
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
       currDownvotes = snapshot.val().Downvotes;
-      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Downvotes'), currDownvotes + 1);
-      // parent.children[0].innerHTML = snapshot.val().Upvotes - snapshot.val().Downvotes - 1;
+      set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Downvotes'), currDownvotes + voteChange);
     }).catch((error) => {
       console.error(error);
     });
@@ -689,6 +782,12 @@ function App() {
             </div>
           </div>
           <div id='lineupGridContainer'>
+            <select>
+              <option>Chronological Order</option>
+              <option>Alphabetical</option>
+              <option>Top Voted</option>
+              <option>Everyone Hates This</option>
+            </select>
             <div id='lineupDiv'>
               <div id='lineupTracksDiv'>
                 {lineupTracksRef.current}
