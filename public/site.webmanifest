@@ -3,12 +3,12 @@
     "short_name": "DJ SkeeterB",
     "icons": [
         {
-            "src": "/android-chrome-144x144.png",
+            "src": "/android-chrome-144x144.png?v=1",
             "sizes": "144x144",
             "type": "image/png"
         }
     ],
-    "theme_color": "#63a5c9",
-    "background_color": "#63a5c9",
+    "theme_color": "#7f27f0",
+    "background_color": "#7f27f0",
     "display": "standalone"
 }

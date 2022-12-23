@@ -651,7 +651,9 @@ function App() {
               React.createElement('p', {id : 'lineupSongName' + key}, value.SongName),
               React.createElement('p', {id : 'lineupArtistName' + key}, value.ArtistName),
               React.createElement('p', {id : 'lineupRequestCount' + key}, "Requests: " + value.RequestCount),
-                
+              React.createElement('p', {id : 'spotifyLinkParent'},
+                React.createElement('a', {id : 'spotifyLink' + key, href : value.SpotifyURL, target : 'blank'}, 'Spotify Link')
+              )
             ),
             React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : key, 'data-currvote' : storageVote},
               React.createElement('a', {id : 'lineup' + key + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
@@ -809,7 +811,7 @@ function App() {
               <h2 id='pageHeader'>DJSkeeterB</h2>
             </div>
             <ul id='navBarList'>
-              <li id='requestSongOption' className='navBarOption'><button id='navRequestSongButton' onClick={SwitchToRequestSong}>Request A Song</button></li>
+              <li id='requestSongOption' className='navBarOption'><button id='navRequestSongButton' onClick={SwitchToRequestSong}>Request Song</button></li>
               <li id='lineupOption' className='navBarOption'><button id='navLineupButton' onClick={SwitchToCurrentLineup}>Current Lineup</button></li>
             </ul>
           </nav>

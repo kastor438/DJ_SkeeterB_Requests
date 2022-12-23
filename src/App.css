@@ -59,7 +59,7 @@
 }
 
 #navBarList{
-  margin-left: -7.5%;
+  margin-left: -12.5%;
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -616,7 +616,7 @@
 
   #navBarList{
     margin-top: 0%;
-    margin-left: -10%;
+    /* margin-left: -10%; */
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -633,7 +633,7 @@
   }
 
   #requestSongOption{
-    padding-right: 15%;
+    padding-right: 10%;
     
     border-width: 0 2px 0 0;
     border-color: white;
@@ -645,7 +645,7 @@
   }
 
   #lineupOption{
-    padding-left: 15%;
+    padding-left: 10%;
   }
 
   .navBarOption button{
