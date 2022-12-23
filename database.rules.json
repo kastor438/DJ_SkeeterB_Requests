@@ -1,6 +1,15 @@
 {
   "rules": {
-    ".read": "true",
-    ".write": "true"
+    ".read": true,
+    ".write": false,
+    "Requests": {
+      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+    },
+    "SongStatistics": {
+      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+    },
+    "Visitors": {
+      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+    }
   }
 }

@@ -4,6 +4,7 @@ import './RequestLineup.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import {GoogleAuthProvider, getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut} from "firebase/auth";
 import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -26,10 +27,13 @@ const firebaseConfig = {
     measurementId: "G-E5J0711GSP",
     databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
-  
+
+const userEmail = 'Kastor438@hotmail.com';
+const userPassword = 'a2AwDnBy8hCsRZ2';
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
+const auth = getAuth(app);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
   
@@ -37,6 +41,7 @@ const clientID = '822b607fa31944ca91f198b9f5e31613';
 const clientSecret = '4aae0065891841c197af65473ac00b49';
 
 function App() {
+  const [firebaseLoggedIn, SetFirebaseLoggedIn] = useState(false);
   const [userFingerprint, SetUserFingerprint] = useState('');
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [accessToken, SetAccessToken] = useState("");
@@ -55,6 +60,9 @@ function App() {
   const [customActive, SetCustomActive] = useState(false);
   const [trackStats, SetTrackStats] = useState(false);
   const [requestSnapshot, SetRequestSnapShot] = useState({});
+
+  const firebaseLoggedInRef = useRef(false);
+  firebaseLoggedInRef.current = firebaseLoggedIn;
 
   const userFingerprintRef = useRef("");
   userFingerprintRef.current = userFingerprint;
@@ -105,36 +113,42 @@ function App() {
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
-    var currentUrl = window.location.href;
-    var requestSongButton = document.getElementById("navRequestSongButton");
-    requestSongButton.style.borderBottom = "1px solid white";
-    requestSongButton.style.color = "#b1afaf";
-    document.getElementById("requestGridContainer").style.display = "grid";
-
-    var lineupButton = document.getElementById("navLineupButton");
-    lineupButton.style.borderBottom = "none";
-    lineupButton.style.color = "white";
-    document.getElementById("lineupGridContainer").style.display = "none"
-    
-    if(currentUrl.includes("dj")){
-      SetTrackStats(true);
-    }
-    
-    getUserData();
-
-    InitializeSpotify();
-
-    const requestsRef = ref(db, '/');
-    onValue(requestsRef, (snapshot) => {
-      const data = snapshot.val();
-      if(data){
-        if(!data.Requests || !requestSnapshotRef.current || !requestSnapshotRef.current.Requests || data.Requests != requestSnapshotRef.current.Requests){
-          SetRequestSnapShot(data);
-          UpdateLineup(data.Requests);
-        }
-      } 
-    });
+    LoginToFirebase(userEmail, userPassword);
   }, []);
+
+  useEffect(() =>{
+    if(!firebaseLoggedInRef.current){
+      var currentUrl = window.location.href;
+      var requestSongButton = document.getElementById("navRequestSongButton");
+      requestSongButton.style.borderBottom = "1px solid white";
+      requestSongButton.style.color = "#b1afaf";
+      document.getElementById("requestGridContainer").style.display = "grid";
+
+      var lineupButton = document.getElementById("navLineupButton");
+      lineupButton.style.borderBottom = "none";
+      lineupButton.style.color = "white";
+      document.getElementById("lineupGridContainer").style.display = "none"
+      
+      if(currentUrl.includes("dj")){
+        SetTrackStats(true);
+      }
+      
+      getUserData();
+
+      InitializeSpotify();
+
+      const requestsRef = ref(db, '/');
+      onValue(requestsRef, (snapshot) => {
+        const data = snapshot.val();
+        if(data){
+          if(!data.Requests || !requestSnapshotRef.current || !requestSnapshotRef.current.Requests || data.Requests != requestSnapshotRef.current.Requests){
+            SetRequestSnapShot(data);
+            UpdateLineup(data.Requests);
+          }
+        } 
+      });
+    }
+  }, [firebaseLoggedIn]);
 
   useEffect(() => {
     CheckValidInput();
@@ -144,7 +158,7 @@ function App() {
     if(!canSubmitRef.current){
       document.getElementById('submitBtn').setAttribute("disabled", "disabled");
     }
-    else{
+    else if(!firebaseLoggedInRef.current){
       document.getElementById('submitBtn').removeAttribute("disabled");
     }
   }, [canSubmit]);
@@ -155,13 +169,22 @@ function App() {
     }
   }, [sortChoice])
 
+  const LoginToFirebase = async (userEmail, userPassword) => {
+    try {
+      await signInWithEmailAndPassword(auth, userEmail, userPassword);
+      SetFirebaseLoggedIn(true);
+      // console.log(auth);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const getUserData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/');
     // console.log(res.data);
 
     getCurrentBrowserFingerPrint().then((fingerprint) => {
       SetUserFingerprint(fingerprint);
-      console.log(fingerprint);
+      console.log('Device fingerprint: ' + fingerprint);
     });
 
     if(trackStatsRef.current){
