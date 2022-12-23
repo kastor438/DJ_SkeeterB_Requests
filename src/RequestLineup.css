@@ -39,7 +39,7 @@
 .lineupSong{
   margin: 0px 0 0px 0;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 6fr 12fr 6fr 1fr;
   /* width: 100%; */
   height: 7vmax;
   margin-left: 2.5%;
@@ -52,7 +52,7 @@
   border: 1px solid black;
   width: 6.5vmax;
   height: 6.5vmax;
-  margin: 3% 2.5%;
+  /* margin: 3% 2.5%; */
 }
 
 .lineupSongInfo{
@@ -79,33 +79,14 @@
   margin-bottom: 4%;
 }
 
-.lineupSpotifyLink{
-  text-decoration: none;
-  color: rgb(188, 83, 230);
-  font-size: 150%;
-  /* border: 1px solid red; */
-  width: 100%;
-  text-align: right;
-  height: fit-content;
-  display: block;
-}
-
-.lineupSpotifyLink:visited{
-  
-}
-
 .lineupVoteDiv{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  margin: 5% 4% 0 0;
-  height: 80%;
-  grid-gap: 7.5%;
-}
-
-.lineupVoteCount{
-  text-align: right;
-  color: #ce8149;
-  font-weight: 400;
+  margin: 0% 0% 0 30%;
+  height: 100%;
+  grid-gap: 0%;
+  border: 1px solid red;
+  width: fit-content;
 }
 
 .lineupUpvoteButton{
@@ -114,6 +95,35 @@
 
 .lineupDownVoteButton{
 
+}
+
+.lineupVoteCount{
+  text-align: right;
+  color: #ce8149;
+  font-weight: 400;
+  border: 1px solid red;
+  width: 50%;
+  margin-left: 22.5%;
+}
+
+.spotifyLinkDiv{
+  height: 50%;
+  margin-top: 75%;
+  margin-left: -10%;
+}
+
+.lineupSpotifyLink{
+  text-decoration: none;
+  color: rgb(188, 83, 230);
+  font-size: 150%;
+  width: 100%;
+  /* height: max-content; */
+  border: 1px solid blue;
+  /* line-height: 350%; */
+}
+
+.lineupSpotifyLink:visited{
+  
 }
 
 #comingSoonP{
@@ -194,7 +204,7 @@
   }
 
   .lineupSong{
-    height: 20%;
+    height: fit-content;
   }
 
   .lineupSongImageDiv{
@@ -202,24 +212,26 @@
   }
 
   .lineupSongImage{
-    width: 90%;
+    width: 100%;
     height: auto;
     margin-top: 10%;
+    margin-left: 5%;
   }
 
   .lineupSongInfo{
-    margin-left: 2%;
+    margin-left: 7.5%;
     height: fit-content;
     /* background-color: #3c3f44; */
     z-index: 0;
-    width: 100%;
+    width: 105%;
     /* border: 1px solid wheat; */
     border-radius: 10px;
-    padding: 5% 2% 0 2%;
+    padding: 5% 0% 0 0%;
   }
 
   .lineupSongInfo p {
-    margin-left: 10%;
+    padding-left: 0;
+    /* margin-left: 10%; */
     height: 20%;
     font-size: 75%;
     line-height: 150%;
@@ -232,7 +244,7 @@
   .lineupVoteCount{
     text-align: right;
     color: #ce8149;
-    font-size: 1200px;
+    font-size: 12px;
     font-weight: 700;
   }
 

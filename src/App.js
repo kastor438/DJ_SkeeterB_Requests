@@ -299,7 +299,7 @@ function App() {
       }
     }
       
-    if(!customActiveRef.current || inputSongNameRef.current.length <= 1){
+    if(!customActiveRef.current || inputSongNameRef.current.length <= 1 || inputArtistNameRef.current.length <= 1){
       SetTrackName("");
       SetArtistName("");
       document.getElementById('submitBtn').setAttribute("disabled", "disabled");
@@ -342,21 +342,23 @@ function App() {
   function SubmitRequest(){
       if(canSubmitRef.current){        
         if(spotifyActiveRef.current){ 
-          AddRequest(trackNameRef.current, artistNameRef.current);
+          AddRequest(trackNameRef.current, artistNameRef.current, trackSpotifyURLRef.current, trackImageLinkRef.current);
         }
         else if(customActiveRef.current){
-          AddRequest(inputSongNameRef.current, inputArtistNameRef.current);
+          AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '');
         }
         document.getElementById('songNameInput').value = '';
         document.getElementById('artistNameInput').value = '';
 
         SetInputSongName('');
         SetInputArtistName('');
+        SetTrackSpotifyURL('');
+        SetTrackImageLink('')
         SetRenderedTracks([]);
       }
   }
 
-  function AddRequest(songName, artistName){
+  function AddRequest(songName, artistName, spotifyURL, spotifyImageLink){
     var nextSongID = 1;
     var songIDs = [];
     var songRequests = [];
@@ -391,8 +393,8 @@ function App() {
             SongName: songName,
             ArtistName: artistName,
             RequestCount: 1,
-            SpotifyURL: trackSpotifyURLRef.current,
-            SpotifyImageURL: trackImageLinkRef.current.toString(),
+            SpotifyURL: spotifyURL,
+            SpotifyImageURL: spotifyImageLink,
             Upvotes: 0,
             Downvotes: 0,
             Voters : {}
@@ -409,8 +411,8 @@ function App() {
           SongName: songName,
           ArtistName: artistName,
           RequestCount: 1,
-          SpotifyURL: trackSpotifyURLRef.current.toString(),
-          SpotifyImageURL: trackImageLinkRef.current.toString(),
+          SpotifyURL: spotifyURL,
+          SpotifyImageURL: spotifyImageLink,
           Upvotes: 0,
           Downvotes: 0,
           Voters : {}
@@ -448,7 +450,7 @@ function App() {
             SongName: songName,
             ArtistName: artistName,
             RequestCount: 1,
-            SpotifyURL: trackSpotifyURLRef.current.toString()
+            SpotifyURL: spotifyURL
           });
         }
       }).catch((error) => {
@@ -469,7 +471,7 @@ function App() {
     var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
         var tracks = [];
         var searchedTracks = data.tracks.items;
         for(var i = 0; i < 50; i++){
@@ -600,7 +602,7 @@ function App() {
       SetTrackName(element.children[1].children[0].innerHTML);
       SetArtistName(element.children[1].children[1].innerHTML);
       SetTrackSpotifyURL(element.children[1].children[0].dataset.spotifyurl);
-      console.log(trackSpotifyURLRef.current + " " + element.children[1].children[0].dataset.spotifyurl);
+      // console.log(trackSpotifyURLRef.current + " " + element.children[1].children[0].dataset.spotifyurl);
       SetCanSubmit(true);
     }
     else{
@@ -656,15 +658,15 @@ function App() {
             React.createElement('div', {className : 'lineupSongInfo'},
               React.createElement('p', {id : 'lineupSongName' + key, className : 'lineupSongName'}, value.SongName),
               React.createElement('p', {id : 'lineupArtistName' + key}, value.ArtistName),
-              React.createElement('p', {id : 'lineupRequestCount' + key}, "Requests: " + value.RequestCount),
-              React.createElement('p', {}, 
-                value.SpotifyURL != '' ? React.createElement('a', {id : 'lineupSpotifyLink' + key, className : 'lineupSpotifyLink', href : value.SpotifyURL, target : 'blank'}, '\uD83D\uDD17') : ''
-              )
+              React.createElement('p', {id : 'lineupRequestCount' + key}, "Requests: " + value.RequestCount)
             ),
             React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : key, 'data-currvote' : storageVote},
               React.createElement('a', {id : 'lineup' + key + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
-              React.createElement('span', {className : 'count lineupVoteCount'}, value.Upvotes - value.Downvotes),
+              React.createElement('span', {className : 'count lineupVoteCount'}, value.Upvotes - value.Downvotes), 
               React.createElement('a', {id : 'lineup' + key + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
+            ),
+            React.createElement('div', {id : 'spotifyLinkDiv' + key, className : 'spotifyLinkDiv'},
+              value.SpotifyURL != '' ? React.createElement('a', {id : 'lineupSpotifyLink' + key, className : 'lineupSpotifyLink', href : value.SpotifyURL, target : 'blank'}, '\uD83D\uDD17') : ''
             )
           );
           lineup.push(track);
