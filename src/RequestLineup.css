@@ -126,14 +126,14 @@
   
 }
 
-#comingSoonP{
+/* #comingSoonP{
   display: inline-block;
   margin-left: 50%;
   width: 40%;
   line-height: 0%;
   text-align: right;
   font-size: 12px;
-}
+} */
 
 @media only screen and (max-width: 1465px){
   #lineupGridContainer{
