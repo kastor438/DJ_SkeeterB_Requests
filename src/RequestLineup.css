@@ -39,10 +39,9 @@
 .lineupSong{
   margin: 0px 0 0px 0;
   display: grid;
-  grid-template-columns: 6fr 12fr 6fr 1fr;
-  /* width: 100%; */
+  grid-template-columns: 6fr 12fr 3fr 1fr;
   height: 7vmax;
-  margin-left: 2.5%;
+  /* margin-left: 2.5%; */
   background-color: #4c4d4e;
   border: 1px solid black;
   font-size: 16px;
@@ -50,18 +49,11 @@
 
 .lineupSongImage{
   border: 1px solid black;
-  width: 6.5vmax;
-  height: 6.5vmax;
-  /* margin: 3% 2.5%; */
 }
 
 .lineupSongInfo{
   margin-top: 2.5%;
-  margin-left: -10%;
   text-align: left;
-  justify-content: center;
-  height: 7vmax;
-  line-height: 17px;
   overflow-y: hidden;
   overflow-x: scroll;
 }
@@ -73,24 +65,24 @@
 .lineupSongInfo p {
   margin-top: 0;
   vertical-align: middle;
-  line-height: calc(1.5 * 1.6vmax);
+  /* line-height: calc(1.5 * 1.6vmax); */
   font-size: 1.2vw;
   white-space: nowrap;
-  margin-bottom: 4%;
+  /* margin-bottom: 4%; */
 }
 
 .lineupVoteDiv{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  margin: 0% 0% 0 40%;
-  height: 100%;
+  margin: 7.5% 0% 0 0%;
+  height: 90%;
   grid-gap: 0%;
   /* border: 1px solid red; */
   width: fit-content;
 }
 
 .lineupUpvoteButton{
-
+  
 }
 
 .lineupDownVoteButton{
@@ -98,25 +90,28 @@
 }
 
 .lineupVoteCount{
-  text-align: right;
+  text-align: center;
   color: #ce8149;
   font-weight: 400;
   /* border: 1px solid red; */
-  width: 50%;
-  margin-left: 22.5%;
+  width: 100%;
+  height: fit-content;
 }
 
 .spotifyLinkDiv{
+  margin-top: 65%;
   height: 50%;
-  margin-top: 75%;
-  margin-left: -10%;
+  /* border: 1px solid green; */
 }
 
 .lineupSpotifyLink{
   text-decoration: none;
-  color: rgb(188, 83, 230);
   font-size: 150%;
   width: 100%;
+  height: fit-content;
+  background-color: #b630f068;
+  border: 1px solid rgb(158, 32, 189);
+  border-radius: 30px;
   /* height: max-content; */
   /* border: 1px solid blue; */
   /* line-height: 350%; */
@@ -145,10 +140,6 @@
     margin-left: 5%;
   }
 
-  .lineupSongInfo{
-    margin-left: -10%;
-  }
-
   .lineupSongInfo p{
     font-size: 1.2vw;
   }
@@ -166,10 +157,6 @@
     font-size: 1.3vw;
     margin-bottom: 0;
     line-height: calc(1.5 * 1.3vw);
-  }
-
-  .lineupSongInfo{
-    margin-left: -15%;
   }
 }
 
@@ -193,7 +180,7 @@
   }
 
   #lineupDiv{
-    margin-top: 1vmax;
+    margin-top: 1%;
   }
 
   #lineupTracksDiv{
@@ -204,37 +191,40 @@
   }
 
   .lineupSong{
-    height: fit-content;
+    height: max-content;
+    margin-left: 4%;
   }
 
   .lineupSongImageDiv{
     z-index: 10;
+    margin: 5% 0 0 5%;
   }
 
   .lineupSongImage{
     width: 100%;
     height: auto;
-    margin-top: 10%;
-    margin-left: 5%;
+    /* margin-top: 10%; */
+    /* margin-left: 5%; */
   }
 
   .lineupSongInfo{
-    margin-left: 7.5%;
-    height: fit-content;
-    /* background-color: #3c3f44; */
+    margin-top: 2.5%;
+    /* margin-left: 2%; */
+    height: 90%;
+    background-color: #3c3f44;
     z-index: 0;
-    width: 110%;
+    width: 98%;
     /* border: 1px solid wheat; */
     border-radius: 10px;
-    padding: 5% 0% 0 0%;
   }
 
   .lineupSongInfo p {
-    padding-left: 0;
-    /* margin-left: 10%; */
+    /* padding-left: 0; */
+    margin-left: 5%;
     height: 20%;
     font-size: 75%;
-    line-height: 150%;
+    line-height: 100%;
+    margin-top: 5%;
   }
 
   .lineupSongName{
@@ -273,8 +263,8 @@ div.upvote a {
   overflow: hidden;
   display: block;
   margin: 0 auto;
-  width: 41px;
-  height: 25px;
+  width: 35px;
+  height: 20px;
 }
 
 div.upvote span.count {
@@ -287,19 +277,22 @@ div.upvote span.count {
 }
 
 div.upvote a.upvote {
-  background-position: 0px -265px;
+  /* margin-top: 6.934%; */
+  background-position: -3px -265px;
 }
 
 div.upvote a.upvote.upvote-on {
-  background-position: 0px -230px;
+  background-position: 0px -165px;
+  background-size: 200px 780px;
 }
 
 div.upvote a.downvote {
-  background-position: 0px -300px;
+  background-position: -3px -300px;
 }
 
 div.upvote a.downvote.downvote-on {
-  background-position: 0px -330px;
+  background-position: 0px -240px;
+  background-size: 200px 780px;
 }
 
 div.upvote a.star {

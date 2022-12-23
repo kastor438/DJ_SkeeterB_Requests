@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
 import axios from 'axios';
-import { data } from 'jquery';
+import { getCurrentBrowserFingerPrint } from "@rajesh896/broprint.js";
 
 require('upvote/lib/jquery.upvote.js');
 // require('upvote/lib/jquery.upvote.css');
@@ -37,7 +37,7 @@ const clientID = '822b607fa31944ca91f198b9f5e31613';
 const clientSecret = '4aae0065891841c197af65473ac00b49';
 
 function App() {
-  const [ip, setIP] = useState('');
+  const [userFingerprint, SetUserFingerprint] = useState('');
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [accessToken, SetAccessToken] = useState("");
   const [canSubmit, SetCanSubmit] = useState(false);
@@ -56,8 +56,8 @@ function App() {
   const [trackStats, SetTrackStats] = useState(false);
   const [requestSnapshot, SetRequestSnapShot] = useState({});
 
-  const ipRef = useRef("");
-  ipRef.current = ip;
+  const userFingerprintRef = useRef("");
+  userFingerprintRef.current = userFingerprint;
 
   const requestSnapshotRef = useRef({});
   requestSnapshotRef.current = requestSnapshot;
@@ -119,8 +119,8 @@ function App() {
     if(currentUrl.includes("dj")){
       SetTrackStats(true);
     }
-
-    getData();
+    
+    getUserData();
 
     InitializeSpotify();
 
@@ -155,20 +155,21 @@ function App() {
     }
   }, [sortChoice])
 
-  const getData = async () => {
+  const getUserData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/');
-    console.log(res.data);
-    var IPv4 = (res.data.IPv4).replace('.', '-');
-    var IPv4 = (IPv4).replace('.', '-');
-    var IPv4 = (IPv4).replace('.', '-');
-    setIP(IPv4);
+    // console.log(res.data);
+
+    getCurrentBrowserFingerPrint().then((fingerprint) => {
+      SetUserFingerprint(fingerprint);
+      console.log(fingerprint);
+    });
 
     if(trackStatsRef.current){
       var visitorCount = 0;
       get(child(dbRef, 'Vistors/' + res.data['country_code'] + '/' + res.data.city)).then((snapshot) => {
         if(snapshot != null){
           visitorCount = snapshot.val();
-          console.log(snapshot.val())
+          // console.log(snapshot.val())
         }
         set(ref(db, 'Vistors/' + res.data['country_code'] + '/' + res.data.city), (visitorCount+1));
       });
@@ -638,23 +639,18 @@ function App() {
         if(data[sortedKeys[i]] != null){
           dataKeys.push(parseInt(sortedKeys[i]));
           // Storage check if already voted.
-          var storageVote = localStorage.getItem('voted' + sortedKeys[i]);
+          var fingerPrintVote = 'none';
           var upvoteOn = false;
           var downvoteOn = false;
-          if(!storageVote){
-            // IP address check
-            if(data[sortedKeys[i]].Voters != null && data[sortedKeys[i]].Voters[ipRef.current]){
-              storageVote = data[sortedKeys[i]].Voters[ipRef.current];
-            }
-            else if(!storageVote){
-              storageVote = 'none';
-            }
+          // Fingerprint check
+          if(data[sortedKeys[i]].Voters != null && data[sortedKeys[i]].Voters[userFingerprintRef.current]){
+            fingerPrintVote = data[sortedKeys[i]].Voters[userFingerprintRef.current];
           }
 
-          if(storageVote == 'up'){
+          if(fingerPrintVote == 'up'){
             upvoteOn = true;
           }
-          else if(storageVote == 'down'){
+          else if(fingerPrintVote == 'down'){
             downvoteOn = true;
           }
 
@@ -672,7 +668,7 @@ function App() {
               React.createElement('p', {id : 'lineupArtistName' + sortedKeys[i]}, data[sortedKeys[i]].ArtistName),
               React.createElement('p', {id : 'lineupRequestCount' + sortedKeys[i]}, "Requests: " + data[sortedKeys[i]].RequestCount)
             ),
-            React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : sortedKeys[i], 'data-currvote' : storageVote},
+            React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : sortedKeys[i], 'data-currvote' : fingerPrintVote},
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
               React.createElement('span', {className : 'count lineupVoteCount'}, data[sortedKeys[i]].Upvotes - data[sortedKeys[i]].Downvotes), 
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
@@ -683,9 +679,9 @@ function App() {
           );
           lineup.push(track);
         }
-        else if(localStorage.getItem('voted' + sortedKeys[i])){
-          localStorage.removeItem('voted' + sortedKeys[i]);
-        }
+        // else if(localStorage.getItem('voted' + sortedKeys[i])){
+        //   localStorage.removeItem('voted' + sortedKeys[i]);
+        // }
       }
     }
     else{
@@ -694,15 +690,15 @@ function App() {
         lineup.push(noLineup);
     }
     // Cleaning Storage of upper song request IDs.
-    const items = { ...localStorage };
-    Object.entries(items).forEach(([key, value]) => {
-      if(key.includes('voted')){
-        var id = parseInt(key.substring(5));
-        if(!dataKeys.includes(id)){
-          localStorage.removeItem(key);
-        }
-      }
-    });
+    // const items = { ...localStorage };
+    // Object.entries(items).forEach(([key, value]) => {
+    //   if(key.includes('voted')){
+    //     var id = parseInt(key.substring(5));
+    //     if(!dataKeys.includes(id)){
+    //       localStorage.removeItem(key);
+    //     }
+    //   }
+    // });
     SetLineupTracks(lineup);
     // console.log(lineupTracksRef.current);
   }
@@ -716,26 +712,26 @@ function App() {
       element.classList.remove('upvote-on');
       parent.dataset.currvote = 'none';
       voteChange = -1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
-      if(ipRef.current && ipRef.current.length > 6)
-        remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current));
+      // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
+      if(userFingerprintRef.current)
+        remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current));
     }
     else if(parent.dataset.currvote === 'down'){
       element.classList.add('upvote-on');
       parent.children[2].classList.remove('downvote-on');
       parent.dataset.currvote = 'up';
       voteChange = 2;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
-      if(ipRef.current && ipRef.current.length > 6)
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'up');
+      // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
+      if(userFingerprintRef.current)
+        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'up');
     }
     else if(parent.dataset.currvote === 'none'){
       element.classList.add('upvote-on');
       parent.dataset.currvote = 'up';
       voteChange = 1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
-      if(ipRef.current && ipRef.current.length > 6)
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'up');
+      // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
+      if(userFingerprintRef.current)
+        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'up');
     }
 
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
@@ -755,26 +751,26 @@ function App() {
       element.classList.remove('downvote-on');
       parent.dataset.currvote = 'none';
       voteChange = -1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
-      if(ipRef.current && ipRef.current.length > 6)
-        remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current));
+      // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
+      if(userFingerprintRef.current)
+        remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current));
     }
     else if(parent.dataset.currvote === 'up'){
       element.classList.add('downvote-on');
       parent.children[0].classList.remove('upvote-on');
       parent.dataset.currvote = 'down';
       voteChange = 2;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
-      if(ipRef.current && ipRef.current.length > 6)
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'down');
+      // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
+      if(userFingerprintRef.current)
+        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'down');
     }
     else if(parent.dataset.currvote === 'none'){
       element.classList.add('downvote-on');
       parent.dataset.currvote = 'down';
       voteChange = 1;
-      localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
-      if(ipRef.current && ipRef.current.length > 6)
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + ipRef.current), 'down');
+      // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
+      if(userFingerprintRef.current)
+        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'down');
     }
 
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
