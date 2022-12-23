@@ -616,9 +616,9 @@ function App() {
     SetLineupTracks([]);
     var dataKeys = [];
     if(data != null){
-      console.log("Data Before: " + data['1'].SongName);
-      data = SortLineup(data);
-      console.log("Data After: " + data['1'].SongName);
+      // console.log("Data Before: " + data['1'].SongName);
+      // data = SortLineup(data);
+      // console.log("Data After: " + data['1'].SongName);
       Object.entries(data).forEach(([key, value]) => {
         if(value != null){
           dataKeys.push(parseInt(key));
@@ -646,13 +646,19 @@ function App() {
 
           var track = 
           React.createElement('div', {key : 'lineup' + key, id : 'lineup' + key, className : 'lineupSong'},
-            React.createElement('img', {className : 'lineupSongImage', src : value.SpotifyImageURL, alt : ''}),
+            value.SpotifyImageURL != '' ?
+            React.createElement('div', {className : 'lineupSongImageDiv'}, 
+              React.createElement('img', {className : 'lineupSongImage', src : value.SpotifyImageURL, alt : 'Song Image'})
+            ) : 
+            React.createElement('div', {className : 'lineupSongImage'}, 
+              React.createElement('h4', {}, 'Custom Request')
+            ),
             React.createElement('div', {className : 'lineupSongInfo'},
-              React.createElement('p', {id : 'lineupSongName' + key}, value.SongName),
+              React.createElement('p', {id : 'lineupSongName' + key, className : 'lineupSongName'}, value.SongName),
               React.createElement('p', {id : 'lineupArtistName' + key}, value.ArtistName),
               React.createElement('p', {id : 'lineupRequestCount' + key}, "Requests: " + value.RequestCount),
-              React.createElement('p', {id : 'spotifyLinkParent'},
-                React.createElement('a', {id : 'spotifyLink' + key, href : value.SpotifyURL, target : 'blank'}, 'Spotify Link')
+              React.createElement('p', {}, 
+                value.SpotifyURL != '' ? React.createElement('a', {id : 'lineupSpotifyLink' + key, className : 'lineupSpotifyLink', href : value.SpotifyURL, target : 'blank'}, '\uD83D\uDD17') : ''
               )
             ),
             React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : key, 'data-currvote' : storageVote},
