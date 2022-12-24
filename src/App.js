@@ -117,7 +117,7 @@ function App() {
   }, []);
 
   useEffect(() =>{
-    if(!firebaseLoggedInRef.current){
+    if(firebaseLoggedInRef.current){
       var currentUrl = window.location.href;
       var requestSongButton = document.getElementById("navRequestSongButton");
       requestSongButton.style.borderBottom = "1px solid white";
@@ -158,7 +158,7 @@ function App() {
     if(!canSubmitRef.current){
       document.getElementById('submitBtn').setAttribute("disabled", "disabled");
     }
-    else if(!firebaseLoggedInRef.current){
+    else if(firebaseLoggedInRef.current){
       document.getElementById('submitBtn').removeAttribute("disabled");
     }
   }, [canSubmit]);
