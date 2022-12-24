@@ -39,7 +39,7 @@
 .lineupSong{
   margin: 0px 0 0px 0;
   display: grid;
-  grid-template-columns: 6fr 12fr 3fr 1fr;
+  grid-template-columns: 6fr 12fr 1fr 1fr;
   height: 7vmax;
   /* margin-left: 2.5%; */
   background-color: #4c4d4e;
@@ -74,7 +74,7 @@
 .lineupVoteDiv{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  margin: 7.5% 0% 0 0%;
+  margin: 12.5% 0% 0 0%;
   height: 90%;
   grid-gap: 0%;
   /* border: 1px solid red; */
@@ -95,26 +95,26 @@
   font-weight: 400;
   /* border: 1px solid red; */
   width: 100%;
-  height: fit-content;
 }
 
 .spotifyLinkDiv{
-  margin-top: 65%;
-  height: 50%;
+  margin-left: -10%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  height: 100%;
   /* border: 1px solid green; */
+  padding: 0%;
 }
 
 .lineupSpotifyLink{
   text-decoration: none;
-  font-size: 150%;
-  width: 100%;
-  height: fit-content;
+  font-size: 18px;
   background-color: #b630f068;
+  width: fit-content;
+  height: fit-content;
   border: 1px solid rgb(158, 32, 189);
   border-radius: 30px;
-  /* height: max-content; */
   /* border: 1px solid blue; */
-  /* line-height: 350%; */
 }
 
 .lineupSpotifyLink:visited{
@@ -184,8 +184,7 @@
   }
 
   #lineupTracksDiv{
-    margin-left: 2%;
-    margin: 4% 0;
+    margin: 2.5% 0;
     width: 95%;
     height: 65vh;
   }
@@ -208,19 +207,18 @@
   }
 
   .lineupSongInfo{
-    margin-top: 2.5%;
-    /* margin-left: 2%; */
+    margin: 2.5% 3%;
     height: 90%;
     background-color: #3c3f44;
     z-index: 0;
-    width: 98%;
+    width: 96.5%;
     /* border: 1px solid wheat; */
     border-radius: 10px;
   }
 
   .lineupSongInfo p {
     /* padding-left: 0; */
-    margin-left: 5%;
+    margin-left: 2%;
     height: 20%;
     font-size: 75%;
     line-height: 100%;

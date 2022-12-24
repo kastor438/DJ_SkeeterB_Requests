@@ -696,10 +696,13 @@ function App() {
               React.createElement('span', {className : 'count lineupVoteCount'}, data[sortedKeys[i]].Upvotes - data[sortedKeys[i]].Downvotes), 
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
             ),
-            React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
-              data[sortedKeys[i]].SpotifyURL != '' ? React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : 'lineupSpotifyLink', href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17') : ''
-            )
+            data[sortedKeys[i]].SpotifyURL != '' ? 
+            (React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
+              React.createElement('span', {}, ''),
+              React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : 'lineupSpotifyLink', href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
+              React.createElement('span', {}, ''))) : ''
           );
+          console.log(data[sortedKeys[i]].SpotifyURL != '');
           lineup.push(track);
         }
         // else if(localStorage.getItem('voted' + sortedKeys[i])){
@@ -730,6 +733,7 @@ function App() {
     var currUpvotes = 0;
     var parent = element.parentNode;
     var voteChange = 0;
+    var downvoteChange = false;
 
     if(parent.dataset.currvote === 'up'){
       element.classList.remove('upvote-on');
@@ -743,7 +747,8 @@ function App() {
       element.classList.add('upvote-on');
       parent.children[2].classList.remove('downvote-on');
       parent.dataset.currvote = 'up';
-      voteChange = 2;
+      voteChange = 1;
+      downvoteChange = true;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
       if(userFingerprintRef.current)
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'up');
@@ -760,6 +765,8 @@ function App() {
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
       currUpvotes = snapshot.val().Upvotes;
       set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Upvotes'), currUpvotes + voteChange);
+      if(downvoteChange == true)
+        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Downvotes'), snapshot.val().Downvotes -1);
     }).catch((error) => {
       console.error(error);
     });
@@ -769,6 +776,7 @@ function App() {
     var currDownvotes = 0;
     var parent = element.parentNode;
     var voteChange = 0;
+    var upvoteChange = false;
 
     if(parent.dataset.currvote === 'down'){
       element.classList.remove('downvote-on');
@@ -782,7 +790,8 @@ function App() {
       element.classList.add('downvote-on');
       parent.children[0].classList.remove('upvote-on');
       parent.dataset.currvote = 'down';
-      voteChange = 2;
+      voteChange = 1;
+      upvoteChange = true;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
       if(userFingerprintRef.current)
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'down');
@@ -799,6 +808,8 @@ function App() {
     get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
       currDownvotes = snapshot.val().Downvotes;
       set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Downvotes'), currDownvotes + voteChange);
+      if(upvoteChange == true)
+        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Upvotes'), snapshot.val().Upvotes -1);
     }).catch((error) => {
       console.error(error);
     });
