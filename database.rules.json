@@ -10,6 +10,9 @@
     },
     "Visitors": {
       ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+    },
+    "Events": {
+      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
     }
   }
 }
