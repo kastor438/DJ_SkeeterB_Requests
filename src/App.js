@@ -684,7 +684,7 @@ function App() {
               React.createElement('img', {className : 'lineupSongImage', src : data[sortedKeys[i]].SpotifyImageURL, alt : 'Song Image'})
             ) : 
             React.createElement('div', {className : 'lineupSongImage'}, 
-              React.createElement('h4', {}, 'Custom Request')
+              React.createElement('h4', {className : 'customRequestHeader'}, 'Custom Request')
             ),
             React.createElement('div', {className : 'lineupSongInfo'},
               React.createElement('p', {id : 'lineupSongName' + sortedKeys[i], className : 'lineupSongName'}, data[sortedKeys[i]].SongName),
@@ -695,12 +695,11 @@ function App() {
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : ''), onClick : (e) => UpvoteSong(e.target)}, ),
               React.createElement('span', {className : 'count lineupVoteCount'}, data[sortedKeys[i]].Upvotes - data[sortedKeys[i]].Downvotes), 
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : ''), onClick : (e) => DownvoteSong(e.target)}, )
-            ),
-            data[sortedKeys[i]].SpotifyURL != '' ? 
-            (React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
+            ), 
+            React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
               React.createElement('span', {}, ''),
-              React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : 'lineupSpotifyLink', href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
-              React.createElement('span', {}, ''))) : ''
+              React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
+              React.createElement('span', {}, ''))
           );
           console.log(data[sortedKeys[i]].SpotifyURL != '');
           lineup.push(track);
@@ -925,6 +924,7 @@ function App() {
             <div id='logoTitleDiv'>
               <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
               <h2 id='pageHeader'>DJSkeeterB</h2>
+              {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
             </div>
             <ul id='navBarList'>
               <li id='requestSongOption' className='navBarOption'><button id='navRequestSongButton' onClick={SwitchToRequestSong}>Request Song</button></li>

@@ -5,7 +5,7 @@
 }
 
 .App-logo {
-  height: 55vmin;
+  min-height: 55vmin;
   pointer-events: none;
 }
 
@@ -18,6 +18,7 @@
 .App-header {
   min-width: 100vw;
   min-height: 100vh;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,7 +40,6 @@
 }
 
 #navBar{
-  /* margin-left: 7.5vw; */
   width: 100vw;
   z-index: 100;
 }
@@ -47,9 +47,16 @@
 #logoTitleDiv{
   display: grid;
   grid-template-columns: 1fr 3fr;
+  
+  /* For live status addition
+  grid-template-columns: 2fr 5fr 5fr; */
   width: 60%;
   height: fit-content;
-  line-height: 200%;
+  /* border: 1px solid red; */
+}
+
+#navBarLogo{
+  width: 100%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -58,16 +65,34 @@
   }
 }
 
+#pageHeader{
+  font-family: 'Merienda';
+  font-size: 68px;
+  margin-right: 0;
+  height: 100%;
+  line-height: 120%;
+  text-align: left;
+}
+
+#liveStatus{
+  margin-top: 0;
+  margin-right: 2%;
+  text-align: end;
+  white-space: nowrap;
+  /* border: 1px solid red; */
+}
+
 #navBarList{
-  margin-left: -12.5%;
+  margin-top: -3%;
+  margin-left: -4%;
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* border: 1px solid red; */
 }
 
 #requestSongOption{
-  padding-right: 15%;
-  
+  padding-right: 10%;
   border-width: 0 1px 0 0;
   border-color: rgb(255, 255, 255);
   border-style: solid;
@@ -84,16 +109,7 @@
 .navBarOption button{
   color: white;
   display: block;
-  font-size: 2.2vmax;
-  background-color: Transparent;
-  background-repeat:no-repeat;
-  border: none;
-}
-
-.navBarOption button{
-  color: white;
-  display: block;
-  font-size: 2.2vmax;
+  font-size: 36px;
   background-color: Transparent;
   background-repeat:no-repeat;
   border: none;
@@ -133,7 +149,7 @@
 }
 
 #spotifyImage{
-  width: 55%;
+  width: 50%;
   margin-top: 8%;
 }
 
@@ -141,7 +157,9 @@
   width: 40%;
   margin-top: 10%;
   margin-left: 30%;
-  font-size: 20px;
+  font-size: 40px;
+  line-height: 100%;
+  height: 100%;
 }
 
 #searchDiv{
@@ -218,18 +236,10 @@
   margin-bottom: 4%;
 }
 
-#pageHeader{
-  font-family: 'Merienda';
-  font-size: 6vmax;
-  margin-right: 0;
-}
-
 #requestGridContainer{
-  margin-top: -7vmax;
-  display: grid;
-  width: 70vmax;
+  display: block;
+  width: 50vw;
   height: 55vmin;
-  grid-template-columns: 2fr 3fr;
 }
 
 #logoDiv{
@@ -238,7 +248,6 @@
 
 #formDiv{
   /* min-height: 100%; */
-  margin-top: 5vmax;
 }
 
 #songDiv{
@@ -356,6 +365,11 @@
 }
 
 @media only screen and (max-width: 1465px){
+  #pageHeader{
+    margin-top: 11%;
+    font-size: 56px;
+  }
+
   #requestGridContainer{
     height: 50vmin;
   }
@@ -392,7 +406,7 @@
 
   #customTag{
     margin-top: 10%;
-    font-size: 21px;
+    font-size: 24px;
   }
 }
 
@@ -401,11 +415,37 @@
     justify-content: start;
   }
 
+  #pageHeader{
+    margin-top: 11%;
+    font-size: 52px;
+  }
+
+  #navBarList{
+    margin-top: -3%;
+    /* margin-left: -3%; */
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  #requestSongOption{
+    padding-right: 10%;
+    border-width: 0 1px 0 0;
+    border-color: rgb(255, 255, 255);
+    border-style: solid;
+  }
+  
+  .navBarOption button{
+    color: white;
+    display: block;
+    font-size: 32px;
+    border-radius: 6px;
+  }
+
   #requestGridContainer{
     display: grid;
     width: 50vmax;
     height: 40vmin;
     grid-template-columns: 1fr;
+    margin-top: 3%;
   }
 
   #logoDiv{
@@ -510,16 +550,24 @@
 @media only screen and (max-width: 1100px){
 
   #pageHeader{
-    font-size: 7vmax;
+    font-size: 48px;
+  }
+
+  #navBarList{
+    margin-left: -5.5%;
+  }
+
+  .navBarOption button{
+    font-size: 28px;
   }
 
   #logoDiv{
     height: 45vmin;
   }
 
-  .App-logo {
+  /* .App-logo {
     height: 45vmin;
-  }
+  } */
 
   #artistDiv{
     margin-top: 1.8vmax;
@@ -571,12 +619,39 @@
   }
 
   .songOptionInfo p {
-    font-size: 1.6vw;
+    font-size: 14px;
   }
 
   #customTag{
     margin-top: 8%;
     font-size: 18px;
+  }
+}
+
+@media only screen and (max-width: 800px){
+#logoTitleDiv{
+  grid-template-columns: 2fr 5fr;
+}
+
+  #pageHeader{
+    font-size: 42px;
+    line-height: 100%;
+  }
+
+  .navBarOption button{
+    font-size: 24px;
+  }
+
+  #tracksDiv{
+    height: 40vh;
+  }
+
+  #renderedTracksDiv{
+    height: 95%;
+  }
+
+  .songOption{
+    height: 27%;
   }
 }
 
@@ -658,7 +733,9 @@
   }
 
   #requestGridContainer{
-    height: 115vmin
+    margin-top: 0;
+    height: max-content;
+    /* border: 1px solid red; */
   }
 
   #logoDiv{
@@ -671,10 +748,14 @@
   }
 
   #formDiv{
-    margin-top: 6.5vmax;
+    margin-top: 1%;
     margin-left: 5%;
     width: 90%;
-    padding-bottom: 10vh;
+    padding-bottom: 2vh;
+  }
+
+  #songSearchTabs{
+    margin-top: 0;
   }
 
   .requestLabel input:not(:-moz-placeholder-shown) + .label {
@@ -715,11 +796,11 @@
   #renderedTracksDiv{
     margin-left: 2%;
     width: 95%;
-    height: 200px;
+    /* height: 200px; */
   }
 
   .songOption{
-    height: 40%;
+    /* height: 40%; */
   }
 
   .songOptionImage{

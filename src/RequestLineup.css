@@ -1,25 +1,44 @@
 #lineupGridContainer{
+  position: relative;
   margin-top: 0;
   display: none;
-  width: 70vmax;
-  min-height: 55vmin;
+  width: 60vw;
+  min-height: 60vh;
+  height: fit-content;
+  /* overflow: hidden; */
+}
+
+#sortSelect{
+  width: 25%;
+  text-align: center;
+  margin-left: 65%;
+  border-radius: 20px;
+  font-size: 18px;
+}
+
+#sortSelect option{
+  font-size: 14px;
+  color: aliceblue;
+  background-color: #465060;
 }
 
 #lineupDiv{
-  margin-top: 2.5vmax;
+  position: relative;
+  margin-top: 1%;
   background-color: #36393f;
   border-width: 1px 1px 1px 1px;
   border-color: black;
   border-style: solid;
   border-radius: 20px 20px 20px 20px;
-  /* padding-bottom: 2%; */
+  padding-bottom: 1%;
 }
 
 #lineupTracksDiv{
-  padding: 0px 1%;
-  /* margin-left: 5%; */
-  width: 100%;
-  height: 200px;
+  /* padding: 0px 1%; */
+  margin-top: 1%;
+  margin-left: 5%;
+  width: 90%;
+  height: 90%;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -37,45 +56,68 @@
 }
 
 .lineupSong{
-  margin: 0px 0 0px 0;
   display: grid;
-  grid-template-columns: 6fr 12fr 1fr 1fr;
-  height: 7vmax;
+  grid-template-columns: 4fr 14fr 2fr 1fr;
+  min-height: 20vh;
   /* margin-left: 2.5%; */
   background-color: #4c4d4e;
   border: 1px solid black;
   font-size: 16px;
 }
 
+.lineupSongImageDiv{
+  z-index: 10;
+  margin: 3% 0 0 3%;
+}
+
 .lineupSongImage{
   border: 1px solid black;
+  width: 100%;
+}
+
+.customRequestHeader{
+  margin-top: 40%;
 }
 
 .lineupSongInfo{
-  margin-top: 2.5%;
+  margin: 1.5% 5% 0% 3%;
+  height: 90%;
+  background-color: #3c3f44;
+  z-index: 0;
+  width: 92%;
+  /* border: 1px solid wheat; */
+  border-radius: 10px;
   text-align: left;
   overflow-y: hidden;
   overflow-x: scroll;
+}
+
+.lineupSongInfo p {
+  /* padding-left: 0; */
+  margin-top: 2.5%;
+  margin-left: 2%;
+  height: 20%;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.lineupVoteCount{
+  text-align: right;
+  color: #ce8149;
+  font-weight: 700;
+  width: 100%;
 }
 
 .lineupSongInfo::-webkit-scrollbar {
   display: none;
 }
 
-.lineupSongInfo p {
-  margin-top: 0;
-  vertical-align: middle;
-  /* line-height: calc(1.5 * 1.6vmax); */
-  font-size: 1.2vw;
-  white-space: nowrap;
-  /* margin-bottom: 4%; */
-}
-
 .lineupVoteDiv{
+  margin-top: 10%;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  margin: 12.5% 0% 0 0%;
-  height: 90%;
+  margin: 0% 0% 0 0%;
+  height: 80%;
   grid-gap: 0%;
   /* border: 1px solid red; */
   width: fit-content;
@@ -89,12 +131,65 @@
 
 }
 
-.lineupVoteCount{
+div.upvote {
   text-align: center;
-  color: #ce8149;
-  font-weight: 400;
-  /* border: 1px solid red; */
-  width: 100%;
+  margin-top: 12.5%;
+}
+
+div.upvote a.upvote-enabled {
+  cursor: pointer;
+}
+
+div.upvote a {
+  color: transparent;
+  background-image: url('../node_modules/upvote/lib/images/sprites-stackoverflow.png?v=1');
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: block;
+  margin: 0 auto;
+  width: 60px;
+  height: 40px;
+}
+
+div.upvote span.count {
+  display: block;
+  font-size: 32px;
+  font-family: Arial, Liberation, Sans, DejaVu Sans, sans-serif;
+  /* color: rgb(255, 255, 255); */
+  text-align: center;
+  line-height: 1;
+}
+
+div.upvote a.upvote {
+  margin-top: 10%;
+  background-position: -3px -365px;
+  background-size: 380px 1480px;
+}
+
+div.upvote a.upvote.upvote-on {
+  background-position: 0px -290px;
+  background-size: 350px 1365px;
+}
+
+div.upvote a.downvote {
+  margin-bottom: 0%;
+  background-position: -3px -410px;
+  background-size: 380px 1480px;
+}
+
+div.upvote a.downvote.downvote-on {
+  background-position: 0px -415px;
+  background-size: 350px 1365px;
+}
+
+div.upvote a.star {
+  width: 33px;
+  height: 31px;
+  background-position: 0px -150px;
+}
+
+div.upvote a.star.star-on {
+  background-position: 0px -190px;
 }
 
 .spotifyLinkDiv{
@@ -108,17 +203,31 @@
 
 .lineupSpotifyLink{
   text-decoration: none;
-  font-size: 18px;
-  background-color: #b630f068;
+  font-size: 32px;
+  background-color: #b630f07f;
   width: fit-content;
   height: fit-content;
-  border: 1px solid rgb(158, 32, 189);
+  border: 1px solid rgb(175, 35, 210);
   border-radius: 30px;
   /* border: 1px solid blue; */
 }
 
 .lineupSpotifyLink:visited{
-  
+  background-color: #701e93a3;
+  border: 1px solid rgb(146, 31, 175);
+}
+
+.noSpotifyLink{
+  pointer-events: none;
+  text-decoration: none;
+  font-size: 32px;
+  width: fit-content;
+  height: fit-content;
+  background-color: #3c3b3ca3;
+  border: 1px solid rgb(101, 99, 101);
+  border-radius: 30px;
+  opacity: 50%;
+    /* border: 1px solid blue; */
 }
 
 /* #comingSoonP{
@@ -131,38 +240,68 @@
 } */
 
 @media only screen and (max-width: 1465px){
-  #lineupGridContainer{
-    height: 50vmin;
-  }
 
-  #lineupTracksDiv{
-    width: 90%;
-    margin-left: 5%;
-  }
-
-  .lineupSongInfo p{
-    font-size: 1.2vw;
-  }
 }
 
 @media only screen and (max-width: 1250px){
-  #lineupGridContainer{
-    width: 50vmax;
-    height: 40vmin;
-    grid-template-columns: 1fr;
+  #sortSelect{
+    width: 25%;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 16px;
+    color: aliceblue;
+    background-color: #4b576b;
+    border: 1px solid aliceblue;
   }
 
-  .lineupSongInfo p {
-    height: 40%;
-    font-size: 1.3vw;
-    margin-bottom: 0;
-    line-height: calc(1.5 * 1.3vw);
+  #sortSelect option{
+    font-size: 14px;
+    color: aliceblue;
+    background-color: #4b576b;
+  }
+
+  .lineupSpotifyLink{
+    font-size: 28px;
+  }
+
+  .noSpotifyLink{
+    font-size: 28px;
   }
 }
 
 @media only screen and (max-width: 1100px){
+  #sortSelect{
+    margin-left: 55%;
+    width: 35%;
+    font-size: 14px;
+  }
+
+  #sortSelect option{
+    font-size: 12px;
+  }
+
+  #lineupGridContainer{
+    width: 80%;
+  }
+
+  .lineupSong{
+    grid-template-columns: 5fr 12fr 1fr 1fr;
+  }
+
+  .lineupSongInfo{
+    margin-top: 3%;
+  }
+
   .lineupSongInfo p {
-    font-size: 1.6vw;
+    font-size: 14px;
+  }
+
+  .lineupSpotifyLink{
+    font-size: 24px;
+  }
+
+  .noSpotifyLink{
+    font-size: 24px;
   }
 }
 
@@ -172,6 +311,11 @@
     text-align: center;
     margin-left: 45%;
     border-radius: 20px;
+    font-size: 14px;
+  }
+
+  #sortSelect option{
+   font-size: 12px; 
   }
 
   #lineupGridContainer{
@@ -190,43 +334,66 @@
   }
 
   .lineupSong{
+    min-height: 10vh;
+    height: 300%;
+    display: grid;
+    grid-template-columns: 6fr 12fr 2fr 1fr;
     height: max-content;
     margin-left: 4%;
   }
 
   .lineupSongImageDiv{
     z-index: 10;
-    margin: 5% 0 0 5%;
+    margin: 2%;
+    /* border: 1px solid blue; */
+    height: fit-content;
   }
 
   .lineupSongImage{
     width: 100%;
     height: auto;
-    /* margin-top: 10%; */
+    border: 1px solid black;
+    margin-top: 5%;
+    margin-bottom: 2%;
     /* margin-left: 5%; */
   }
 
   .lineupSongInfo{
-    margin: 2.5% 3%;
+    margin: 2.5% 5% 0% 3%;
     height: 90%;
     background-color: #3c3f44;
     z-index: 0;
-    width: 96.5%;
+    width: 92%;
     /* border: 1px solid wheat; */
     border-radius: 10px;
+    text-align: left;
+    overflow-y: hidden;
+    overflow-x: scroll;
   }
 
   .lineupSongInfo p {
-    /* padding-left: 0; */
     margin-left: 2%;
-    height: 20%;
-    font-size: 75%;
-    line-height: 100%;
-    margin-top: 5%;
+    margin-right: 3%;
+    width: max-content;
+    height: auto;
+    font-size: 12px;
+    white-space: nowrap;
+    /* line-height: 50%; */
   }
 
   .lineupSongName{
     /* margin-top: 120px; */
+  }
+
+  .lineupVoteDiv{
+    /* margin-top: 10%; */
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    margin: 0% 0% 0 -10%;
+    height: 90%;
+    grid-gap: 0%;
+    /* border: 1px solid red; */
+    width: fit-content;
   }
 
   .lineupVoteCount{
@@ -243,159 +410,51 @@
   .lineupDownVoteButton{
     
   }
-}
 
+  div.upvote a {
+    width: 35px;
+    height: 20px;
+  }
 
-div.upvote {
-  text-align: center;
-}
+  div.upvote a.upvote {
+    background-position: 0px -215px;
+    background-size: 200px 880px;
+  }
+  
+  div.upvote a.upvote.upvote-on {
+    background-position: 0px -165px;
+    background-size: 200px 780px;
+  }
+  
+  div.upvote a.downvote {
+    background-position: 0px -245px;
+    background-size: 200px 880px;
 
-div.upvote a.upvote-enabled {
-  cursor: pointer;
-}
+  }
+  
+  div.upvote a.downvote.downvote-on {
+    background-position: 0px -240px;
+    background-size: 200px 780px;
+  }
 
-div.upvote a {
-  color: transparent;
-  background-image: url('../node_modules/upvote/lib/images/sprites-stackoverflow.png?v=1');
-  background-repeat: no-repeat;
-  overflow: hidden;
-  display: block;
-  margin: 0 auto;
-  width: 35px;
-  height: 20px;
-}
+  .spotifyLinkDiv{
+    margin-left: -10%;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 100%;
+    /* border: 1px solid greenyellow; */
+    padding: 0%;
+  }
 
-div.upvote span.count {
-  display: block;
-  font-size: 24px;
-  font-family: Arial, Liberation, Sans, DejaVu Sans, sans-serif;
-  /* color: rgb(255, 255, 255); */
-  text-align: center;
-  line-height: 1;
-}
+  .lineupSpotifyLink{
+    font-size: 20px;
+    /* border: 1px solid blue; */
+  }
 
-div.upvote a.upvote {
-  /* margin-top: 6.934%; */
-  background-position: -3px -265px;
-}
-
-div.upvote a.upvote.upvote-on {
-  background-position: 0px -165px;
-  background-size: 200px 780px;
-}
-
-div.upvote a.downvote {
-  background-position: -3px -300px;
-}
-
-div.upvote a.downvote.downvote-on {
-  background-position: 0px -240px;
-  background-size: 200px 780px;
-}
-
-div.upvote a.star {
-  width: 33px;
-  height: 31px;
-  background-position: 0px -150px;
-}
-
-div.upvote a.star.star-on {
-  background-position: 0px -190px;
-}
-
-div.upvote-serverfault a {
-  background-image: url('../node_modules/upvote/lib/images/sprites-serverfault.png?v=1');
-}
-
-div.upvote-meta-stackoverflow a {
-  background-image: url('../node_modules/upvote/lib/images/sprites-meta-stackoverflow.png?v=1');
-}
-
-div.upvote-superuser a {
-  background-image: url('../node_modules/upvote/lib/images/sprites-superuser.png?v=1');
-}
-
-div.upvote-unix a {
-  background-image: url('../node_modules/upvote/lib/images/sprites-unix.png?v=1');
-  width: 42px;
-  height: 27px;
-}
-
-div.upvote-unix a.upvote {
-  background-position: 0px -237px;
-}
-
-div.upvote-unix a.upvote.upvote-on {
-  background-position: 0px -198px;
-}
-
-div.upvote-unix a.downvote {
-  background-position: 0px -281px;
-}
-
-div.upvote-unix a.downvote.downvote-on {
-  background-position: 0px -319px;
-}
-
-div.upvote-unix a.star {
-  width: 42px;
-  height: 30px;
-  background-position: 0px -126px;
-}
-
-div.upvote-unix a.star.star-on {
-  background-position: 0px -164px;
-}
-
-div.upvote-unix span.count {
-  color: #333;
-  line-height: 15px;
-  padding: 9px 0;
-  font-family: "DejaVu Sans Mono","Bitstream Vera Sans Mono","Courier New",Courier,Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter",monospace;
-  text-shadow: 1px 1px 0 #ffffff;
-  font-weight: bold;
-  margin: 0;
-  border: 0;
-  vertical-align: baseline;
-}
-
-div.upvote-programmers a {
-  background-image: url('../node_modules/upvote/lib/images/sprites-programmers.png?v=1');
-  width: 42px;
-  height: 20px;
-}
-
-div.upvote-programmers a.upvote {
-  background-position: 5px -248px;
-}
-
-div.upvote-programmers a.upvote.upvote-on {
-  background-position: 5px -211px;
-}
-
-div.upvote-programmers a.downvote {
-  background-position: 5px -282px;
-}
-
-div.upvote-programmers a.downvote.downvote-on {
-  background-position: 5px -320px;
-}
-
-div.upvote-programmers a.star {
-  width: 42px;
-  height: 30px;
-  background-position: 6px -128px;
-}
-
-div.upvote-programmers a.star.star-on {
-  background-position: 6px -166px;
-}
-
-div.upvote-programmers span.count {
-  color: #333;
-  line-height: 15px;
-  padding: 5px 0 7px;
-  font-size: 20px;
-  font-weight: bold;
-  font-family: Tahoma,Geneva,Arial,sans-serif;
+  .noSpotifyLink{
+    pointer-events: none;
+    font-size: 20px;
+    opacity: 50%;
+      /* border: 1px solid blue; */
+  }
 }
