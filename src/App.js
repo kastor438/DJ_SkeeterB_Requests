@@ -276,7 +276,11 @@ function App() {
       //   customTab.children[0].style.marginTop = "0%";
       //   customTab.children[0].style.fontSize = "16px";
       // }
-      document.getElementById("renderedTracksDiv").style.height = "200px";
+      if(screenWidth <= 800)
+        document.getElementById("renderedTracksDiv").style.height = "95%";
+      else
+        document.getElementById("renderedTracksDiv").style.height = "200px";
+
       SetSpotifyActive(true);
       SetCustomActive(false);
     }
@@ -311,11 +315,13 @@ function App() {
       //   customTab.children[0].style.marginTop = "6%";
       //   customTab.children[0].style.fontSize = "18px";
       // }
-      document.getElementById("renderedTracksDiv").style.height = "0";
+      // document.getElementById("tracksDiv").style.display = "none";
+      document.getElementById("tracksDiv").style.height = "0";
+      document.getElementById("renderedTracksDiv").style.height = "0px";
 
       SetSpotifyActive(false);
       SetCustomActive(true);
-      CheckValidInput();
+      // CheckValidInput();
     }
   }
 
@@ -328,6 +334,10 @@ function App() {
   }
 
   function CheckValidInput(){
+    let screenWidth = window.innerWidth;
+    if(screenWidth <= 800)
+      document.getElementById("tracksDiv").style.height = "0px";
+
     for(var i = 0; i < 10; i++){
       var option = document.getElementById("option" + i);
       if(option){
@@ -554,6 +564,15 @@ function App() {
         SetRenderedTracks(tracks);
         document.getElementById("renderedTracksDiv").style.display = "block";
         document.getElementById("renderedTracksDiv").style.overflowY = "scroll";
+        let screenWidth = window.innerWidth;
+        if(screenWidth <= 800){
+          document.getElementById("tracksDiv").style.height = "40vh";      
+          document.getElementById("renderedTracksDiv").style.height = "95%";
+        }
+        else{
+          document.getElementById("renderedTracksDiv").style.height = "200px";
+          document.getElementById("tracksDiv").style.height = "fit-content"
+        }  
       });        
   }
 
@@ -739,7 +758,7 @@ function App() {
       parent.dataset.currvote = 'none';
       voteChange = -1;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
-      if(userFingerprintRef.current)
+      if(userFingerprintRef.current != '')
         remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current));
     }
     else if(parent.dataset.currvote === 'down'){
@@ -749,7 +768,7 @@ function App() {
       voteChange = 1;
       downvoteChange = true;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
-      if(userFingerprintRef.current)
+      if(userFingerprintRef.current != '')
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'up');
     }
     else if(parent.dataset.currvote === 'none'){
@@ -757,7 +776,7 @@ function App() {
       parent.dataset.currvote = 'up';
       voteChange = 1;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
-      if(userFingerprintRef.current)
+      if(userFingerprintRef.current != '')
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'up');
     }
 
@@ -782,7 +801,7 @@ function App() {
       parent.dataset.currvote = 'none';
       voteChange = -1;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
-      if(userFingerprintRef.current)
+      if(userFingerprintRef.current != '')
         remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current));
     }
     else if(parent.dataset.currvote === 'up'){
@@ -792,7 +811,7 @@ function App() {
       voteChange = 1;
       upvoteChange = true;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
-      if(userFingerprintRef.current)
+      if(userFingerprintRef.current != '')
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'down');
     }
     else if(parent.dataset.currvote === 'none'){
@@ -800,7 +819,7 @@ function App() {
       parent.dataset.currvote = 'down';
       voteChange = 1;
       // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
-      if(userFingerprintRef.current)
+      if(userFingerprintRef.current != '')
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + userFingerprintRef.current), 'down');
     }
 

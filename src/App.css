@@ -17,7 +17,7 @@
 
 .App-header {
   min-width: 100vw;
-  min-height: 100vh;
+  min-height: 80vh;
   height: fit-content;
   display: flex;
   flex-direction: column;
@@ -640,10 +640,6 @@
 
   .navBarOption button{
     font-size: 24px;
-  }
-
-  #tracksDiv{
-    height: 40vh;
   }
 
   #renderedTracksDiv{

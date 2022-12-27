@@ -1,6 +1,6 @@
 {
   "rules": {
-    ".read": true,
+    ".read": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'",
     ".write": false,
     "Requests": {
       ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
@@ -12,6 +12,9 @@
       ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
     },
     "Events": {
+      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+    },
+    "_Live": {
       ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
     }
   }
