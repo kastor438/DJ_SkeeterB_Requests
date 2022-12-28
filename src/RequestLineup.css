@@ -14,6 +14,9 @@
   margin-left: 65%;
   border-radius: 20px;
   font-size: 18px;
+  color: aliceblue;
+  background-color: #4b576b;
+  border: 1px solid aliceblue;
 }
 
 #sortSelect option{
@@ -249,9 +252,6 @@ div.upvote a.star.star-on {
     text-align: center;
     border-radius: 20px;
     font-size: 16px;
-    color: aliceblue;
-    background-color: #4b576b;
-    border: 1px solid aliceblue;
   }
 
   #sortSelect option{
@@ -306,6 +306,10 @@ div.upvote a.star.star-on {
 }
 
 @media only screen and (max-width: 660px){
+  #lineupGridContainer{
+    overflow-y: hidden;
+  }
+
   #sortSelect{
     width: 45%;
     text-align: center;

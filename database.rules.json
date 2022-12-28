@@ -1,15 +1,15 @@
 {
   "rules": {
-    ".read": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'",
+    ".read": "auth.uid !== null",
     ".write": false,
     "Requests": {
-      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+      ".write": "auth.uid !== null"
     },
     "SongStatistics": {
-      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+      ".write": "auth.uid !== null"
     },
     "Visitors": {
-      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+      ".write": "auth.uid !== null"
     },
     "Events": {
       ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"

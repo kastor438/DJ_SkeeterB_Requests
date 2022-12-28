@@ -338,7 +338,7 @@ function App() {
     if(screenWidth <= 800)
       document.getElementById("tracksDiv").style.height = "0px";
 
-    for(var i = 0; i < 10; i++){
+    for(var i = 0; i < 50; i++){
       var option = document.getElementById("option" + i);
       if(option){
         option.style.color = "white";
@@ -644,7 +644,7 @@ function App() {
       element = element.parentNode;
     }
 
-    for(var i = 0; i < 10; i++){
+    for(var i = 0; i < 50; i++){
       var option = document.getElementById("option" + i);
       if(option){
         option.style.color = "white";
