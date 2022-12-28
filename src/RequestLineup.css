@@ -38,7 +38,7 @@
   margin-top: 1%;
   margin-left: 5%;
   width: 90%;
-  height: 90%;
+  height: 65vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }

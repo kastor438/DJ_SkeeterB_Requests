@@ -279,7 +279,7 @@ function App() {
       if(screenWidth <= 800)
         document.getElementById("renderedTracksDiv").style.height = "95%";
       else
-        document.getElementById("renderedTracksDiv").style.height = "200px";
+        document.getElementById("renderedTracksDiv").style.height = "320px";
 
       SetSpotifyActive(true);
       SetCustomActive(false);
@@ -570,7 +570,7 @@ function App() {
           document.getElementById("renderedTracksDiv").style.height = "95%";
         }
         else{
-          document.getElementById("renderedTracksDiv").style.height = "200px";
+          document.getElementById("renderedTracksDiv").style.height = "320px";
           document.getElementById("tracksDiv").style.height = "fit-content"
         }  
       });        
@@ -720,7 +720,6 @@ function App() {
               React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
               React.createElement('span', {}, ''))
           );
-          console.log(data[sortedKeys[i]].SpotifyURL != '');
           lineup.push(track);
         }
         // else if(localStorage.getItem('voted' + sortedKeys[i])){
@@ -951,9 +950,6 @@ function App() {
             </ul>
           </nav>
           <div id='requestGridContainer'>
-            {/* <div id='logoDiv'>
-              <img src={logo} className="App-logo" alt="logo" />
-            </div> */}
             <div id='formDiv'>
               <div id='songSearchTabs'>
                 <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>

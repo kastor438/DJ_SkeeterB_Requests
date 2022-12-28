@@ -4,17 +4,6 @@
   overflow-x: hidden;
 }
 
-.App-logo {
-  min-height: 55vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 10s linear;
-  }
-}
-
 .App-header {
   min-width: 100vw;
   min-height: 80vh;
@@ -173,7 +162,7 @@
 
 #renderedTracksDiv{
   display: none;
-  padding: 0 1%;
+  padding: 0 0%;
   /* margin-left: 5%; */
   width: 100%;
   height: 200px;
@@ -197,7 +186,7 @@
   margin: 0px 0 0px 0;
   display: grid;
   grid-template-columns: 1fr 2fr;
-  /* width: 100%; */
+  width: 95%;
   height: 7vmax;
   margin-left: 2.5%;
   background-color: #4c4d4e;
@@ -234,12 +223,13 @@
   font-size: 1.2vw;
   white-space: nowrap;
   margin-bottom: 4%;
+  width: 100%;
 }
 
 #requestGridContainer{
   display: block;
   width: 50vw;
-  height: 55vmin;
+  min-height: max-content;
 }
 
 #logoDiv{
@@ -371,7 +361,7 @@
   }
 
   #requestGridContainer{
-    height: 50vmin;
+    min-height: 70vh;
   }
 
   #renderedTracksDiv{
@@ -380,10 +370,6 @@
   }
 
   #logoDiv{
-    height: 45vmin;
-  }
-  
-  .App-logo {
     height: 45vmin;
   }
 
@@ -443,19 +429,9 @@
   #requestGridContainer{
     display: grid;
     width: 50vmax;
-    height: 40vmin;
+    height: 60vh;
     grid-template-columns: 1fr;
     margin-top: 3%;
-  }
-
-  #logoDiv{
-    margin-top: 0;
-    height: 40vmin;
-  }
-
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
   }
 
   #formDiv{
@@ -551,6 +527,7 @@
 
   #pageHeader{
     font-size: 48px;
+    margin-top: 9%;
   }
 
   #navBarList{
@@ -561,13 +538,9 @@
     font-size: 28px;
   }
 
-  #logoDiv{
-    height: 45vmin;
+  #requestGridContainer{
+    height: 75vh;
   }
-
-  /* .App-logo {
-    height: 45vmin;
-  } */
 
   #artistDiv{
     margin-top: 1.8vmax;
@@ -615,7 +588,7 @@
   }
 
   #submitBtn{
-    padding: 0.5vmax 0;
+    padding: 0 0;
   }
 
   .songOptionInfo p {
@@ -629,13 +602,14 @@
 }
 
 @media only screen and (max-width: 800px){
-#logoTitleDiv{
-  grid-template-columns: 2fr 5fr;
-}
+  #logoTitleDiv{
+    grid-template-columns: 2fr 5fr;
+  } 
 
   #pageHeader{
     font-size: 42px;
     line-height: 100%;
+    margin-top: 15%;
   }
 
   .navBarOption button{
@@ -658,53 +632,51 @@
 
   #logoTitleDiv{
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 4fr;
     width: 100vw;
     height: fit-content;
-    line-height: 200%;
     /* border: 1px solid red; */
   }
 
   #navBarLogo{
     width: 100%;
-    /* display: inline-block; */
   }
 
   #pageHeader{
     display: inline;
-    /* margin-left: 15%; */
-    font-size: 4vmax;
-    /* margin-top: 10px; */
+    font-size: 28px;
+    margin-top: 12.5%;
+    height: 100%;
+    line-height: 0%;
     text-align: left;
   }
 
   #navBar{
-    /* margin-left: 7.5vw; */
-    /* margin-top: -7%; */
     width: 100vw;
     z-index: 100;
   }
 
   #navBarList{
-    margin-top: 0%;
-    /* margin-left: -10%; */
+    margin-left: -7%;
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    width: 100vw;
     line-height: 200%;
+    /* border: 1px solid red; */
   }
 
   .navBarOption button{
     color: white;
     display: block;
-    font-size: 2.2vmax;
+    font-size: 18px;
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
   }
 
   #requestSongOption{
-    padding-right: 10%;
+    padding-right: 20px;
     
     border-width: 0 2px 0 0;
     border-color: white;
@@ -716,31 +688,14 @@
   }
 
   #lineupOption{
-    padding-left: 10%;
-  }
-
-  .navBarOption button{
-    color: white;
-    display: block;
-    font-size: 2.2vmax;
-    background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
+    padding-left: 20px;
+    float: left;
   }
 
   #requestGridContainer{
     margin-top: 0;
     height: max-content;
     /* border: 1px solid red; */
-  }
-
-  #logoDiv{
-    margin-top: 2.8vmax;
-    height: 50vmin;
-  }
-
-  .App-logo {
-    height: 50vmin;
   }
 
   #formDiv{
@@ -754,26 +709,31 @@
     margin-top: 0;
   }
 
+  .requestLabel .label {
+    font-size: 1.6vmax;
+    margin-top: 1vmax;
+  }
+
   .requestLabel input:not(:-moz-placeholder-shown) + .label {
     color: #0077FFCF;
     transform: translate3d(0, -3.3vmax, 0) scale(0.75);
+    margin-top: 0vmax;
   }
   .requestLabel input:not(:-ms-input-placeholder) + .label {
     color: #0077FFCF;
     transform: translate3d(0, -3.3vmax, 0) scale(0.75);
+    margin-top: 0vmax;
   }
   .requestLabel input:not(:placeholder-shown) + .label {
     color: #0077FFCF;
-    transform: translate3d(0, -3.3vmax, 0) scale(0.75);
-  }
-  .requestLabel .label {
-    font-size: 1.6vmax;
+    transform: translate3d(0, -2vmax, 0) scale(0.75);
+    margin-top: 0vmax;
   }
 
   .requestLabel input:focus + .label {
     color: #2e8cf7;
-    font-size: 2.3vmax;
-    transform: translate3d(0, -4.2vmax, 0) scale(0.75);
+    font-size: 2.5vmax;
+    transform: translate3d(0, -4.1vmax, 0) scale(0.75);
   }
 
   .requestLabel input {
@@ -792,11 +752,6 @@
   #renderedTracksDiv{
     margin-left: 2%;
     width: 95%;
-    /* height: 200px; */
-  }
-
-  .songOption{
-    /* height: 40%; */
   }
 
   .songOptionImage{
@@ -806,13 +761,13 @@
   }
 
   .songOptionInfo{
-    margin-left: -15%;
+    margin-left: -8%;
     margin-top: 4%;
     height: 70%;
   }
 
   .songOptionInfo p {
-    margin-left: 10%;
+    /* margin-left: 10%; */
     height: 40%;
     margin-top: 3%;
     font-size: 90%;
@@ -832,5 +787,17 @@
 
   #submissionTextDiv{
     margin-top: -6%;
+  }
+}
+
+@media only screen and (max-width: 500px){
+  #navBarList{
+    margin-left: -9%;
+  }
+}
+
+@media only screen and (max-width: 400px){
+  #navBarList{
+    margin-left: -12%;
   }
 }
