@@ -412,30 +412,50 @@ function App() {
     var songExistsID = -1;
     var prevRequestCount = 0;
 
-    get(child(dbRef, 'Requests/')).then((snapshot) => {
-      if (snapshot.exists()) {
-        //console.log(snapshot.val());
+    if(userFingerprintRef.current && userFingerprintRef.current != ''){
+      get(child(dbRef, 'Requests/')).then((snapshot) => {
+        if (snapshot.exists()) {
+          //console.log(snapshot.val());
 
-        Object.entries(snapshot.val()).forEach(([key, value]) => {
-          songIDs.push(key);
-          songRequests.push(value);
-        });
+          Object.entries(snapshot.val()).forEach(([key, value]) => {
+            songIDs.push(key);
+            songRequests.push(value);
+          });
 
-        for(var i = 0; i < songRequests.length; i++){
-          if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
-            addRequestBool = false;
-            prevRequestCount = songRequests[i].RequestCount;
-            songExistsID = songIDs[i];
-          }
-        }
-
-        if(addRequestBool){
-          for(i = 0; i < songIDs.length; i++){
-            if(songIDs[i] >= nextSongID){
-              nextSongID = parseInt(songIDs[i]) + 1;
+          for(var i = 0; i < songRequests.length; i++){
+            if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
+              addRequestBool = false;
+              prevRequestCount = songRequests[i].RequestCount;
+              songExistsID = songIDs[i];
             }
           }
-          set(ref(db, 'Requests/' + nextSongID + '/'), {
+
+          if(addRequestBool){
+            for(i = 0; i < songIDs.length; i++){
+              if(songIDs[i] >= nextSongID){
+                nextSongID = parseInt(songIDs[i]) + 1;
+              }
+            }
+            set(ref(db, 'Requests/' + nextSongID + '/'), {
+              SongName: songName,
+              ArtistName: artistName,
+              RequestCount: 1,
+              SpotifyURL: spotifyURL,
+              SpotifyImageURL: spotifyImageLink,
+              Upvotes: 0,
+              Downvotes: 0,
+              Voters : {},
+              RequestedBy : userFingerprintRef.current
+            });
+            document.getElementById('submissionText').innerHTML = "Request Sent!";
+          }
+          else{
+            set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
+            document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
+          }
+        } 
+        else {
+          set(ref(db, 'Requests/1/'), {
             SongName: songName,
             ArtistName: artistName,
             RequestCount: 1,
@@ -443,65 +463,52 @@ function App() {
             SpotifyImageURL: spotifyImageLink,
             Upvotes: 0,
             Downvotes: 0,
-            Voters : {}
+            Voters : {},
+            RequestedBy : userFingerprintRef.current
           });
           document.getElementById('submissionText').innerHTML = "Request Sent!";
         }
-        else{
-          set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
-          document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
-        }
-      } 
-      else {
-        set(ref(db, 'Requests/1/'), {
-          SongName: songName,
-          ArtistName: artistName,
-          RequestCount: 1,
-          SpotifyURL: spotifyURL,
-          SpotifyImageURL: spotifyImageLink,
-          Upvotes: 0,
-          Downvotes: 0,
-          Voters : {}
-        });
-        document.getElementById('submissionText').innerHTML = "Request Sent!";
-      }
-      setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
-    }).catch((error) => {
-      console.error(error);
-    });
-
-    if(trackStatsRef.current){
-      get(child(dbRef, 'SongStatistics/')).then((snapshot) => {
-        var songKey = -1;
-        var newKeyIndex = 0;
-        var statsSong;
-        if (snapshot.exists()) {  
-          Object.entries(snapshot.val()).forEach(([key, value]) => {
-            var currKey = parseInt(key);
-            if(value.SongName == songName){
-              songKey = currKey;
-              statsSong = value;
-            }
-            else if(newKeyIndex <= currKey){
-              newKeyIndex = currKey+1;
-            }
-          });
-        }
-
-        if(songKey > -1){
-          set(ref(db, 'SongStatistics/' + songKey + '/RequestCount'), (statsSong.RequestCount+1));
-        }
-        else{
-          set(ref(db, 'SongStatistics/' + newKeyIndex + '/'), {
-            SongName: songName,
-            ArtistName: artistName,
-            RequestCount: 1,
-            SpotifyURL: spotifyURL
-          });
-        }
+        setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
       }).catch((error) => {
         console.error(error);
       });
+
+      if(trackStatsRef.current){
+        get(child(dbRef, 'SongStatistics/')).then((snapshot) => {
+          var songKey = -1;
+          var newKeyIndex = 0;
+          var statsSong;
+          if (snapshot.exists()) {  
+            Object.entries(snapshot.val()).forEach(([key, value]) => {
+              var currKey = parseInt(key);
+              if(value.SongName == songName){
+                songKey = currKey;
+                statsSong = value;
+              }
+              else if(newKeyIndex <= currKey){
+                newKeyIndex = currKey+1;
+              }
+            });
+          }
+
+          if(songKey > -1){
+            set(ref(db, 'SongStatistics/' + songKey + '/RequestCount'), (statsSong.RequestCount+1));
+          }
+          else{
+            set(ref(db, 'SongStatistics/' + newKeyIndex + '/'), {
+              SongName: songName,
+              ArtistName: artistName,
+              RequestCount: 1,
+              SpotifyURL: spotifyURL
+            });
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
+    }
+    else{
+      console.log("Fingerprint error...")
     }
   }
 
