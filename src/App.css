@@ -72,7 +72,7 @@
 }
 
 #navBarList{
-  margin-top: -3%;
+  margin-top: -4%;
   margin-left: -4%;
   list-style: none;
   display: grid;
@@ -98,7 +98,7 @@
 .navBarOption button{
   color: white;
   display: block;
-  font-size: 36px;
+  font-size: 40px;
   background-color: Transparent;
   background-repeat:no-repeat;
   border: none;
@@ -198,12 +198,12 @@
   border: 1px solid black;
   width: 6.5vmax;
   height: 6.5vmax;
-  margin: 3% 2.5%;
+  margin: 1% 2.5%;
 }
 
 .songOptionInfo{
-  margin-top: 2.5%;
-  margin-left: -10%;
+  /* margin-top: 2.5%; */
+  margin-left: -18%;
   text-align: left;
   justify-content: center;
   height: 7vmax;
@@ -391,7 +391,7 @@ input:-webkit-autofill:focus{
   }
 
   .songOptionInfo{
-    margin-left: -10%;
+    margin-left: -18%;
   }
 
   .songOptionInfo p{
@@ -509,15 +509,16 @@ input:-webkit-autofill:focus{
     background: linear-gradient(to right, #4492eb , #cd15d3);;
   }
   
-  .songOptionInfo p {
-    height: 40%;
-    font-size: 1.3vw;
-    margin-bottom: 0;
-    line-height: calc(1.5 * 1.3vw);
+  .songOptionInfo{
+    margin-top: 3%;
+    margin-left: -18%;
   }
 
-  .songOptionInfo{
-    margin-left: -15%;
+  .songOptionInfo p {
+    height: 25%;
+    font-size: 1.3vw;
+    /* margin-bottom: 0; */
+    line-height: calc(1.5 * 1.3vw);
   }
 
   #spotifyImage{
@@ -630,6 +631,16 @@ input:-webkit-autofill:focus{
 
   .songOption{
     height: 27%;
+  }
+
+  .songOptionInfo{
+    margin-left: -12%;
+  }
+
+  .songOptionImage{
+    margin-top: 2.5%;
+    width: 65%;
+    height: 90%;
   }
 }
 
@@ -762,8 +773,8 @@ input:-webkit-autofill:focus{
   }
 
   .songOptionImage{
-    width: 65%;
-    height: 85%;
+    width: 70%;
+    height: 90%;
     margin: 2.5% 2%;
   }
 

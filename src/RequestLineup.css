@@ -137,6 +137,7 @@
 div.upvote {
   text-align: center;
   margin-top: 12.5%;
+  margin-left: -5%;
 }
 
 div.upvote a.upvote-enabled {
@@ -167,22 +168,26 @@ div.upvote a.upvote {
   margin-top: 10%;
   background-position: -3px -365px;
   background-size: 380px 1480px;
+  transform: translate3d(0, 0, 0) scale(0.9);
 }
 
 div.upvote a.upvote.upvote-on {
   background-position: 0px -290px;
   background-size: 350px 1365px;
+  transform: translate3d(0, 0, 0) scale(0.9);
 }
 
 div.upvote a.downvote {
   margin-bottom: 0%;
   background-position: -3px -410px;
   background-size: 380px 1480px;
+  transform: translate3d(0, 0, 0) scale(0.9);
 }
 
 div.upvote a.downvote.downvote-on {
   background-position: 0px -415px;
   background-size: 350px 1365px;
+  transform: translate3d(0, 0, 0) scale(0.9);
 }
 
 div.upvote a.star {
@@ -243,7 +248,25 @@ div.upvote a.star.star-on {
 } */
 
 @media only screen and (max-width: 1465px){
+  div.upvote{
+    margin-left: -15%;
+  }
 
+  div.upvote a.upvote {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.upvote.upvote-on {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.downvote {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.downvote.downvote-on {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
 }
 
 @media only screen and (max-width: 1250px){
@@ -258,6 +281,26 @@ div.upvote a.star.star-on {
     font-size: 14px;
     color: aliceblue;
     background-color: #4b576b;
+  }
+
+  div.upvote{
+    margin-left: -15%;
+  }
+
+  div.upvote a.upvote {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.upvote.upvote-on {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.downvote {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.downvote.downvote-on {
+    transform: translate3d(0, 0, 0) scale(0.85);
   }
 
   .lineupSpotifyLink{
@@ -302,6 +345,32 @@ div.upvote a.star.star-on {
 
   .noSpotifyLink{
     font-size: 24px;
+  }
+
+  div.upvote{
+    margin-left: -15%;
+  }
+
+  div.upvote a.upvote {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.upvote.upvote-on {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.downvote {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  
+  div.upvote a.downvote.downvote-on {
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+}
+
+@media only screen and (max-width: 800px){
+  div.upvote{
+    margin-left: -10%;
   }
 }
 
@@ -415,6 +484,10 @@ div.upvote a.star.star-on {
     
   }
 
+  div.upvote{
+    margin-left: -8%;
+  }
+
   div.upvote a {
     width: 35px;
     height: 20px;
@@ -423,22 +496,25 @@ div.upvote a.star.star-on {
   div.upvote a.upvote {
     background-position: 0px -215px;
     background-size: 200px 880px;
+    transform: translate3d(0, 0, 0) scale(1.3);
   }
   
   div.upvote a.upvote.upvote-on {
     background-position: 0px -165px;
     background-size: 200px 780px;
+    transform: translate3d(0, 0, 0) scale(1.2);
   }
   
   div.upvote a.downvote {
     background-position: 0px -245px;
     background-size: 200px 880px;
-
+    transform: translate3d(0, 0, 0) scale(1.3);
   }
   
   div.upvote a.downvote.downvote-on {
     background-position: 0px -240px;
     background-size: 200px 780px;
+    transform: translate3d(0, 0, 0) scale(1.2);
   }
 
   .spotifyLinkDiv{
@@ -461,4 +537,8 @@ div.upvote a.star.star-on {
     opacity: 50%;
       /* border: 1px solid blue; */
   }
+}
+
+@media only screen and (max-width: 500px){
+
 }
