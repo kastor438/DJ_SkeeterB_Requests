@@ -412,7 +412,7 @@ function App() {
     var songExistsID = -1;
     var prevRequestCount = 0;
 
-    if(userFingerprintRef.current && userFingerprintRef.current != ''){
+    if((userFingerprintRef.current && userFingerprintRef.current != '') || true){
       get(child(dbRef, 'Requests/')).then((snapshot) => {
         if (snapshot.exists()) {
           //console.log(snapshot.val());
