@@ -1,0 +1,155 @@
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#navBar{
+  width: 100vw;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  align-items: center;
+}
+
+#logoTitleDiv{
+  display: flex;
+  align-items: center;
+  width: 90%;
+  height: fit-content;
+  /* border: 1px solid red; */
+}
+
+#navBarLogo{
+  width: 25%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #navBarLogo {
+    animation: App-logo-spin infinite 10s linear;
+  }
+}
+
+#logoTitleDiv a{
+  text-decoration: none;
+  color: white;
+}
+
+#pageHeader{
+  font-family: 'Merienda';
+  font-size: 68px;
+  /* border: 1px solid red; */
+}
+
+#loginSignupOptions{
+  display: block;
+  /* border: 1px solid red; */
+  height: max-content;
+  white-space: nowrap;
+}
+
+#loginSignupOptions a{
+  text-decoration: none;
+  font-size: 75%;
+  color: rgb(161, 61, 219);
+}
+
+#userDiv{
+  /* border: 1px solid red; */
+  white-space: nowrap;
+}
+
+#userDisplayName{
+  font-size: 18px;
+}
+
+#signoutSpan{
+  font-size: 18px;
+}
+
+#signoutButton{
+  background-color: transparent;
+  border: none;
+  color: rgb(145, 62, 223);
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 1465px){
+  #pageHeader{
+    font-size: 56px;
+  }
+}
+
+@media only screen and (max-width: 1250px){
+  #navBarLogo{
+    width: 22%;
+  }
+
+  #pageHeader{
+    font-size: 52px;
+  }
+}
+
+@media only screen and (max-width: 1100px){
+  #pageHeader{
+    font-size: 44px;
+  }
+}
+
+@media only screen and (max-width: 800px){
+  #navBarLogo{
+    width: 25%;
+  }
+
+  #pageHeader{
+    font-size: 150%;
+  }
+
+  #userDisplayName{
+    font-size: 14px;
+  }
+
+  #signoutSpan{
+    font-size: 14px;
+  }
+
+  #signoutButton{
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: 660px){
+  #navBar{
+    width: 100vw;
+    z-index: 100;
+  }
+
+  #navBarLogo{
+    width: 40%;
+  }
+
+  #pageHeader{
+    font-size: 140%;
+  }
+}
+
+@media only screen and (max-width: 575px){
+  #userDiv{
+    /* border: 1px solid red; */
+    justify-content: end;
+    display: flex;
+    width: 100%;
+  }
+  #userDisplayName{
+    /* border: 1px solid red; */
+    font-size: 14px;
+    width: 40%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

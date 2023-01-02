@@ -1,0 +1,712 @@
+#songRequestsDiv{
+  width: 100vw;
+  /* border: 1px solid red; */
+}
+
+#liveStatus{
+  margin-top: 0;
+  margin-right: 2%;
+  text-align: end;
+  white-space: nowrap;
+  /* border: 1px solid red; */
+}
+
+#requestAndLineupList{
+  width: 100vw;
+  z-index: 100;
+  margin-top: -4%;
+  margin-left: -3%;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* border: 1px solid red; */
+}
+
+#requestSongOption{
+  padding-right: 10%;
+  border-width: 0 1px 0 0;
+  border-color: rgb(255, 255, 255);
+  border-style: solid;
+}
+
+#requestSongOption button{
+  float: right;
+}
+
+#lineupOption{
+  padding-left: 10%;
+}
+
+.contentOption button{
+  color: white;
+  display: block;
+  font-size: 40px;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+}
+
+#contentDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#tracksDiv{
+  margin-top: 2.5vmax;
+}
+
+#songSearchTabs{
+  display: grid;
+  /* grid-template-rows: 1fr; */
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  /* margin-left: 5%; */
+}
+
+#spotifyTab{
+  border-width: 1px 1px 0 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 10% 20% 0 0 / 40% 100%;
+  height: 100%;
+  background-color: #36393f;
+  z-index: 3;
+}
+
+#customTab{
+  border-width: 1px 1px 0 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 20% 10% 0 0 / 100% 40%;
+  height: 100%;
+  margin-left: -5%;
+  z-index: 2;
+  background-color: #2e2f32;
+}
+
+#spotifyImage{
+  width: 50%;
+  margin-top: 8%;
+}
+
+#customTag{
+  width: 40%;
+  margin-top: 10%;
+  margin-left: 30%;
+  font-size: 40px;
+  line-height: 100%;
+  height: 100%;
+}
+
+#searchDiv{
+  background-color: #36393f;
+  border-width: 0 1px 1px 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 0 0 20px 20px;
+  padding-bottom: 2%;
+}
+
+#renderedTracksDiv{
+  display: none;
+  padding: 0 0%;
+  /* margin-left: 5%; */
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#renderedTracksDiv::-webkit-scrollbar-track {
+  background: #484646;
+}
+
+#renderedTracksDiv::-webkit-scrollbar{
+  width: 8px;
+}
+
+#renderedTracksDiv::-webkit-scrollbar-thumb {
+  background: #847d7d; 
+}
+
+.songOption{
+  margin: 0px 0 0px 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  width: 95%;
+  height: 7vmax;
+  margin-left: 2.5%;
+  background-color: #4c4d4e;
+  border: 1px solid black;
+  font-size: 16px;
+}
+
+.songOptionImage{
+  border: 1px solid black;
+  width: 6.5vmax;
+  height: 6.5vmax;
+  margin: 1% 2.5%;
+}
+
+.songOptionInfo{
+  /* margin-top: 2.5%; */
+  margin-left: -18%;
+  text-align: left;
+  justify-content: center;
+  height: 7vmax;
+  line-height: 17px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.songOptionInfo::-webkit-scrollbar {
+  display: none;
+}
+
+.songOptionInfo p {
+  margin-top: 0;
+  vertical-align: middle;
+  line-height: calc(1.5 * 1.6vmax);
+  font-size: 1.2vw;
+  white-space: nowrap;
+  margin-bottom: 4%;
+  width: 100%;
+}
+
+#requestGridContainer{
+  display: block;
+  width: 50vw;
+  min-height: max-content;
+}
+
+#formDiv{
+  /* min-height: 100%; */
+}
+
+#songDiv{
+  padding-top: 2.5vmax;
+}
+
+#artistDiv{
+  margin-top: 2.5vmax;
+}
+
+.requestLabel {
+  position: relative;
+  margin: auto;
+  width: 100%;
+  max-width: 2vmax;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.requestLabel .label {
+  position: absolute;
+  top: 1vmax;
+  left: 12px;
+  font-size: 1.5vmax;
+  color: #64a8f5;
+  font-weight: 500;
+  transform-origin: 0 0;
+  transform: translate3d(0, -1vmax, 0);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+.requestLabel .focus-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.requestLabel input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 80%;
+  border: 0;
+  font-family: inherit;
+  padding: 1vmin 1vmax 0 1vmax;
+  height: 3.2vmax;
+  font-size: 2vmax;
+  font-weight: 400;
+  background: rgba(0, 0, 0, 0);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+  color: rgb(255, 255, 255);
+  transition: all 0.15s ease;
+}
+.requestLabel input:hover {
+  background: rgba(0, 0, 0, 0);
+  box-shadow: inset 0 -1px 0 #2e8cf7;;
+}
+.requestLabel input:not(:-moz-placeholder-shown) + .label {
+  color: #0077FFCF;
+  transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+}
+.requestLabel input:not(:-ms-input-placeholder) + .label {
+  color: #0077FFCF;
+  transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+}
+.requestLabel input:not(:placeholder-shown) + .label {
+  color: #0077FFCF;
+  transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+}
+.requestLabel input:focus {
+  background: rgba(82, 78, 78, 0.377);
+  outline: none;
+  box-shadow: inset 0 -2px 0 #0051ff;
+}
+.requestLabel input:focus + .label {
+  color: #2e8cf7;
+  transform: translate3d(0, -4vmax, 0) scale(0.75);
+}
+.requestLabel input:focus + .label + .focus-bg {
+  transform: scaleX(1);
+  transition: all 0.1s ease;
+}
+ 
+input:-webkit-autofill:focus{
+  border: 1px solid rgb(52, 52, 52);
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: inset 0 -1px 0 #36393f;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
+#submitBtn{
+  margin-top: 3vmax;
+  padding: 0.6vmax;
+  color: white;
+  width: 250px;
+  border-color: white;
+  border-radius: 15px;
+  font-size: 28px;
+  background: linear-gradient(to right, #4492eb , #cd15d3);
+  box-shadow: inset 0 -6px 0 #380e50;
+}
+
+#submitBtn:hover{
+  color: rgb(175, 175, 175);
+  border-color: rgba(148, 148, 148, 0.76);
+  background: linear-gradient(to right, #326cad , #910e96);
+  box-shadow: inset 0 -3px 0 #540681;
+}
+
+#submitBtn:disabled{
+  pointer-events: none;
+  filter: grayscale(100%);
+  color: rgb(175, 175, 175);
+  border-color: rgba(148, 148, 148, 0.76);
+  background: linear-gradient(to right, #326cad , #910e96);
+  box-shadow: inset 0 -3px 0 #540681;
+}
+
+@media only screen and (max-width: 1465px){
+  #requestGridContainer{
+    min-height: 70vh;
+  }
+
+  #renderedTracksDiv{
+    width: 90%;
+    margin-left: 5%;
+  }
+
+  .requestLabel input:focus + .label {
+    color: #2e8cf7;
+    transform: translate3d(0, -5vmin, 0) scale(0.75);
+  }
+
+  #submitBtn{
+    font-size: 29px;
+  }
+
+  .songOptionInfo{
+    margin-left: -18%;
+  }
+
+  .songOptionInfo p{
+    font-size: 1.2vw;
+  }
+
+  #customTag{
+    margin-top: 10%;
+    font-size: 24px;
+  }
+}
+
+@media only screen and (max-width: 1250px){
+  .App-header {
+    justify-content: start;
+  }
+
+  #requestAndLineupList{
+    margin-top: -3%;
+    /* margin-left: -3%; */
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  #requestSongOption{
+    padding-right: 10%;
+    border-width: 0 1px 0 0;
+    border-color: rgb(255, 255, 255);
+    border-style: solid;
+  }
+  
+  .contentOption button{
+    color: white;
+    display: block;
+    font-size: 32px;
+    border-radius: 6px;
+  }
+
+  #requestGridContainer{
+    display: grid;
+    width: 50vmax;
+    height: 60vh;
+    grid-template-columns: 1fr;
+    margin-top: 3%;
+  }
+
+  #formDiv{
+    margin-top: -2vmax;
+  }
+
+  #songDiv{
+    margin-top: 0;
+  }
+
+  #artistDiv{
+    margin-top: 2.5vmax;
+  }
+
+  .requestLabel input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 70%;
+    border: 0;
+    font-family: inherit;
+    padding: 1vmin 1vmax 0 1vmax;
+    height: 3.5vmax;
+    font-size: 2.4vmax;
+    font-weight: 400;
+    background: rgba(0, 0, 0, 0);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    color: rgb(255, 255, 255);
+    transition: all 0.15s ease;
+  }
+  .requestLabel input:hover {
+    background: rgba(0, 0, 0, 0);
+    box-shadow: inset 0 -1px 0 #2e8cf7;;
+  }
+  .requestLabel input:not(:-moz-placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+  }
+  .requestLabel input:not(:-ms-input-placeholder) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+  }
+  .requestLabel input:not(:placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+  }
+  .requestLabel input:focus {
+    background: rgba(82, 78, 78, 0.377);
+    outline: none;
+    box-shadow: inset 0 -2px 0 #0051ff;
+  }
+  .requestLabel input:focus + .label {
+    color: #2e8cf7;
+    font-size: 2vmax;
+    transform: translate3d(0, -4vmax, 0) scale(0.75);
+  }
+  .requestLabel input:focus + .label + .focus-bg {
+    transform: scaleX(1);
+    transition: all 0.1s ease;
+  }
+
+  #submitBtn{
+    margin-top: 4vmax;
+    width: 230px;
+    border-radius: 15px;
+    font-size: 24px;
+    background: linear-gradient(to right, #4492eb , #cd15d3);;
+  }
+  
+  .songOptionInfo{
+    margin-top: 3%;
+    margin-left: -18%;
+  }
+
+  .songOptionInfo p {
+    height: 25%;
+    font-size: 1.3vw;
+    /* margin-bottom: 0; */
+    line-height: calc(1.5 * 1.3vw);
+  }
+
+  #spotifyImage{
+    width: 55%;
+    margin-top: 6%;
+  }
+
+  #customTag{
+    margin-top: 9%;
+    font-size: 22px;
+  }
+}
+
+@media only screen and (max-width: 1100px){
+  #requestAndLineupList{
+    margin-left: -4%;
+  }
+
+  .contentOption button{
+    font-size: 28px;
+  }
+
+  #requestGridContainer{
+    height: 75vh;
+  }
+
+  #artistDiv{
+    margin-top: 1.8vmax;
+  }
+
+  .requestLabel .label {
+    font-size: 1.8vmax;
+  }
+
+  .requestLabel input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 75%;
+    border: 0;
+    font-family: inherit;
+    padding: 1vmin 1vmax 0 1vmax;
+    height: 4vmax;
+    font-size: 2.4vmax;
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    color: rgb(255, 255, 255);
+    transition: all 0.15s ease;
+    margin-top: 1vmax;
+  }
+
+  .requestLabel input:not(:-moz-placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+  }
+  .requestLabel input:not(:-ms-input-placeholder) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+  }
+  .requestLabel input:not(:placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.8vmax, 0) scale(0.75);
+  }
+
+  .requestLabel input:focus + .label {
+    color: #2e8cf7;
+    font-size: 2.4vmax;
+    transform: translate3d(0, -4.5vmax, 0) scale(0.75);
+  }
+
+  #submitBtn{
+    padding: 0 0;
+  }
+
+  .songOptionInfo p {
+    font-size: 14px;
+  }
+
+  #customTag{
+    margin-top: 8%;
+    font-size: 18px;
+  }
+}
+
+@media only screen and (max-width: 800px){
+  #requestAndLineupList{
+    margin-left: -5.5%;
+  }
+  .contentOption button{
+    font-size: 24px;
+  }
+
+  #renderedTracksDiv{
+    height: 95%;
+  }
+
+  .songOption{
+    height: 27%;
+  }
+
+  .songOptionInfo{
+    margin-left: -12%;
+  }
+
+  .songOptionImage{
+    margin-top: 2.5%;
+    width: 65%;
+    height: 90%;
+  }
+}
+
+@media only screen and (max-width: 660px){
+  .App {
+    overflow: hidden;
+  }
+
+  #requestAndLineupList{
+    margin-left: -7%;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100vw;
+    line-height: 200%;
+    /* border: 1px solid red; */
+  }
+
+  .contentOption button{
+    color: white;
+    display: block;
+    font-size: 18px;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+  }
+
+  #requestSongOption{
+    padding-right: 20px;
+    
+    border-width: 0 2px 0 0;
+    border-color: white;
+    border-style: solid;
+  }
+
+  #requestSongOption button{
+    float: right;
+  }
+
+  #lineupOption{
+    padding-left: 20px;
+    float: left;
+  }
+
+  #requestGridContainer{
+    margin-top: 0;
+    height: max-content;
+    /* border: 1px solid red; */
+  }
+
+  #formDiv{
+    margin-top: 1%;
+    margin-left: 5%;
+    width: 90%;
+    padding-bottom: 2vh;
+  }
+
+  #songSearchTabs{
+    margin-top: 0;
+  }
+
+  .requestLabel .label{
+    font-size: 1.6vmax;
+  }
+
+  .requestLabel input:not(:-moz-placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.2vmax, 0) scale(0.75);
+    margin-top: 0vmax;
+  }
+  .requestLabel input:not(:-ms-input-placeholder) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.2vmax, 0) scale(0.75);
+    margin-top: 0vmax;
+  }
+  .requestLabel input:not(:placeholder-shown) + .label {
+    color: #0077FFCF;
+    transform: translate3d(0, -2.2vmax, 0) scale(0.75);
+    margin-top: 0vmax;
+  }
+
+  .requestLabel input:focus + .label {
+    color: #2e8cf7;
+    font-size: 2.5vmax;
+    transform: translate3d(0, -3.6vmax, 0) scale(0.75);
+  }
+
+  .requestLabel input {
+    font-size: 2.2vmax;
+    width: 70%;
+    height: 3.2vmax;
+  }
+
+  #submitBtn{
+    width: 180px;
+    font-size: 20px;
+    padding-bottom: 5px;
+    margin-top: 1.5vmax;
+  }
+
+  #renderedTracksDiv{
+    margin-left: 2%;
+    width: 95%;
+  }
+
+  .songOptionImage{
+    width: 70%;
+    height: 90%;
+    margin: 2.5% 2%;
+  }
+
+  .songOptionInfo{
+    margin-left: -8%;
+    margin-top: 4%;
+    height: 70%;
+  }
+
+  .songOptionInfo p {
+    /* margin-left: 10%; */
+    height: 40%;
+    margin-top: 3%;
+    font-size: 90%;
+    line-height: 100%;
+  }
+
+  #spotifyImage{
+    width: 50%;
+    margin-top: 6%;
+  }
+
+  #customTag{
+    margin-top: 7%;
+    font-size: 1.7vmax;
+    line-height: 100%;
+  }
+
+  #submissionTextDiv{
+    margin-top: -6%;
+  }
+}
+
+@media only screen and (max-width: 500px){
+  #requestAndLineupList{
+    margin-left: -9%;
+  }
+}
+
+@media only screen and (max-width: 400px){
+  #requestAndLineupList{
+    margin-left: -12%;
+  }
+}

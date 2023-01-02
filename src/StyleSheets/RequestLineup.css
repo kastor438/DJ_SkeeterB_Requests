@@ -145,7 +145,7 @@ div.upvote a.upvote-enabled {
 
 div.upvote a {
   color: transparent;
-  background-image: url('../node_modules/upvote/lib/images/sprites-stackoverflow.png?v=1');
+  background-image: url('../../node_modules/upvote/lib/images/sprites-stackoverflow.png?v=1');
   background-repeat: no-repeat;
   overflow: hidden;
   display: block;
@@ -197,6 +197,11 @@ div.upvote a.star {
 
 div.upvote a.star.star-on {
   background-position: 0px -190px;
+}
+
+.disabledVoteButton{
+  pointer-events: none;
+  opacity: 60%;
 }
 
 .spotifyLinkDiv{
