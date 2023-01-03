@@ -21,7 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const Signup = () => {
+const Signup = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
   const [userEmail, SetUserEmail] = useState('');
   const [userPassword, SetUserPassword] = useState('');
@@ -36,9 +36,8 @@ const Signup = () => {
     try {
       await createUserWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current).then((userCredential) => {
         console.log(auth.currentUser);
-        document.getElementById('emailInput').innerHTML = '';
-        document.getElementById('passwordInput').innerHTML = '';
-  
+        props.signupHandler(auth.currentUser);
+
         SetUserEmail('');
         SetUserPassword('');
   
@@ -65,11 +64,11 @@ const Signup = () => {
         </div>
         <div>
           <label>Email: </label>
-          <input id='emailInput' type='email' placeholder='example@gmail.com' autoComplete='off' onChange={e => SetUserEmail(e.target.value)}/>
+          <input id='emailInput' type='email' value={userEmail} placeholder='example@gmail.com' autoComplete='off' onChange={e => SetUserEmail(e.target.value)}/>
         </div>
         <div>
           <label>Password: </label>
-          <input id='passwordInput' type='password' placeholder='Password' autoComplete='new-password' onChange={e => SetUserPassword(e.target.value)}/>
+          <input id='passwordInput' type='password' value={userPassword} placeholder='Password' autoComplete='new-password' onChange={e => SetUserPassword(e.target.value)}/>
         </div>
         <button onClick={e => SignupToFirebase()}>Submit</button>
         <div>
