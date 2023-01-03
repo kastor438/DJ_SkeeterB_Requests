@@ -20,9 +20,6 @@ const firebaseConfig = {
   databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
-const userEmail = 'Kastor438@hotmail.com';
-const userPassword = 'a2AwDnBy8hCsRZ2';
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -47,12 +44,10 @@ class App extends Component {
   }
 
   componentDidMount(){
-    console.log("test");
     this.Setup();
   }
 
   async Setup(){
-    console.log("test");
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {

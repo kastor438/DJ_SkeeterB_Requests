@@ -392,43 +392,23 @@ const SongRequests = props => {
   }
 
   async function SubmitRequest(){
-      if(canSubmitRef.current){
-        
-        if(auth.currentUser == null){
-          const userEmail = 'Kastor438@hotmail.com';
-          const userPassword = 'a2AwDnBy8hCsRZ2';
-          try {
-            await signInWithEmailAndPassword(auth, userEmail, userPassword);
-            if(spotifyActiveRef.current){ 
-              AddRequest(trackNameRef.current, artistNameRef.current, trackSpotifyURLRef.current, trackImageLinkRef.current);
-            }
-            else if(customActiveRef.current){
-              AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '');
-            }
-            signOut(auth);
-          } catch (err) {
-            console.error(err);
-          }
-        }
-        else{
-          if(spotifyActiveRef.current){ 
-            AddRequest(trackNameRef.current, artistNameRef.current, trackSpotifyURLRef.current, trackImageLinkRef.current);
-          }
-          else if(customActiveRef.current){
-            AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '');
-          }
-        }
-
-        
-        document.getElementById('songNameInput').value = '';
-        document.getElementById('artistNameInput').value = '';
-
-        SetInputSongName('');
-        SetInputArtistName('');
-        SetTrackSpotifyURL('');
-        SetTrackImageLink('')
-        SetRenderedTracks([]);
+    if(canSubmitRef.current){
+      if(spotifyActiveRef.current){ 
+        AddRequest(trackNameRef.current, artistNameRef.current, trackSpotifyURLRef.current, trackImageLinkRef.current);
       }
+      else if(customActiveRef.current){
+        AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '');
+      }
+      
+      document.getElementById('songNameInput').value = '';
+      document.getElementById('artistNameInput').value = '';
+
+      SetInputSongName('');
+      SetInputArtistName('');
+      SetTrackSpotifyURL('');
+      SetTrackImageLink('')
+      SetRenderedTracks([]);
+    }
   }
 
   function AddRequest(songName, artistName, spotifyURL, spotifyImageLink){
@@ -439,50 +419,30 @@ const SongRequests = props => {
     var songExistsID = -1;
     var prevRequestCount = 0;
 
-    if(auth.currentUser != null){
-      get(child(dbRef, 'Requests/')).then((snapshot) => {
-        if (snapshot.exists()) {
-          //console.log(snapshot.val());
+    get(child(dbRef, 'Requests/')).then((snapshot) => {
+      if (snapshot.exists()) {
+        //console.log(snapshot.val());
 
-          Object.entries(snapshot.val()).forEach(([key, value]) => {
-            songIDs.push(key);
-            songRequests.push(value);
-          });
+        Object.entries(snapshot.val()).forEach(([key, value]) => {
+          songIDs.push(key);
+          songRequests.push(value);
+        });
 
-          for(var i = 0; i < songRequests.length; i++){
-            if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
-              addRequestBool = false;
-              prevRequestCount = songRequests[i].RequestCount;
-              songExistsID = songIDs[i];
+        for(var i = 0; i < songRequests.length; i++){
+          if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
+            addRequestBool = false;
+            prevRequestCount = songRequests[i].RequestCount;
+            songExistsID = songIDs[i];
+          }
+        }
+
+        if(addRequestBool){
+          for(i = 0; i < songIDs.length; i++){
+            if(songIDs[i] >= nextSongID){
+              nextSongID = parseInt(songIDs[i]) + 1;
             }
           }
-
-          if(addRequestBool){
-            for(i = 0; i < songIDs.length; i++){
-              if(songIDs[i] >= nextSongID){
-                nextSongID = parseInt(songIDs[i]) + 1;
-              }
-            }
-            set(ref(db, 'Requests/' + nextSongID + '/'), {
-              SongName: songName,
-              ArtistName: artistName,
-              RequestCount: 1,
-              SpotifyURL: spotifyURL,
-              SpotifyImageURL: spotifyImageLink,
-              Upvotes: 0,
-              Downvotes: 0,
-              Voters : {},
-              RequestedBy : auth.currentUser.uid
-            });
-            document.getElementById('submissionText').innerHTML = "Request Sent!";
-          }
-          else{
-            set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
-            document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
-          }
-        } 
-        else {
-          set(ref(db, 'Requests/1/'), {
+          set(ref(db, 'Requests/' + nextSongID + '/'), {
             SongName: songName,
             ArtistName: artistName,
             RequestCount: 1,
@@ -495,44 +455,62 @@ const SongRequests = props => {
           });
           document.getElementById('submissionText').innerHTML = "Request Sent!";
         }
-        setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
+        else{
+          set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
+          document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
+        }
+      } 
+      else {
+        set(ref(db, 'Requests/1/'), {
+          SongName: songName,
+          ArtistName: artistName,
+          RequestCount: 1,
+          SpotifyURL: spotifyURL,
+          SpotifyImageURL: spotifyImageLink,
+          Upvotes: 0,
+          Downvotes: 0,
+          Voters : {},
+          RequestedBy: (auth.currentUser ? auth.currentUser.uid : '')
+        });
+        document.getElementById('submissionText').innerHTML = "Request Sent!";
+      }
+      setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    if(trackStatsRef.current){
+      get(child(dbRef, 'SongStatistics/')).then((snapshot) => {
+        var songKey = -1;
+        var newKeyIndex = 0;
+        var statsSong;
+        if (snapshot.exists()) {  
+          Object.entries(snapshot.val()).forEach(([key, value]) => {
+            var currKey = parseInt(key);
+            if(value.SongName == songName){
+              songKey = currKey;
+              statsSong = value;
+            }
+            else if(newKeyIndex <= currKey){
+              newKeyIndex = currKey+1;
+            }
+          });
+        }
+
+        if(songKey > -1){
+          set(ref(db, 'SongStatistics/' + songKey + '/RequestCount'), (statsSong.RequestCount+1));
+        }
+        else{
+          set(ref(db, 'SongStatistics/' + newKeyIndex + '/'), {
+            SongName: songName,
+            ArtistName: artistName,
+            RequestCount: 1,
+            SpotifyURL: spotifyURL
+          });
+        }
       }).catch((error) => {
         console.error(error);
       });
-
-      if(trackStatsRef.current){
-        get(child(dbRef, 'SongStatistics/')).then((snapshot) => {
-          var songKey = -1;
-          var newKeyIndex = 0;
-          var statsSong;
-          if (snapshot.exists()) {  
-            Object.entries(snapshot.val()).forEach(([key, value]) => {
-              var currKey = parseInt(key);
-              if(value.SongName == songName){
-                songKey = currKey;
-                statsSong = value;
-              }
-              else if(newKeyIndex <= currKey){
-                newKeyIndex = currKey+1;
-              }
-            });
-          }
-
-          if(songKey > -1){
-            set(ref(db, 'SongStatistics/' + songKey + '/RequestCount'), (statsSong.RequestCount+1));
-          }
-          else{
-            set(ref(db, 'SongStatistics/' + newKeyIndex + '/'), {
-              SongName: songName,
-              ArtistName: artistName,
-              RequestCount: 1,
-              SpotifyURL: spotifyURL
-            });
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
-      }
     }
   }
 

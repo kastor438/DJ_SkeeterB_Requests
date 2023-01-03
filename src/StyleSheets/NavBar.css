@@ -124,6 +124,10 @@
     font-size: 150%;
   }
 
+  #loginSignupDiv{
+    margin-left: -20%;
+  }
+
   #userDisplayName{
     font-size: 14px;
   }

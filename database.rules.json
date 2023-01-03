@@ -3,22 +3,22 @@
     ".read": true,
     ".write": false,
     "Requests": {
-      ".write": "auth.uid !== null"
+      ".write": true
     },
     "LastRequests": {
       ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
     },
     "SongStatistics": {
-      ".write": "auth.uid !== null"
+      ".write": true
     },
     "Visitors": {
-      ".write": "auth.uid !== null"
+      ".write": true
     },
     "Events": {
-      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+      ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83' || auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
     },
     "_Live": {
-      ".write": "auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
+      ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83' || auth.uid === '63bGCWJEzoUHX77aOZ8jzoOKkOJ2'"
     }
   }
 }
