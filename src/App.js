@@ -2,7 +2,7 @@ import './App.css';
 import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 import NavBar from "./Components/NavBar";
@@ -38,9 +38,30 @@ class App extends Component {
 
     // Set some state
     this.state = {
-      signedIn: auth.currentUser ? true : false,
-      authUser: auth.currentUser
+      signedIn: false,
+      authUser: null
     };
+    this.Setup = this.Setup.bind(this);
+    this.SignInHandler = this.SignInHandler.bind(this);
+    this.SignOutHandler = this.SignOutHandler.bind(this);
+  }
+
+  componentDidMount(){
+    console.log("test");
+    this.Setup();
+  }
+
+  async Setup(){
+    console.log("test");
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.SignInHandler(user);
+      } 
+      else {
+        this.SignOutHandler();
+      }
+    });
   }
 
   SignInHandler(user) {
@@ -50,7 +71,7 @@ class App extends Component {
     });
   }
 
-  SignOutHandler(user) {
+  SignOutHandler() {
     this.setState({
       signedIn: false,
       authUser: null
@@ -62,7 +83,7 @@ class App extends Component {
       <div>
         <div className="App">
           <header className="App-header">
-            <NavBar signoutHandler={(authUser) => this.SignOutHandler(authUser)} authUser={this.state.authUser} />
+            <NavBar signoutHandler={() => this.SignOutHandler()} authUser={this.state.authUser} />
             <Main signinHandler={(authUser) => this.SignInHandler(authUser)} authUser={this.state.authUser}/>
           </header>
         </div>

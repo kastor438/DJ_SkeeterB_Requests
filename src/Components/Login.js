@@ -37,7 +37,7 @@ const Login = props => {
     try {
       await signInWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current);
       console.log(auth.currentUser);
-      props.signinHandler(auth.currentUser);
+      // props.signinHandler(auth.currentUser);
 
       SetUserEmail('');
       SetUserPassword('');

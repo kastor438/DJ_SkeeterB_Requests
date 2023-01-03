@@ -79,7 +79,7 @@ const NavBar = props => {
   async function SignOutUser(element){
     try{
       await signOut(auth);
-      props.signoutHandler(null);
+      // props.signoutHandler();
       // SetNavBar(null)
     }
     catch(err){

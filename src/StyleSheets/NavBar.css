@@ -67,18 +67,18 @@
 }
 
 #userDisplayName{
-  font-size: 18px;
+  font-size: 75%;
 }
 
 #signoutSpan{
-  font-size: 18px;
+  font-size: 75%;
 }
 
 #signoutButton{
   background-color: transparent;
   border: none;
   color: rgb(145, 62, 223);
-  font-size: 14px;
+  font-size: 80%;
 }
 
 @media only screen and (max-width: 1465px){
@@ -94,6 +94,18 @@
 
   #pageHeader{
     font-size: 52px;
+  }
+
+  #userDisplayName{
+    font-size: 65%;
+  }
+  
+  #signoutSpan{
+    font-size: 65%;
+  }
+  
+  #signoutButton{
+    font-size: 70%;
   }
 }
 
