@@ -221,7 +221,6 @@ div.upvote a.star.star-on {
   height: fit-content;
   border: 1px solid rgb(175, 35, 210);
   border-radius: 30px;
-  overflow: hidden;
   /* border: 1px solid blue; */
 }
 
