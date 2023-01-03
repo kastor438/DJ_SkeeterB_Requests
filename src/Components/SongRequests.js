@@ -1,5 +1,6 @@
 import logo from '../skeeterB-Logo.png';
 import '../StyleSheets/SongRequests.css';
+import '../StyleSheets/SkeeterSpecificsSongRequests.css'
 import '../StyleSheets/RequestLineup.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
@@ -54,9 +55,10 @@ const SongRequests = props => {
   const [customActive, SetCustomActive] = useState(false);
   const [trackStats, SetTrackStats] = useState(false);
   const [requestSnapshot, SetRequestSnapShot] = useState({});
+  const [skeeterSpecificDiv, SetSkeeterSpecificDiv] = useState();
 
-  const requestSnapshotRef = useRef({});
-  requestSnapshotRef.current = requestSnapshot;
+  const recentSnapshotRef = useRef({});
+  recentSnapshotRef.current = requestSnapshot;
 
   const sortChoiceRef = useRef("Chronological");
   sortChoiceRef.current = sortChoice;
@@ -125,7 +127,7 @@ const SongRequests = props => {
     onValue(requestsRef, (snapshot) => {
       const data = snapshot.val();
       if(data){
-        if(!data.Requests || !requestSnapshotRef.current || !requestSnapshotRef.current.Requests || data.Requests != requestSnapshotRef.current.Requests){
+        if(!data.Requests || !recentSnapshotRef.current || !recentSnapshotRef.current.Requests || data.Requests != recentSnapshotRef.current.Requests){
           SetRequestSnapShot(data);
           UpdateLineup(data.Requests);
         }
@@ -147,8 +149,8 @@ const SongRequests = props => {
   }, [canSubmit]);
   
   useEffect(() => {
-    if(requestSnapshotRef.current && requestSnapshotRef.current.Requests){
-      UpdateLineup(requestSnapshotRef.current.Requests);
+    if(recentSnapshotRef.current && recentSnapshotRef.current.Requests){
+      UpdateLineup(recentSnapshotRef.current.Requests);
     }
   }, [sortChoice]);
 
@@ -174,6 +176,10 @@ const SongRequests = props => {
   }
 
   useEffect(() => {
+    if(!props.authUser){
+      var skeeterSpecific = null;
+      SetSkeeterSpecificDiv(skeeterSpecific);
+    }
     // setTimeout(function(){
     //   console.log(requestSnapshotRef.current);
     // }, 100)
@@ -214,6 +220,9 @@ const SongRequests = props => {
     lineupButton.style.borderBottom = "none";
     lineupButton.style.color = "white";
     document.getElementById("lineupGridContainer").style.display = "none"
+
+    var skeeterSpecific = null;
+    SetSkeeterSpecificDiv(skeeterSpecific);
   }
 
   function SwitchToCurrentLineup(){
@@ -226,6 +235,16 @@ const SongRequests = props => {
     lineupButton.style.borderBottom = "1px solid white";
     lineupButton.style.color = "#b1afaf";
     document.getElementById("lineupGridContainer").style.display = "block";
+
+    get(child(dbRef, 'LastRequests/')).then((snapshot) => {
+      var skeeterSpecific = 
+        (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ?
+        React.createElement('div', {id : 'skeeterSpecificDiv'}, 
+          React.createElement('button', {id : 'skeeterRemoveAllButton', onClick : () => SkeeterRemoveAllSongs()}, 'Remove All Requests'),
+          React.createElement('button', {id : 'skeeterRecoverLastButton', onClick : () => SkeeterRecoverLast()}, 'Recover Last Remove All')
+        ) : null);
+      SetSkeeterSpecificDiv(skeeterSpecific);
+    });
   }
 
   function SwitchToSpotify(e){
@@ -727,7 +746,11 @@ const SongRequests = props => {
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => DownvoteSong(e.target)}, )
             ), 
             React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
-              React.createElement('span', {}, ''),
+              (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 
+                React.createElement('button', {id : 'removeRequestButton', 'data-requestkey' : sortedKeys[i], onClick : (e) => SkeeterRemoveSong(e.target)}, 'X')
+                :
+                React.createElement('span', {}, '')
+              ),
               React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
               React.createElement('span', {}, ''))
           );
@@ -933,6 +956,32 @@ const SongRequests = props => {
     return sortedKeys;
   }
 
+  function SkeeterRemoveSong(element){
+    set(ref(db, 'Requests/' + element.dataset.requestkey), null);
+  }
+
+  function SkeeterRemoveAllSongs(){
+    get(child(dbRef, 'Requests/')).then((snapshot) => {
+      if(snapshot.val()){
+        set(ref(db, 'LastRequests/'), recentSnapshotRef.current.Requests);
+        set(ref(db, 'Requests/'), null);
+        document.getElementById('skeeterRemoveAllButton').disabled = true;
+        document.getElementById('skeeterRecoverLastButton').disabled = false;
+      }
+    });
+  }
+
+  function SkeeterRecoverLast(){
+    get(child(dbRef, 'LastRequests/')).then((snapshot) => {
+      if(snapshot.val()){
+        set(ref(db, 'Requests/'), snapshot.val());
+        set(ref(db, 'LastRequests/'), null);
+        document.getElementById('skeeterRemoveAllButton').disabled = false;
+        document.getElementById('skeeterRecoverLastButton').disabled = true;
+      }
+    });
+  }
+
   return (
     <div id='songRequestsDiv'>
       <ul id='requestAndLineupList'>
@@ -999,6 +1048,7 @@ const SongRequests = props => {
             </div>
           </div>
         </div>
+        {skeeterSpecificDiv}
       </div>
     </div>
   );
