@@ -30,13 +30,45 @@ const analytics = getAnalytics(app);
 const database = getDatabase(app);
   
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    // Bind the this context to the handler function
+    // this.SignInHandler = this.SignInHandler.bind(this);
+
+    // Set some state
+    this.state = {
+      signedIn: auth.currentUser ? true : false,
+      authUser: auth.currentUser
+    };
+  }
+
+  SignInHandler(user) {
+    console.log(user);
+    this.setState({
+      signedIn: true,
+      authUser: user
+    });
+  }
+
+  SignOutHandler(user) {
+    this.setState({
+      signedIn: false,
+      authUser: null
+    });
+  }
+
+  componentDidMount(){
+    console.log(this.state.authUser);
+  }
+
   render(){
     return (
       <div>
         <div className="App">
           <header className="App-header">
-            <NavBar/>
-            <Main/>
+            <NavBar signoutHandler={() => this.SignOutHandler()} authUser={this.state.authUser} />
+            <Main signinHandler={() => this.SignInHandler()}/>
           </header>
         </div>
       </div>

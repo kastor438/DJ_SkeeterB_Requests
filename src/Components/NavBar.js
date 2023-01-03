@@ -20,12 +20,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const NavBar = () => {
+const NavBar = props => {
   const [userInfo, SetUserInfo] = useState();
 
   useEffect(() => {
     SetNavBar(null);
-  }, [])
+  }, []);
 
   function SetNavBar(element){
     var user = auth.currentUser;
@@ -48,10 +48,12 @@ const NavBar = () => {
         
       if(!urlTO.includes("login") && !urlTO.includes("signup")){
         var userLoginSignupElement = 
-          React.createElement('span', {id : 'loginSignupOptions'}, 
-            React.createElement(Link, {to : '/login', onClick : (e) => SetNavBar(e.target)}, 'Login'), 
-            '/',
-            React.createElement(Link, {to : '/signup', onClick : (e) => SetNavBar(e.target)}, 'Signup')
+          React.createElement('div', {id : 'loginSignupDiv'}, 
+            React.createElement('span', {id : 'loginSignupOptions'}, 
+              React.createElement(Link, {to : '/login', onClick : (e) => SetNavBar(e.target)}, 'Login'), 
+              '/',
+              React.createElement(Link, {to : '/signup', onClick : (e) => SetNavBar(e.target)}, 'Signup')
+            )
           );
       }
       else{
@@ -73,6 +75,7 @@ const NavBar = () => {
   async function SignOutUser(element){
     try{
       await signOut(auth);
+      props.signoutHandler(null);
       SetNavBar(null)
     }
     catch(err){

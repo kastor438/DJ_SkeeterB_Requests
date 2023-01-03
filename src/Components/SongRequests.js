@@ -118,8 +118,6 @@ const SongRequests = () => {
     if(currentUrl.includes("dj")){
       SetTrackStats(true);
     }
-    
-    getUserData();
 
     InitializeSpotify();
 
@@ -155,9 +153,10 @@ const SongRequests = () => {
   }, [sortChoice]);
 
   useEffect(() => {
-    CheckValidInput();
-  }, [auth.currentUser]);
-
+    if(trackStatsRef.current){
+      getUserData();
+    }
+  }, [trackStats]);
   const getUserData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/');
     // console.log(res.data);

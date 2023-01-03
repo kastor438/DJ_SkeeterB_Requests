@@ -6,14 +6,14 @@ import Upcoming from './Components/Upcoming'
 import Signup from './Components/Signup'
 import Login from './Components/Login'
 
-const Main = () => {
+const Main = props => {
     return (
         <div id='main'>
             <Routes>
                 <Route exact path='/' element={<SongRequests/>}/>
                 <Route exact path='/upcoming' element={<Upcoming/>}/>
                 <Route exact path='/signup' element={<Signup/>}/>
-                <Route exact path='/login' element={<Login/>}/>
+                <Route exact path='/login' element={<Login signinHandler={() => props.signinHandler()}/>}/>
             </Routes>
         </div>
     );

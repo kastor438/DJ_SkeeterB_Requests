@@ -22,7 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const Login = () => {
+const Login = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
   const [userEmail, SetUserEmail] = useState('');
   const [userPassword, SetUserPassword] = useState('');
@@ -37,6 +37,8 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current);
       console.log(auth.currentUser);
+      console.log(props.signinHandler);
+      props.signinHandler(auth.currentUser);
       document.getElementById('emailInput').innerHTML = '';
       document.getElementById('passwordInput').innerHTML = '';
 
