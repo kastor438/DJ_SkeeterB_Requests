@@ -36,7 +36,7 @@ const database = getDatabase(app);
 const clientID = '822b607fa31944ca91f198b9f5e31613';
 const clientSecret = '4aae0065891841c197af65473ac00b49';
 
-const SongRequests = () => {
+const SongRequests = props => {
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [accessToken, SetAccessToken] = useState("");
   const [canSubmit, SetCanSubmit] = useState(false);
@@ -172,6 +172,19 @@ const SongRequests = () => {
       });
     }
   }
+
+  useEffect(() => {
+    // setTimeout(function(){
+    //   console.log(requestSnapshotRef.current);
+    // }, 100)
+    get(child(dbRef, '/')).then((snapshot) => {
+      if(snapshot != null){
+        SetRequestSnapShot(snapshot.val());
+        UpdateLineup(snapshot.val().Requests);
+      }
+    });
+    // UpdateLineup(requestSnapshotRef.current.Requests);
+  }, [props.authUser]);
 
   function InitializeSpotify(){
     var authParams = {

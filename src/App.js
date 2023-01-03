@@ -44,7 +44,6 @@ class App extends Component {
   }
 
   SignInHandler(user) {
-    console.log(user);
     this.setState({
       signedIn: true,
       authUser: user
@@ -58,17 +57,13 @@ class App extends Component {
     });
   }
 
-  componentDidMount(){
-    console.log(this.state.authUser);
-  }
-
   render(){
     return (
       <div>
         <div className="App">
           <header className="App-header">
-            <NavBar signoutHandler={() => this.SignOutHandler()} authUser={this.state.authUser} />
-            <Main signinHandler={() => this.SignInHandler()}/>
+            <NavBar signoutHandler={(authUser) => this.SignOutHandler(authUser)} authUser={this.state.authUser} />
+            <Main signinHandler={(authUser) => this.SignInHandler(authUser)} authUser={this.state.authUser}/>
           </header>
         </div>
       </div>

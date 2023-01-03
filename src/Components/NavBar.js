@@ -27,10 +27,12 @@ const NavBar = props => {
     SetNavBar(null);
   }, []);
 
+  useEffect(() => {
+    SetNavBar(null)
+  }, [props.authUser]);
+
   function SetNavBar(element){
     var user = auth.currentUser;
-    console.log(auth.currentUser);
-
     if (user){
       var userInfo = 
         React.createElement('div', {id : 'userDiv'},
@@ -63,10 +65,12 @@ const NavBar = props => {
     }
     else{
       var userLoginSignupElement = 
-        React.createElement('span', {id : 'loginSignupOptions'}, 
-          React.createElement(Link, {to : '/login', onClick : (e) => SetNavBar(e.target)}, 'Login'), 
-          '/',
-          React.createElement(Link, {to : '/signup', onClick : (e) => SetNavBar(e.target)}, 'Signup')
+        React.createElement('div', {id : 'loginSignupDiv'},
+          React.createElement('span', {id : 'loginSignupOptions'}, 
+            React.createElement(Link, {to : '/login', onClick : (e) => SetNavBar(e.target)}, 'Login'), 
+            '/',
+            React.createElement(Link, {to : '/signup', onClick : (e) => SetNavBar(e.target)}, 'Signup')
+          )
         );
       SetUserInfo(userLoginSignupElement);
     }
@@ -76,7 +80,7 @@ const NavBar = props => {
     try{
       await signOut(auth);
       props.signoutHandler(null);
-      SetNavBar(null)
+      // SetNavBar(null)
     }
     catch(err){
       console.log(err);

@@ -37,10 +37,7 @@ const Login = props => {
     try {
       await signInWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current);
       console.log(auth.currentUser);
-      console.log(props.signinHandler);
       props.signinHandler(auth.currentUser);
-      document.getElementById('emailInput').innerHTML = '';
-      document.getElementById('passwordInput').innerHTML = '';
 
       SetUserEmail('');
       SetUserPassword('');
@@ -61,11 +58,11 @@ const Login = props => {
         </div>
         <div>
           <label>Email: </label>
-          <input id='emailInput' type='email' placeholder='example@gmail.com' onChange={e => SetUserEmail(e.target.value)}/>
+          <input id='emailInput' type='email' value={userEmail} placeholder='example@gmail.com' onChange={e => SetUserEmail(e.target.value)}/>
         </div>
         <div>
           <label>Password: </label>
-          <input id='passwordInput' type='password' placeholder='Password' onChange={e => SetUserPassword(e.target.value)}/>
+          <input id='passwordInput' type='password' value={userPassword} placeholder='Password' onChange={e => SetUserPassword(e.target.value)}/>
         </div>
         <button onClick={e => LoginToFirebase()}>Submit</button>
         <div>
