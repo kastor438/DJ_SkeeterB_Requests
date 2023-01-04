@@ -5,12 +5,14 @@ import '../StyleSheets/RequestLineup.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
 import axios from 'axios';
+
+import SkeeterPanel from './SkeeterPanel';
 
 require('upvote/lib/jquery.upvote.js');
 // require('upvote/lib/jquery.upvote.css');
@@ -55,7 +57,6 @@ const SongRequests = props => {
   const [customActive, SetCustomActive] = useState(false);
   const [trackStats, SetTrackStats] = useState(false);
   const [requestSnapshot, SetRequestSnapShot] = useState({});
-  const [skeeterSpecificDiv, SetSkeeterSpecificDiv] = useState();
 
   const recentSnapshotRef = useRef({});
   recentSnapshotRef.current = requestSnapshot;
@@ -159,37 +160,30 @@ const SongRequests = props => {
       getUserData();
     }
   }, [trackStats]);
+
   const getUserData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/');
     // console.log(res.data);
 
     if(trackStatsRef.current){
       var visitorCount = 0;
-      get(child(dbRef, 'Vistors/' + res.data['country_code'] + '/' + res.data.city)).then((snapshot) => {
+      get(child(dbRef, 'Visitors/' + res.data['country_code'] + '/' + res.data.city)).then((snapshot) => {
         if(snapshot != null){
           visitorCount = snapshot.val();
           // console.log(snapshot.val())
         }
-        set(ref(db, 'Vistors/' + res.data['country_code'] + '/' + res.data.city), (visitorCount+1));
+        set(ref(db, 'Visitors/' + res.data['country_code'] + '/' + res.data.city), (visitorCount+1));
       });
     }
   }
 
   useEffect(() => {
-    if(!props.authUser){
-      var skeeterSpecific = null;
-      SetSkeeterSpecificDiv(skeeterSpecific);
-    }
-    // setTimeout(function(){
-    //   console.log(requestSnapshotRef.current);
-    // }, 100)
     get(child(dbRef, '/')).then((snapshot) => {
       if(snapshot != null){
         SetRequestSnapShot(snapshot.val());
         UpdateLineup(snapshot.val().Requests);
       }
     });
-    // UpdateLineup(requestSnapshotRef.current.Requests);
   }, [props.authUser]);
 
   function InitializeSpotify(){
@@ -220,9 +214,6 @@ const SongRequests = props => {
     lineupButton.style.borderBottom = "none";
     lineupButton.style.color = "white";
     document.getElementById("lineupGridContainer").style.display = "none"
-
-    var skeeterSpecific = null;
-    SetSkeeterSpecificDiv(skeeterSpecific);
   }
 
   function SwitchToCurrentLineup(){
@@ -235,16 +226,6 @@ const SongRequests = props => {
     lineupButton.style.borderBottom = "1px solid white";
     lineupButton.style.color = "#b1afaf";
     document.getElementById("lineupGridContainer").style.display = "block";
-
-    get(child(dbRef, 'LastRequests/')).then((snapshot) => {
-      var skeeterSpecific = 
-        (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ?
-        React.createElement('div', {id : 'skeeterSpecificDiv'}, 
-          React.createElement('button', {id : 'skeeterRemoveAllButton', onClick : () => SkeeterRemoveAllSongs()}, 'Remove All Requests'),
-          React.createElement('button', {id : 'skeeterRecoverLastButton', onClick : () => SkeeterRecoverLast()}, 'Recover Last Remove All')
-        ) : null);
-      SetSkeeterSpecificDiv(skeeterSpecific);
-    });
   }
 
   function SwitchToSpotify(e){
@@ -451,7 +432,7 @@ const SongRequests = props => {
             Upvotes: 0,
             Downvotes: 0,
             Voters : {},
-            RequestedBy : auth.currentUser.uid
+            RequestedBy : (auth.currentUser ? auth.currentUser.uid : '')
           });
           document.getElementById('submissionText').innerHTML = "Request Sent!";
         }
@@ -474,7 +455,11 @@ const SongRequests = props => {
         });
         document.getElementById('submissionText').innerHTML = "Request Sent!";
       }
-      setTimeout(function(){document.getElementById('submissionText').innerHTML = "";}, 5000);
+      setTimeout(function(){
+        if(document.getElementById('submissionText') != null){
+          document.getElementById('submissionText').innerHTML = "";
+        }
+      }, 5000);
     }).catch((error) => {
       console.error(error);
     });
@@ -938,27 +923,27 @@ const SongRequests = props => {
     set(ref(db, 'Requests/' + element.dataset.requestkey), null);
   }
 
-  function SkeeterRemoveAllSongs(){
-    get(child(dbRef, 'Requests/')).then((snapshot) => {
-      if(snapshot.val()){
-        set(ref(db, 'LastRequests/'), recentSnapshotRef.current.Requests);
-        set(ref(db, 'Requests/'), null);
-        document.getElementById('skeeterRemoveAllButton').disabled = true;
-        document.getElementById('skeeterRecoverLastButton').disabled = false;
-      }
-    });
-  }
+  // function SkeeterRemoveAllSongs(){
+  //   get(child(dbRef, 'Requests/')).then((snapshot) => {
+  //     if(snapshot.val()){
+  //       set(ref(db, 'LastRequests/'), recentSnapshotRef.current.Requests);
+  //       set(ref(db, 'Requests/'), null);
+  //       document.getElementById('skeeterRemoveAllButton').disabled = true;
+  //       document.getElementById('skeeterRecoverLastButton').disabled = false;
+  //     }
+  //   });
+  // }
 
-  function SkeeterRecoverLast(){
-    get(child(dbRef, 'LastRequests/')).then((snapshot) => {
-      if(snapshot.val()){
-        set(ref(db, 'Requests/'), snapshot.val());
-        set(ref(db, 'LastRequests/'), null);
-        document.getElementById('skeeterRemoveAllButton').disabled = false;
-        document.getElementById('skeeterRecoverLastButton').disabled = true;
-      }
-    });
-  }
+  // function SkeeterRecoverLast(){
+  //   get(child(dbRef, 'LastRequests/')).then((snapshot) => {
+  //     if(snapshot.val()){
+  //       set(ref(db, 'Requests/'), snapshot.val());
+  //       set(ref(db, 'LastRequests/'), null);
+  //       document.getElementById('skeeterRemoveAllButton').disabled = false;
+  //       document.getElementById('skeeterRecoverLastButton').disabled = true;
+  //     }
+  //   });
+  // }
 
   return (
     <div id='songRequestsDiv'>
@@ -1026,7 +1011,7 @@ const SongRequests = props => {
             </div>
           </div>
         </div>
-        {skeeterSpecificDiv}
+        <SkeeterPanel authUser={props.authUser}/>
       </div>
     </div>
   );

@@ -64,7 +64,7 @@ const Login = props => {
           <label>Password: </label>
           <input id='passwordInput' type='password' value={userPassword} placeholder='Password' onChange={e => SetUserPassword(e.target.value)}/>
         </div>
-        <button onClick={e => LoginToFirebase()}>Submit</button>
+        <button id='loginButton' onClick={e => LoginToFirebase()}>Login</button>
         <div>
           <span id='alreadySignedUpSpan'>
             <Link to='/signup'>Not registered? Signup here</Link>

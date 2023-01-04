@@ -70,7 +70,7 @@ const Signup = props => {
           <label>Password: </label>
           <input id='passwordInput' type='password' value={userPassword} placeholder='Password' autoComplete='new-password' onChange={e => SetUserPassword(e.target.value)}/>
         </div>
-        <button onClick={e => SignupToFirebase()}>Submit</button>
+        <button id='signupButton' onClick={e => SignupToFirebase()}>Signup</button>
         <div>
           <span id='alreadySignedUpSpan'>
             <Link to='/login'>Already have an account?</Link>

@@ -38,9 +38,7 @@ const NavBar = props => {
         React.createElement('div', {id : 'userDiv'},
           React.createElement('span', {id : 'userDisplayName'}, user.email),
           React.createElement('span', {id : 'signoutSpan'}, 
-            '(', 
-            React.createElement('button', {id : 'signoutButton', onClick : (e) => SignOutUser(e.target)}, 'Signout'),
-            ')'
+            React.createElement('button', {id : 'signoutButton', onClick : (e) => SignOutUser(e.target)}, 'Signout')
           )
         );
       SetUserInfo(userInfo);
