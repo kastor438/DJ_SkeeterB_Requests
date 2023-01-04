@@ -14,7 +14,7 @@
   position: fixed;
   display: grid;
   grid-template-columns: 1fr 4fr;
-  right: 0;
+  right: -160px;
   top: 30%;
   width: 200px;
   border-width: 1px 0 1px 1px;
@@ -29,11 +29,11 @@
 }
 
 #skeeterPanel.openSkeeterPanel{
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(-160px, 0, 0);
 }
 
 #skeeterPanel.closeSkeeterPanel{
-  transform: translate3d(160px, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 #slidingButtonDiv{
@@ -63,6 +63,8 @@
   background-color: transparent;
   color: antiquewhite;
   border: none;
+  text-align: left;
+  padding-right: 40px;
 }
 
 #skeeterButtonsDiv{
@@ -82,4 +84,10 @@
 #skeeterButtonsDiv button:disabled{
   background-color: rgb(82, 79, 85);
   color: rgb(173, 164, 151);
+}
+
+@media only screen and (max-width: 800px){
+  #slidingButton{
+    padding-right: 60px;
+  }
 }
