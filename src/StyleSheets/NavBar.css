@@ -24,7 +24,7 @@
 }
 
 #navBarLogo{
-  width: 25%;
+  width: 18%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -98,6 +98,10 @@
 }
 
 @media only screen and (max-width: 1465px){
+  #navBarLogo{
+    width: 20%;
+  }
+
   #pageHeader{
     font-size: 56px;
   }

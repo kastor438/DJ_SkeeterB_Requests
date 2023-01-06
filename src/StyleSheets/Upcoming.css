@@ -1,18 +1,51 @@
 #upcomingDiv{
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  min-height: 40vh;
+  grid-template-columns: 2fr 7fr;
+  width: 95vw;
+  /* min-height: 40vh; */
+  border: 1px solid gray;
 }
 
 #calendarDiv{
-  border: 1px solid red;
+  border: 1px solid blue;
 }
 
 #eventDiv{
-
+  display: grid;
+  grid-template-rows: 1fr 4fr;
 }
 
-.react-calendar__navigation__label{
+#selectedDateHeader{
+  /* height: 10%; */
+  margin-top: 0;
+  border: 1px solid red;
+}
+
+#eventInfoDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid red;
+  /* height: 85%; */
+}
+
+#eventDetailsDiv div{
+  align-items: flex-start;
+  width: fit-content;
+  border: 1px solid red;
+}
+
+#eventDescriptionDiv{
+  height: 10vh;
+  width: auto;
+  border: 1px solid rgb(34, 216, 64);
+}
+
+#eventDescription{
+  text-align: left;
+  display: block;
+  width: 150%;
+}
+/* .react-calendar__navigation__label{
   font-weight: 600;
 }
 
@@ -22,10 +55,11 @@
 }
 
 .react-calendar__tile{
-  height: 32px;  
+  width: 1px;
+  height: 42px;  
 }
 
 .react-calendar__tile--active{
   background-color: rgb(88, 168, 228);
   color: antiquewhite;
-}
+} */
