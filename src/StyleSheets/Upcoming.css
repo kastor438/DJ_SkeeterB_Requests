@@ -1,0 +1,31 @@
+#upcomingDiv{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  min-height: 40vh;
+}
+
+#calendarDiv{
+  border: 1px solid red;
+}
+
+#eventDiv{
+
+}
+
+.react-calendar__navigation__label{
+  font-weight: 600;
+}
+
+.react-calendar__month-view__weekdays__weekday{
+  font-size: 20px;
+  border: none;
+}
+
+.react-calendar__tile{
+  height: 32px;  
+}
+
+.react-calendar__tile--active{
+  background-color: rgb(88, 168, 228);
+  color: antiquewhite;
+}

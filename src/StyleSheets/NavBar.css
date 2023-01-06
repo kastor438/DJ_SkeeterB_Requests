@@ -64,6 +64,7 @@
 #userDiv{
   /* border: 1px solid red; */
   white-space: nowrap;
+  margin-right: 2vmax;
 }
 
 #userDisplayName{
