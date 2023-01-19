@@ -651,7 +651,11 @@ const SongRequests = props => {
     if(trackNameRef.current != element.children[1].children[0].innerHTML && artistNameRef.current != element.children[1].children[1].innerHTML){
       element.style.color = "red";   
       SetTrackImageLink(element.children[0].src); 
-      SetTrackName(element.children[1].children[0].innerHTML);
+      var newTrackName = element.children[1].children[0].innerHTML;
+      while(newTrackName.includes('&amp;')){
+        newTrackName = newTrackName.replace('&amp;', '&');
+      }
+      SetTrackName(newTrackName);
       SetArtistName(element.children[1].children[1].innerHTML);
       SetTrackSpotifyURL(element.children[1].children[0].dataset.spotifyurl);
       // console.log(trackSpotifyURLRef.current + " " + element.children[1].children[0].dataset.spotifyurl);
