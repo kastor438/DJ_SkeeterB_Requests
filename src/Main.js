@@ -11,7 +11,7 @@ const Main = props => {
     <div id='main'>
       <Routes>
         <Route exact path='/' element={<SongRequests authUser={props.authUser}/>}/>
-        <Route exact path='/upcoming' element={<Upcoming />}/>
+        <Route exact path='/upcoming' element={<Upcoming authUser={props.authUser}/>}/>
         <Route exact path='/signup' element={<Signup signupHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route exact path='/login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
       </Routes>

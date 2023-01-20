@@ -1,5 +1,5 @@
 import '../StyleSheets/Upcoming.css';
-import 'react-calendar/dist/Calendar.css';
+import '../StyleSheets/ReactCalendar.css';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
@@ -8,77 +8,86 @@ import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
 import Calendar from 'react-calendar';
 
-const Upcoming = () => {
+const Upcoming = props => {
   const [calendarDateHeader, SetCalendarDateHeader] = useState();
   const [calendarDate, SetCalendarDate] = useState(new Date());
-  const [eventInfoElement, SetEventInfoElement] = useState();
+  const [eventElements, SetEventElements] = useState();
   
   const db = getDatabase();
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
+    get(child(dbRef, '/Events/')).then((snapshot) => {
+      const eventData = snapshot.val();
+      if(eventData){
+        Object.entries(eventData).forEach(([key, value]) => {
+
+        });
+      }
+    });
+  }, [])
+
+  useEffect(() => {
     console.log(calendarDate);
-    var calendarDateElement = React.createElement('h3', {id : 'selectedDateHeader'}, calendarDate.getDate() + '/' + (calendarDate.getMonth() + 1) + '/' + calendarDate.getFullYear());
+    var calendarDateElement = React.createElement('h3', {id : 'selectedDateHeader'}, calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2}) + '/' + (calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2}) + '/' + calendarDate.getFullYear());
     SetCalendarDateHeader(calendarDateElement);
+
+    SetEventDetails();
   }, [calendarDate]);
 
   function SetEventDetails(){
     get(child(dbRef, '/Events/')).then((snapshot) => {
       const eventData = snapshot.val();
+      const newEventElements = [];
       if(eventData){
-        var eventDate = calendarDate.getFullYear() + '-' + (calendarDate.getMonth() + 1) + "-" + calendarDate.getDate();
+        var eventDate = calendarDate.getFullYear() + '-' + (calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2}) + "-" + calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2});
         Object.entries(eventData).forEach(([key, value]) => {
           if(value.EventDate === eventDate){
-            var newEventInfoElement =
-              React.createElement('div', {id : 'eventInfoDiv'},
-                React.createElement('div', {id : 'eventDetailsDiv'},
-                  React.createElement('div', {id : 'eventLiveAtDiv'}, 
-                     React.createElement('label', {id : 'eventLiveAtLabel', className : 'eventInfoLabel'}, 'Live at: '),
-                     React.createElement('span', {}, '')
+            var newEventElement =
+              React.createElement('div', {className : 'eventInfoDiv', key : 'eventInfoDiv' + key},
+                React.createElement('div', {className : 'eventDetailsDiv'},
+                  React.createElement('div', {className : 'eventLiveAtDiv'}, 
+                     React.createElement('label', {className : 'eventInfoLabel'}, 'Live at: '),
+                     React.createElement('span', {className : 'eventLiveAtContent'}, value.EventVenue)
                   ),
-                  React.createElement('div', {id : 'eventStartTimeDiv'}, 
-                     React.createElement('label', {id : 'eventStartTimeLabel', className : 'eventInfoLabel'}, 'Start Time: '),
-                     React.createElement('span', {}, '')
+                  React.createElement('div', {className : 'eventStartTimeDiv'}, 
+                     React.createElement('label', {className : 'eventInfoLabel'}, 'Start Time: '),
+                     React.createElement('span', {className : 'eventStartTimeContent'}, value.EventStartTime)
                   ),
-                  React.createElement('div', {id : 'eventDescriptionDiv'}, 
-                     React.createElement('label', {id : 'eventDescription'}, 'Description: '),
-                     React.createElement('span', {}, '')
-                  ),
+                  React.createElement('div', {className : 'eventDescriptionDiv'}, 
+                     React.createElement('span', {className : 'eventDescription'}, value.EventDescription),
+                  )
+                ),
+                React.createElement('div', {className : 'eventImageDiv'},
+                  React.createElement('img', {className : 'eventImage', src : './BuckLogo.jpg', alt : 'An image representing the event'})
                 )
               );
+            newEventElements.push(newEventElement);
           }
         });
       }
+      if(newEventElements.length <= 0)
+        SetEventElements(React.createElement('span', {}, 'No events on selected date'));
+      else
+        SetEventElements(newEventElements);
     });
   }
 
   return (
+    (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ?
     <div id='upcomingDiv'>
       <div id='calendarDiv'>
-        <Calendar id='upcomingCalendar' onChange={SetCalendarDate} value={calendarDate} />
+        <Calendar id='upcomingCalendar' maxDate={new Date("2035, 9, 19")} onChange={SetCalendarDate} value={calendarDate} />
       </div>
-      <div id='eventDiv'>
+      <div id='selectedDateEventInfoDiv'>
         {calendarDateHeader}
-        <div id='eventInfoDiv'>
-          <div id='eventDetailsDiv'>
-            <div id='eventLiveAtDiv'>
-              <label id='eventLiveAtLabel' className='eventInfoLabel'>Live at: </label>
-              <span>Kai Brady's</span>
-            </div>
-            <div id='eventStartTimeDiv'>
-              <label id='eventStartTimeLabel' className='eventInfoLabel'>Start Time: </label>
-              <span>9pm</span>
-            </div>
-            <div id='eventDescriptionDiv'>
-              <span id='eventDescription'>Wing Night!!!!!!!!!!!</span>
-            </div>
-          </div>
-          <div id='eventImageDiv'>
-            <img src='https://picsum.photos/200' alt='An image representing the event'/>
-          </div>
+        <div id='eventsDiv'>
+          {eventElements}
         </div>
       </div>
     </div>
+    :
+    <div></div>
   );
 }
 
