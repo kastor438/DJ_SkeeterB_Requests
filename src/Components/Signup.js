@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Link, Navigate } from 'react-router-dom';
+import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
 
-import NavBar from './NavBar'
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
   authDomain: "dj-skeeterb.firebaseapp.com",
@@ -18,8 +18,10 @@ const firebaseConfig = {
   databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = getDatabase(app);
 
 const Signup = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
@@ -36,36 +38,58 @@ const Signup = props => {
   const userPasswordRef = useRef('');
   userPasswordRef.current = userPassword;
 
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
+
   const SignupToFirebase = async () => {
+    var acceptableAccount = true;    
     if(userDisplayNameRef.current.length < 6 || userDisplayNameRef.current.length > 24){
       document.getElementById('signupDisplayInfo').innerHTML = "Display name must have 6-24 characters.";
       return;
     }
 
-    try {
-      await createUserWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current)
-        .then(function(result) {
-          updateProfile(result.user, {
-            displayName: userDisplayNameRef.current
-          });
-        }).then((userCredential) => {
-          console.log(auth.currentUser);
-        
-          SetUserEmail('');
-          SetUserPassword('');
-    
-          SetNavigateToHome(true);
+    await get(child(dbRef, 'Users/')).then((snapshot) => {
+      if(snapshot.val()){
+        Object.entries(snapshot.val()).forEach(([key, value]) => {
+          if(userDisplayNameRef.current === value.DisplayName){
+            document.getElementById('signupDisplayInfo').innerHTML = "Display name already in use.";
+            acceptableAccount = false;
+          }
         });
-    } catch (err) {
-      console.error(err.code);
-      if(err.code == "auth/invalid-email"){
-        document.getElementById('signupDisplayInfo').innerHTML = "Invalid email address!"
       }
-      else if(err.code == "auth/email-already-in-use"){
-        document.getElementById('signupDisplayInfo').innerHTML = "Email already in use!"
+    });
+
+    if(acceptableAccount){
+      try {
+        await createUserWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current)
+          .then(function(result) {
+            updateProfile(result.user, {
+              displayName: userDisplayNameRef.current
+            });
+          }).then((userCredential) => {
+            // console.log(auth.currentUser);
+            set(ref(db, 'Users/' + auth.currentUser.uid + '/'), {
+              DisplayName : userDisplayNameRef.current
+            });
+            // props.signupHandler(auth.currentUser);
+
+            SetUserDisplayName('');
+            SetUserEmail('');
+            SetUserPassword('');
+      
+            SetNavigateToHome(true);
+          });
+      } catch (err) {
+        console.error(err.code);
+        if(err.code == "auth/invalid-email"){
+          document.getElementById('signupDisplayInfo').innerHTML = "Invalid email address!"
+        }
+        else if(err.code == "auth/email-already-in-use"){
+          document.getElementById('signupDisplayInfo').innerHTML = "Email already in use!"
+        }
       }
     }
-  };
+  }
 
   if(navigateToHome === true){
     return <Navigate to='/'/>;
