@@ -2,7 +2,7 @@ import '../StyleSheets/Singup.css';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Link, Navigate } from 'react-router-dom';
 
 import NavBar from './NavBar'
@@ -23,8 +23,12 @@ const auth = getAuth(app);
 
 const Signup = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
+  const [userDisplayName, SetUserDisplayName] = useState('');
   const [userEmail, SetUserEmail] = useState('');
   const [userPassword, SetUserPassword] = useState('');
+
+  const userDisplayNameRef = useRef('');
+  userDisplayNameRef.current = userDisplayName;
 
   const userEmailRef = useRef('');
   userEmailRef.current = userEmail;
@@ -33,16 +37,25 @@ const Signup = props => {
   userPasswordRef.current = userPassword;
 
   const SignupToFirebase = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current).then((userCredential) => {
-        console.log(auth.currentUser);
-        props.signupHandler(auth.currentUser);
+    if(userDisplayNameRef.current.length < 6 || userDisplayNameRef.current.length > 24){
+      document.getElementById('signupDisplayInfo').innerHTML = "Display name must have 6-24 characters.";
+      return;
+    }
 
-        SetUserEmail('');
-        SetUserPassword('');
-  
-        SetNavigateToHome(true);
-      });
+    try {
+      await createUserWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current)
+        .then(function(result) {
+          updateProfile(result.user, {
+            displayName: userDisplayNameRef.current
+          });
+        }).then((userCredential) => {
+          console.log(auth.currentUser);
+        
+          SetUserEmail('');
+          SetUserPassword('');
+    
+          SetNavigateToHome(true);
+        });
     } catch (err) {
       console.error(err.code);
       if(err.code == "auth/invalid-email"){
@@ -61,6 +74,10 @@ const Signup = props => {
       <div id='signupDiv'>
         <div>
           <h2>Signup</h2>
+        </div>
+        <div>
+          <label>Display Name: </label>
+          <input id='displayNameInput' type='text' value={userDisplayName} placeholder='example123' autoComplete='off' onChange={e => SetUserDisplayName(e.target.value)}/>
         </div>
         <div>
           <label>Email: </label>

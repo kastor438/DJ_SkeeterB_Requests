@@ -51,8 +51,7 @@ class App extends Component {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("App")
-        console.log(user);
+        // console.log(user);
         this.SignInHandler(user);
       } 
       else {

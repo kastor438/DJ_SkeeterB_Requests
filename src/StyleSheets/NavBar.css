@@ -148,6 +148,14 @@
     margin-left: -20%;
   }
 
+  #userDiv{
+    /* border: 1px solid red; */
+    justify-content: end;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
   #userDisplayName{
     font-size: 14px;
   }
@@ -177,19 +185,21 @@
 }
 
 @media only screen and (max-width: 575px){
-  #userDiv{
-    /* border: 1px solid red; */
-    justify-content: end;
-    display: flex;
-    width: 100%;
-  }
   #userDisplayName{
     /* border: 1px solid red; */
-    font-size: 14px;
+    font-size: 12px;
+  }
+}
+@media only screen and (max-width: 360px){
+  #userDisplayName{
     width: 40%;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  #signoutButton{
+    font-size: 12px;
   }
 }
