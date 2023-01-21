@@ -43,24 +43,6 @@ const NavBar = props => {
         );
       SetUserInfo(userInfo);
     }
-    else if(element != null && element.nodeName === 'A'){
-      var urlTO = element.href;
-        
-      if(!urlTO.includes("login") && !urlTO.includes("signup")){
-        var userLoginSignupElement = 
-          React.createElement('div', {id : 'loginSignupDiv'}, 
-            React.createElement('span', {id : 'loginSignupOptions'}, 
-              React.createElement(Link, {to : '/login', onClick : (e) => SetNavBar(e.target)}, 'Login'), 
-              '/',
-              React.createElement(Link, {to : '/signup', onClick : (e) => SetNavBar(e.target)}, 'Signup')
-            )
-          );
-      }
-      else{
-        var userLoginSignupElement = null;
-      }
-      SetUserInfo(userLoginSignupElement);
-    }
     else{
       var userLoginSignupElement = 
         React.createElement('div', {id : 'loginSignupDiv'},
