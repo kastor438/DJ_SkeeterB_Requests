@@ -521,7 +521,9 @@ input:-webkit-autofill:focus{
   }
 
   #submitBtn{
-    padding: 0 0;
+    padding: 0;
+    padding-bottom: 5px;
+
   }
 
   .songOptionInfo p {

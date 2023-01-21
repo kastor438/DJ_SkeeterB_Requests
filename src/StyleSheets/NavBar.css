@@ -45,7 +45,9 @@
 }
 
 #loginSignupDiv{
-
+  position: fixed;
+  top: 4vh;
+  right: 1vw;
 }
 
 #loginSignupOptions{
@@ -58,17 +60,21 @@
 #loginSignupOptions a{
   text-decoration: none;
   font-size: 75%;
-  color: rgb(161, 61, 219);
+  font-weight: 700;
+  color: rgb(0, 0, 0);
 }
 
 #userDiv{
+  position: fixed;
+  top: 2vh;
+  right: 1vw;
   /* border: 1px solid red; */
   white-space: nowrap;
-  margin-right: 2vmax;
 }
 
 #userDisplayName{
   font-size: 75%;
+  font-weight: 700;
   padding-right: 4px;
 }
 
@@ -97,6 +103,142 @@
   border: 1px solid rgb(10, 173, 248);
 }
 
+/* #menuButtonContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid red;
+} */
+
+#menuButtonDiv{
+  z-index: 200;
+  position: fixed;
+  right: 4vw;
+  top: 8vh;
+  cursor: pointer;
+  width: max-content;
+  /* border: 1px solid red; */
+  transition: transform .4s cubic-bezier(0, .52, 0, 1);
+}
+
+.bar1, .bar2, .bar3{
+  width: 50px;
+  height: 8px;
+  margin: 11px 0;
+  transition: .4s;
+  border-radius: 15px;
+  background-color: #7f27f0;
+  /* border: 1px solid red; */
+}
+
+#menuButtonDiv.openMenuPanel .bar1,
+#menuButtonDiv.openMenuPanel .bar2,
+#menuButtonDiv.openMenuPanel .bar3{
+  background-color: black;
+  width: 45px;
+  height: 6px;
+  margin: 6px 0;
+}
+
+#menuBackgroundFade{
+  position: fixed;
+  right: -100vw;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+#menuBackgroundFade.menuOpen{
+  background-color: #321f3a5c;
+  backdrop-filter: blur(1px);
+  z-index: 190;
+  transform: translateX(-100vw);
+  transition: transform 0.2s ease-in-out;
+}
+
+#slidingMenuPanel{
+  background-color: #7f27f0;
+  z-index: 199;
+  position: fixed;
+  width: 25vw;
+  top: 0;
+  right: -25vw;
+  height: 100vh;
+  transition: transform .3s cubic-bezier(0, .52, 0, 1);
+}
+
+#menuButtonDiv.openMenuPanel{
+  transform: translate3d(-16vw, 0, 0);
+  position: fixed;
+  top: 4vh;
+}
+
+#slidingMenuPanel.openMenuPanel{
+  transform: translate3d(-25vw, 0, 0);
+}
+
+#menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
+  transform: translate3d(0, 0, 0);
+}
+
+#menuButtonDiv.openMenuPanel .bar1 {
+  transform: translate(0, 11px) rotate(-135deg);
+}
+
+#menuButtonDiv.openMenuPanel .bar2 {
+  opacity: 0;
+}
+
+#menuButtonDiv.openMenuPanel .bar3 {
+  transform: translate(0, -11px) rotate(135deg);
+}
+
+#navBarLinks{
+  margin-left: 0;
+  margin: auto;
+  margin-top: 30%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: start;
+  padding: 0;
+  row-gap: 10px;
+  /* border: 1px solid red; */
+}
+
+.navBarLink{
+  margin-left: 0;
+  display: block;
+  width: 100%;
+  height: max-content;
+  /* border: 1px solid blue; */
+}
+
+.navBarLink a{
+  width: 100%;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-size: 32px;
+  font-weight: 700;
+  transition: 0.7s;
+  white-space: nowrap;
+}
+
+.navBarLink a:hover{
+  color: rgb(35, 21, 47);
+}
+
+.navBarLink a:active{
+  color: rgb(0, 0, 0);
+}
+
+a.activeLink{
+  color: rgb(62, 26, 78);
+  /* font-size: 32px; */
+}
+
 @media only screen and (max-width: 1465px){
   #navBarLogo{
     width: 20%;
@@ -104,6 +246,10 @@
 
   #pageHeader{
     font-size: 56px;
+  }
+
+  #navBarLinks{
+    margin-top: 40%;
   }
 }
 
@@ -114,6 +260,16 @@
 
   #pageHeader{
     font-size: 52px;
+  }
+
+  #menuButtonDiv{
+    top: 7vh;
+  }
+
+  .bar1, .bar2, .bar3{
+    width: 45px;
+    height: 7px;
+    margin: 8px 0;
   }
 
   #userDisplayName{
@@ -133,6 +289,52 @@
   #pageHeader{
     font-size: 44px;
   }
+
+  #menuButtonDiv{
+    top: 6vh;
+  }
+}
+
+@media only screen and (max-width: 1000px){
+  #menuButtonDiv{
+    top: 5vh;
+  }
+
+  #menuButtonDiv.openMenuPanel .bar1,
+  #menuButtonDiv.openMenuPanel .bar2,
+  #menuButtonDiv.openMenuPanel .bar3{
+
+  }
+
+  #slidingMenuPanel{
+    width: 30vw;
+    right: -30vw;
+  }
+
+  #menuButtonDiv.openMenuPanel{
+    transform: translate3d(-20vw, 0, 0);
+    position: fixed;
+    top: 3vh;
+  }
+  
+  #slidingMenuPanel.openMenuPanel{
+    transform: translate3d(-30vw, 0, 0);
+  }
+  
+  #menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
+    transform: translate3d(0, 0, 0);
+  }
+  #loginSignupDiv{
+    top: 2vh;
+  }
+
+  #userDiv{
+    top: 2vh;
+  }
+  
+  #userDisplayName{
+    font-size: 18px;
+  }
 }
 
 @media only screen and (max-width: 800px){
@@ -144,20 +346,35 @@
     font-size: 150%;
   }
 
-  #loginSignupDiv{
-    margin-left: -20%;
+  #slidingMenuPanel{
+    width: 40vw;
+    right: -40vw;
   }
 
-  #userDiv{
-    /* border: 1px solid red; */
-    justify-content: end;
+  #menuButtonDiv.openMenuPanel{
+    transform: translate3d(-28vw, 0, 0);
+    position: fixed;
+  }
+  
+  #slidingMenuPanel.openMenuPanel{
+    transform: translate3d(-40vw, 0, 0);
+  }
+  
+  #menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
+    transform: translate3d(0, 0, 0);
+  }
+
+  #loginSignupDiv{
     display: flex;
     align-items: center;
-    width: 100%;
+    top: 3vh;
+    right: 4vw;
+    /* border: 1px solid red; */
+    height: 40px;
   }
-
+  
   #userDisplayName{
-    font-size: 14px;
+    font-size: 20px;
   }
 
   #signoutSpan{
@@ -176,29 +393,103 @@
   }
 
   #navBarLogo{
-    width: 40%;
+    width: 30%;
   }
 
   #pageHeader{
     font-size: 140%;
   }
+
+  #userDisplayName{
+    font-size: 18px;
+  }
 }
 
 @media only screen and (max-width: 575px){
-  #userDisplayName{
-    /* border: 1px solid red; */
-    font-size: 12px;
-  }
-}
-@media only screen and (max-width: 360px){
-  #userDisplayName{
-    width: 40%;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .bar1, .bar2, .bar3{
+    width: 45px;
+    height: 7px;
+    margin: 8px 0;
   }
 
+  #menuButtonDiv.openMenuPanel .bar1,
+  #menuButtonDiv.openMenuPanel .bar2,
+  #menuButtonDiv.openMenuPanel .bar3{
+    width: 50px;
+    height: 6px;
+    margin: 6px 0;
+  }
+
+  #menuButtonDiv{
+    top: 4vh;
+  }
+
+  #slidingMenuPanel{
+    width: 100vw;
+    right: -100vw;
+  }
+
+  #menuButtonDiv.openMenuPanel{
+    transform: translate3d(0, 0, 0);
+    position: fixed;
+    top: 5vh;
+    left: 8vw;
+    right: 0;
+    transition: all 2s ease ease-in-out;
+  }
+  
+  #slidingMenuPanel.openMenuPanel{
+    transform: translate3d(-100vw, 0, 0);
+  }
+  
+  #menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
+    transform: translate3d(0, 0, 0);
+  }
+
+  #loginSignupDiv{
+    top: 5vh;
+  }
+  
+  #loginSignupOptions{
+    font-size: 150%;
+  }
+
+  #userDiv{
+    display: flex;
+    align-items: center;
+    top: 5vh;
+    right: 4vw;
+    /* border: 1px solid red; */
+    height: 40px;
+  }
+
+  #userDisplayName{
+    font-size: 18px;
+  }
+
+  #signoutButton{
+    width: 120%;
+    height: 30px;
+  }
+
+  .navBarLink a{
+    font-size: 200%;
+  }
+}
+
+@media only screen and (max-width: 480px){
+  #menuButtonDiv{
+    top: 3vh;
+  }
+
+  .bar1, .bar2, .bar3{
+    width: 35px;
+    height: 5px;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 360px){
   #signoutButton{
     font-size: 12px;
   }
