@@ -13,10 +13,16 @@ const Upcoming = props => {
   const [calendarDate, SetCalendarDate] = useState(new Date());
   const [eventElements, SetEventElements] = useState();
   
+  const returnToHomeLinkRef = useRef(null);
+
   const db = getDatabase();
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
+    if(returnToHomeLinkRef != null){
+      returnToHomeLinkRef.current.click();
+    }
+
     get(child(dbRef, '/Events/')).then((snapshot) => {
       const eventData = snapshot.val();
       if(eventData){
@@ -87,7 +93,9 @@ const Upcoming = props => {
       </div>
     </div>
     :
-    <div></div>
+    <div>
+      <NavLink ref={returnToHomeLinkRef} to='/'></NavLink>
+    </div>
   );
 }
 

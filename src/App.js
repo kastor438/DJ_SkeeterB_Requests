@@ -20,6 +20,8 @@ const firebaseConfig = {
   databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
+const publicRecaptchaKey = '6LdqIxskAAAAADVCIjtf00Sj76bY2vB3KA-J-6-D';
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
