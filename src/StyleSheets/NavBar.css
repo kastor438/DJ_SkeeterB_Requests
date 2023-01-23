@@ -192,7 +192,6 @@
 #menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
   transform: translate3d(0, 0, 0);
 }
-
 #menuButtonDiv.openMenuPanel .bar1 {
   transform: translate(0, 11px) rotate(-135deg);
 }
@@ -246,7 +245,7 @@
 }
 
 a.activeLink{
-  color: rgb(62, 26, 78);
+  color: rgba(59, 24, 75, 0.534);
   /* font-size: 32px; */
 }
 

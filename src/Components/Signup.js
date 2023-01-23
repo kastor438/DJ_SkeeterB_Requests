@@ -1,10 +1,10 @@
 import '../StyleSheets/Singup.css';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Link, Navigate } from 'react-router-dom';
-import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, set, child, get } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -21,7 +21,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const database = getDatabase(app);
 
 const Signup = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);

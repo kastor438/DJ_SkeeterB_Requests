@@ -1,9 +1,8 @@
 import '../StyleSheets/SkeeterSpecificsSongRequests.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getDatabase, ref, set, remove, child, get, onValue, Unsubscribe } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, set, child, get, onValue } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -20,8 +19,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
 
 const SkeeterPanel = props => {
   const [isPanelOpen, SetIsPanelOpen] = useState(false);
@@ -31,7 +28,7 @@ const SkeeterPanel = props => {
 
   useEffect(() => {
     const rootRef = ref(db, '/');
-    if(auth.currentUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
       onValue(rootRef, (snapshot) => {
         const data = snapshot.val();
         if(data && document.getElementById('skeeterRemoveAllButton') != null){
