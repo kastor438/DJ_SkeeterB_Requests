@@ -2,8 +2,8 @@ import logo from '../skeeterB-Logo.png';
 import '../StyleSheets/NavBar.css';
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut } from "firebase/auth";
-import React, { Component, useEffect, useState, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
