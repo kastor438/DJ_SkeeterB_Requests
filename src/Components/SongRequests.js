@@ -234,35 +234,13 @@ const SongRequests = props => {
       var spotifyTab = document.getElementById("spotifyTab");
       spotifyTab.style.backgroundColor = "#36393f";
       spotifyTab.style.zIndex = "3";
-      // spotifyTab.style.borderWidth = "1px 1px 0 1px";
-      spotifyTab.children[0].style.width = "55%";
-      spotifyTab.children[0].style.marginTop = "8%";
-
-      if(screenWidth <= 660){
-        spotifyTab.children[0].style.marginTop = "4%";
-        spotifyTab.children[0].style.width = "50%";
-      }
+      spotifyTab.children[0].classList.add('selectedTab')
 
       var customTab = document.getElementById("customTab");
       customTab.style.backgroundColor = "#2e2f32";
       customTab.style.zIndex = "2";
-      // appleMusicTab.style.borderWidth = "1px";
-      // if(screenWidth >= 1465){
-      //   customTab.children[0].style.marginTop = "10%";
-      //   customTab.children[0].style.fontSize = "24px";
-      // }
-      // else if(screenWidth >= 1250){
-      //   customTab.children[0].style.marginTop = "8%";
-      //   customTab.children[0].style.fontSize = "20px";
-      // }
-      // else if(screenWidth >= 1100){
-      //   customTab.children[0].style.marginTop = "5%";
-      //   customTab.children[0].style.fontSize = "18px";
-      // }
-      // else if(screenWidth >= 660){
-      //   customTab.children[0].style.marginTop = "0%";
-      //   customTab.children[0].style.fontSize = "16px";
-      // }
+      customTab.children[0].classList.remove('selectedTab')
+
       if(screenWidth <= 800)
         document.getElementById("renderedTracksDiv").style.height = "95%";
       else
@@ -278,37 +256,19 @@ const SongRequests = props => {
       var spotifyTab = document.getElementById("spotifyTab");
       spotifyTab.style.backgroundColor = "#2e2f32";
       spotifyTab.style.zIndex = "2";
-      // spotifyTab.style.borderWidth = "1px";
-      spotifyTab.children[0].style.width = "40%";
-      spotifyTab.children[0].style.marginTop = "9%";
+      spotifyTab.children[0].classList.remove('selectedTab')
+
 
       var customTab = document.getElementById("customTab");
       customTab.style.backgroundColor = "#36393f";
       customTab.style.zIndex = "3";
-      // appleMusicTab.style.borderWidth = "1px 1px 0 1px";
-      // if(screenWidth >= 1465){
-      //   customTab.children[0].style.marginTop = "10%";
-      //   customTab.children[0].style.fontSize = "28px";
-      // }
-      // else if(screenWidth >= 1250){
-      //   // customTab.children[0].style.marginTop = "10%";
-      //   customTab.children[0].style.fontSize = "26px";
-      // }
-      // else if(screenWidth >= 1100){
-      //   customTab.children[0].style.marginTop = "6%";
-      //   customTab.children[0].style.fontSize = "20px";
-      // }
-      // else if(screenWidth >= 660){
-      //   customTab.children[0].style.marginTop = "6%";
-      //   customTab.children[0].style.fontSize = "18px";
-      // }
-      // document.getElementById("tracksDiv").style.display = "none";
+      customTab.children[0].classList.add('selectedTab')
+
       document.getElementById("tracksDiv").style.height = "0";
       document.getElementById("renderedTracksDiv").style.height = "0px";
 
       SetSpotifyActive(false);
       SetCustomActive(true);
-      // CheckValidInput();
     }
   }
 
@@ -450,7 +410,6 @@ const SongRequests = props => {
           SpotifyImageURL: spotifyImageLink,
           Upvotes: 0,
           Downvotes: 0,
-          Voters : {},
           RequestedBy: (auth.currentUser ? auth.currentUser.uid : '')
         });
         document.getElementById('submissionText').innerHTML = "Request Sent!";
@@ -508,7 +467,7 @@ const SongRequests = props => {
       }
     }
 
-    var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
+    await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
       .then(response => response.json())
       .then(data => {
         // console.log(data);
@@ -573,64 +532,6 @@ const SongRequests = props => {
       });        
   }
 
-  // async function FetchAppleMusicSongs(){
-  //   var songParams = {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer ' + accessToken
-  //     }
-  //   }
-
-  //   var songID = await fetch('https://api.music.apple.com/v1/catalog/ca/search?types=songs&term=' + inputSongName, songParams)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       // console.log(data);
-  //       var tracks = [];
-  //       var searchedTracks = data.tracks.items;
-  //       for(var i = 0; i < 10; i++){
-  //         if(searchedTracks[i] == null)
-  //             break;
-
-  //         var artistFound = false;
-  //         var searchingArtist = inputArtistName.length > 0 ? true : false;
-  //         if(searchingArtist){
-  //           for(var j = 0; j < searchedTracks[i].artists.length; j++){
-  //             var currArtistName = searchedTracks[i].artists[j].name;
-  //             var inputArtistNameIndex = 0;
-  //             for(var k = 0; k < currArtistName.length; k++){
-  //               if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
-  //                 inputArtistNameIndex++;
-  //                 if(inputArtistNameIndex == inputArtistName.length){
-  //                   artistFound = true;
-  //                   break;
-  //                 }
-  //               }
-  //             }
-  //             if(artistFound){
-  //               break;
-  //             }
-  //           }
-  //         }
-  //         var artistNames = searchedTracks[i].artists[0].name;
-  //         for(var j = 1; j < searchedTracks[i].artists.length; j++){
-  //           artistNames += ", " + searchedTracks[i].artists[j].name;
-  //         }
-  //         if(artistFound || !searchingArtist){
-  //           var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
-  //               React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
-  //               React.createElement('div', {className : 'songOptionInfo'},
-  //                   React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
-  //                   React.createElement('p', {id : 'artistName' + i}, artistNames)
-  //               )
-  //           );
-  //           tracks.push(track);
-  //         }
-  //       }
-  //       SetRenderedTracks(tracks);
-  //     });        
-  // }
-
   function CustomSetup(){
     SetCanSubmit(true);
   }
@@ -658,7 +559,6 @@ const SongRequests = props => {
       SetTrackName(newTrackName);
       SetArtistName(element.children[1].children[1].innerHTML);
       SetTrackSpotifyURL(element.children[1].children[0].dataset.spotifyurl);
-      // console.log(trackSpotifyURLRef.current + " " + element.children[1].children[0].dataset.spotifyurl);
       SetCanSubmit(true);
     }
     else{
@@ -682,6 +582,7 @@ const SongRequests = props => {
           var userVote = 'none';
           var upvoteOn = false;
           var downvoteOn = false;
+
           // userID check
           if(auth.currentUser && data[sortedKeys[i]].Voters != null && data[sortedKeys[i]].Voters[auth.currentUser.uid]){
             userVote = data[sortedKeys[i]].Voters[auth.currentUser.uid];
@@ -723,9 +624,6 @@ const SongRequests = props => {
           );
           lineup.push(track);
         }
-        // else if(localStorage.getItem('voted' + sortedKeys[i])){
-        //   localStorage.removeItem('voted' + sortedKeys[i]);
-        // }
       }
     }
     else{
@@ -748,7 +646,6 @@ const SongRequests = props => {
         element.classList.remove('upvote-on');
         parent.dataset.currvote = 'none';
         voteChange = -1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
         remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid));
       }
       else if(parent.dataset.currvote === 'down'){
@@ -757,14 +654,12 @@ const SongRequests = props => {
         parent.dataset.currvote = 'up';
         voteChange = 1;
         downvoteChange = true;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'up');
       }
       else if(parent.dataset.currvote === 'none'){
         element.classList.add('upvote-on');
         parent.dataset.currvote = 'up';
         voteChange = 1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'up');
       }
 
@@ -790,7 +685,6 @@ const SongRequests = props => {
         element.classList.remove('downvote-on');
         parent.dataset.currvote = 'none';
         voteChange = -1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
         remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid));
       }
       else if(parent.dataset.currvote === 'up'){
@@ -799,14 +693,12 @@ const SongRequests = props => {
         parent.dataset.currvote = 'down';
         voteChange = 1;
         upvoteChange = true;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'down');
       }
       else if(parent.dataset.currvote === 'none'){
         element.classList.add('downvote-on');
         parent.dataset.currvote = 'down';
         voteChange = 1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
         set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'down');
       }
 
@@ -927,28 +819,6 @@ const SongRequests = props => {
     set(ref(db, 'Requests/' + element.dataset.requestkey), null);
   }
 
-  // function SkeeterRemoveAllSongs(){
-  //   get(child(dbRef, 'Requests/')).then((snapshot) => {
-  //     if(snapshot.val()){
-  //       set(ref(db, 'LastRequests/'), recentSnapshotRef.current.Requests);
-  //       set(ref(db, 'Requests/'), null);
-  //       document.getElementById('skeeterRemoveAllButton').disabled = true;
-  //       document.getElementById('skeeterRecoverLastButton').disabled = false;
-  //     }
-  //   });
-  // }
-
-  // function SkeeterRecoverLast(){
-  //   get(child(dbRef, 'LastRequests/')).then((snapshot) => {
-  //     if(snapshot.val()){
-  //       set(ref(db, 'Requests/'), snapshot.val());
-  //       set(ref(db, 'LastRequests/'), null);
-  //       document.getElementById('skeeterRemoveAllButton').disabled = false;
-  //       document.getElementById('skeeterRecoverLastButton').disabled = true;
-  //     }
-  //   });
-  // }
-
   return (
     <div id='songRequestsDiv'>
       <ul id='requestAndLineupList'>
@@ -960,10 +830,10 @@ const SongRequests = props => {
           <div id='formDiv'>
             <div id='songSearchTabs'>
               <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
-                <img id='spotifyImage' src='SpotifyLogo.png'/>
+                <img id='spotifyImage' src='SpotifyLogo.png' alt='Spotify Logo'/>
               </div>
               <div id='customTab' onClick={e => SwitchToCustom(e)}>
-                <h4 id='customTag'>Custom</h4>
+                <img id='customImage' src='CustomLogo.png' alt='Custom Logo'/>
               </div>
             </div>
             <div id='searchDiv'>

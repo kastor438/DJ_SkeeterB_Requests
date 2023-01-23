@@ -2,10 +2,7 @@ import '../StyleSheets/Upcoming.css';
 import '../StyleSheets/ReactCalendar.css';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, child, get } from "firebase/database";
 import Calendar from 'react-calendar';
 import { NavLink } from 'react-router-dom';
 
@@ -14,7 +11,6 @@ const Upcoming = props => {
   const [calendarDate, SetCalendarDate] = useState(new Date());
   const [eventElements, SetEventElements] = useState();
   
-  const db = getDatabase();
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
