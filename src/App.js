@@ -1,9 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase } from "firebase/database";
 
 import NavBar from "./Components/NavBar";
 import Main from "./Main";
@@ -27,11 +25,6 @@ const auth = getAuth(app);
 class App extends Component {
   constructor(props) {
     super(props)
-
-    // Bind the this context to the handler function
-    // this.SignInHandler = this.SignInHandler.bind(this);
-
-    // Set some state
     this.state = {
       signedIn: false,
       authUser: null

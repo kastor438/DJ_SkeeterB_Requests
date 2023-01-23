@@ -37,13 +37,16 @@ const Signup = props => {
   const userPasswordRef = useRef('');
   userPasswordRef.current = userPassword;
 
+  // DOM Refs
+  const signupDisplayInfoRef = useRef();
+
   const db = getDatabase();
   const dbRef = ref(getDatabase());
 
   const SignupToFirebase = async () => {
     var acceptableAccount = true;    
     if(userDisplayNameRef.current.length < 6 || userDisplayNameRef.current.length > 24){
-      document.getElementById('signupDisplayInfo').innerHTML = "Display name must have 6-24 characters.";
+      signupDisplayInfoRef.current.innerHTML = "Display name must have 6-24 characters.";
       return;
     }
 
@@ -51,7 +54,7 @@ const Signup = props => {
       if(snapshot.val()){
         Object.entries(snapshot.val()).forEach(([key, value]) => {
           if(userDisplayNameRef.current === value.DisplayName){
-            document.getElementById('signupDisplayInfo').innerHTML = "Display name already in use.";
+            signupDisplayInfoRef.current.innerHTML = "Display name already in use.";
             acceptableAccount = false;
           }
         });
@@ -81,10 +84,10 @@ const Signup = props => {
       } catch (err) {
         console.error(err.code);
         if(err.code == "auth/invalid-email"){
-          document.getElementById('signupDisplayInfo').innerHTML = "Invalid email address!"
+          signupDisplayInfoRef.current.innerHTML = "Invalid email address!"
         }
         else if(err.code == "auth/email-already-in-use"){
-          document.getElementById('signupDisplayInfo').innerHTML = "Email already in use!"
+          signupDisplayInfoRef.current.innerHTML = "Email already in use!"
         }
       }
     }
@@ -117,7 +120,7 @@ const Signup = props => {
           </span>
         </div>
         <div id='signupDisplayDiv'>
-          <h4 id='signupDisplayInfo'></h4>
+          <h4 id='signupDisplayInfo' ref={signupDisplayInfoRef}></h4>
         </div>
       </div>
   );

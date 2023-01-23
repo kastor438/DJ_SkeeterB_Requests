@@ -1,4 +1,3 @@
-import logo from '../skeeterB-Logo.png';
 import '../StyleSheets/SongRequests.css';
 import '../StyleSheets/SkeeterSpecificsSongRequests.css'
 import '../StyleSheets/RequestLineup.css';
@@ -43,7 +42,6 @@ const SongRequests = props => {
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [accessToken, SetAccessToken] = useState("");
   const [canSubmit, SetCanSubmit] = useState(false);
-  const [invalidChars, SetInvalidChars] = useState('\'"\\/');
   const [inputSongName, SetInputSongName] = useState("");
   const [inputArtistName, SetInputArtistName] = useState("");
   const [hasListener, SetHasListener] = useState(false);
@@ -105,6 +103,7 @@ const SongRequests = props => {
 
   const db = getDatabase();
   const dbRef = ref(getDatabase());
+  const invalidChars = '\'"\\/';
 
   // DOM Refs
   const requestSongButtonRef = useRef();
@@ -122,15 +121,13 @@ const SongRequests = props => {
 
   useEffect(() => {
     var currentUrl = window.location.href;
-    var requestSongButton = document.getElementById("requestSongButton");
-    requestSongButton.style.borderBottom = "1px solid white";
-    requestSongButton.style.color = "#b1afaf";
-    document.getElementById("requestGridContainer").style.display = "grid";
+    requestSongButtonRef.current.style.borderBottom = "1px solid white";
+    requestSongButtonRef.current.style.color = "#b1afaf";
+    requestGridContainerRef.current.style.display = "grid";
 
-    var lineupButton = document.getElementById("lineupButton");
-    lineupButton.style.borderBottom = "none";
-    lineupButton.style.color = "white";
-    document.getElementById("lineupGridContainer").style.display = "none"
+    lineupButtonRef.current.style.borderBottom = "none";
+    lineupButtonRef.current.style.color = "white";
+    lineupGridContainerRef.current.style.display = "none"
     
     if(currentUrl.includes("dj")){
       SetTrackStats(true);
@@ -156,10 +153,10 @@ const SongRequests = props => {
 
   useEffect(() => {
     if(!canSubmitRef.current){
-      document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+      submitSongRequestButtonRef.current.setAttribute("disabled", "disabled");
     }
     else{
-      document.getElementById('submitBtn').removeAttribute("disabled");
+      submitSongRequestButtonRef.current.removeAttribute("disabled");
     }
   }, [canSubmit]);
   
@@ -522,16 +519,16 @@ const SongRequests = props => {
             break;
         }
         SetRenderedTracks(tracks);
-        document.getElementById("renderedTracksDiv").style.display = "block";
-        document.getElementById("renderedTracksDiv").style.overflowY = "scroll";
+        renderedTracksDivRef.current.style.display = "block";
+        renderedTracksDivRef.current.style.overflowY = "scroll";
         let screenWidth = window.innerWidth;
         if(screenWidth <= 800){
-          document.getElementById("tracksDiv").style.height = "40vh";      
-          document.getElementById("renderedTracksDiv").style.height = "95%";
+          tracksDivRef.current.style.height = "40vh";      
+          renderedTracksDivRef.current.style.height = "95%";
         }
         else{
-          document.getElementById("renderedTracksDiv").style.height = "320px";
-          document.getElementById("tracksDiv").style.height = "fit-content"
+          renderedTracksDivRef.current.style.height = "320px";
+          tracksDivRef.current.style.height = "fit-content"
         }  
       }).catch((error) => {
         console.log(error);

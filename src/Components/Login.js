@@ -36,12 +36,8 @@ const Login = props => {
   const LoginToFirebase = async () => {
     try {
       await signInWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current);
-      // console.log(auth.currentUser);
-      // props.signinHandler(auth.currentUser);
-
       SetUserEmail('');
       SetUserPassword('');
-
       SetNavigateToHome(true);
     } catch (err) {
       console.error(err);

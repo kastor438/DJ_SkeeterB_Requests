@@ -1,5 +1,5 @@
 import '../StyleSheets/SkeeterSpecificsSongRequests.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, child, get, onValue } from "firebase/database";
@@ -23,6 +23,9 @@ const auth = getAuth(app);
 const SkeeterPanel = props => {
   const [isPanelOpen, SetIsPanelOpen] = useState(false);
 
+  // DOM Refs
+  const SkeeterRemoveAllButtonRef = useRef();
+
   const db = getDatabase();
   const dbRef = ref(getDatabase());
 
@@ -31,12 +34,12 @@ const SkeeterPanel = props => {
     if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
       onValue(rootRef, (snapshot) => {
         const data = snapshot.val();
-        if(data && document.getElementById('skeeterRemoveAllButton') != null){
+        if(data && SkeeterRemoveAllButtonRef.current != null){
           if(!data.Requests){
-            document.getElementById('skeeterRemoveAllButton').disabled = true;
+            SkeeterRemoveAllButtonRef.current.disabled = true;
           }
           else{
-            document.getElementById('skeeterRemoveAllButton').disabled = false;
+            SkeeterRemoveAllButtonRef.current.disabled = false;
           }
         } 
       });
@@ -59,8 +62,7 @@ const SkeeterPanel = props => {
 
   function SkeeterRemoveAllSongs(){
     get(child(dbRef, 'Requests/')).then((snapshot) => {
-        set(ref(db, 'Requests/'), null);
-        // document.getElementById('skeeterRemoveAllButton').disabled = true;
+      set(ref(db, 'Requests/'), null);
     });
   }
 
@@ -71,7 +73,7 @@ const SkeeterPanel = props => {
           <button id='slidingButton' onClick={(e) => ToggleSkeeterPanel(e.target)}>&#8592;</button>
         </div>
         <div id='skeeterButtonsDiv'>
-          <button id='skeeterRemoveAllButton' onClick={() => SkeeterRemoveAllSongs()}>Remove All Requests</button>
+          <button id='skeeterRemoveAllButton' ref ={SkeeterRemoveAllButtonRef} onClick={() => SkeeterRemoveAllSongs()}>Remove All Requests</button>
         </div>
       </div>
       :
