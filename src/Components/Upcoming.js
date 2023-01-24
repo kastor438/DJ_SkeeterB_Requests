@@ -54,9 +54,8 @@ const Upcoming = props => {
             var newEventElement =
               React.createElement('div', {className : 'eventInfoDiv' + (lastEvent ? '' : ' eventBottomBorder'), key : 'eventInfoDiv' + key},
                 React.createElement('div', {className : 'eventDetailsDiv'},
-                  React.createElement('div', {className : 'eventLiveAtDiv'}, 
-                     React.createElement('label', {className : 'eventInfoLabel'}, 'Live at: '),
-                     React.createElement('span', {className : 'eventLiveAtContent'}, value.EventVenue)
+                  React.createElement('div', {className : 'eventVenueDiv'}, 
+                    React.createElement('span', {className : 'eventVenue', 'data-eventkey' : key, onClick : (e) => OpenUpcomingEvent(e.target)}, value.EventVenue)
                   ),
                   React.createElement('div', {className : 'eventStartTimeDiv'}, 
                      React.createElement('label', {className : 'eventInfoLabel'}, 'Start Time: '),
@@ -68,9 +67,6 @@ const Upcoming = props => {
                 ),
                 React.createElement('div', {className : 'eventImageDiv'},
                   React.createElement('img', {className : 'eventImage', src : './BuckLogo.jpg', alt : 'An image representing the event'})
-                ),
-                React.createElement('div', {className : 'openEventButtonDiv'},
-                  React.createElement('button', {className : 'openEventButton', 'data-eventkey' : key, onClick : (e) => OpenUpcomingEvent(e.target)}, 'Song Requests'),
                 )
               );
             newEventElements.push(newEventElement);
