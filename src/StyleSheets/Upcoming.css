@@ -40,10 +40,14 @@
   cursor: pointer;
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
-  border: 1px solid rgb(45, 212, 54);
+  /* border: 1px solid rgb(45, 212, 54); */
 }
 
-.eventInfoDiv:hover *{
+.eventInfoDiv *{
+  pointer-events: none;
+}
+
+.eventInfoDiv:hover * {
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
 }
@@ -58,6 +62,10 @@
   border-bottom: 1px solid black;
 }
 
+.eventInfoDiv:hover.eventBottomBorder{
+  padding-top: 10px;
+}
+
 .eventDetailsDiv{
   display: grid;
   grid-row: 1/2;
@@ -67,7 +75,7 @@
 }
 
 .eventDetailsDiv div{
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .eventInfoDiv:hover .eventDetailsDiv div label,
@@ -99,7 +107,7 @@
   grid-row: 3/4;
   grid-column: 1/2;
   overflow: hidden;
-  border: 1px solid rgb(34, 216, 64);
+  /* border: 1px solid rgb(34, 216, 64); */
 }
 
 .eventDescription{
@@ -117,7 +125,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .eventImage{

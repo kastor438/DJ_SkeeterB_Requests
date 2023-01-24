@@ -52,10 +52,10 @@ const Upcoming = props => {
             if(newEventElements.length === Object.keys(snapshot.val()).length-1)
               lastEvent = true;
             var newEventElement =
-              React.createElement('div', {className : 'eventInfoDiv' + (lastEvent ? '' : ' eventBottomBorder'), key : 'eventInfoDiv' + key},
+              React.createElement('div', {className : 'eventInfoDiv' + (lastEvent ? '' : ' eventBottomBorder'), key : 'eventInfoDiv' + key, 'data-eventkey' : key, onClick : (e) => OpenUpcomingEvent(e.target)},
                 React.createElement('div', {className : 'eventDetailsDiv'},
                   React.createElement('div', {className : 'eventVenueDiv'}, 
-                    React.createElement('span', {className : 'eventVenue', 'data-eventkey' : key, onClick : (e) => OpenUpcomingEvent(e.target)}, value.EventVenue)
+                    React.createElement('span', {className : 'eventVenue'}, value.EventVenue)
                   ),
                   React.createElement('div', {className : 'eventStartTimeDiv'}, 
                      React.createElement('label', {className : 'eventInfoLabel'}, 'Start Time: '),
