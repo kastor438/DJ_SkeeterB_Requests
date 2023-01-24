@@ -3,14 +3,16 @@ import '../StyleSheets/ReactCalendar.css';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { getDatabase, ref, child, get } from "firebase/database";
+import { Navigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
-import { NavLink } from 'react-router-dom';
 
 const Upcoming = props => {
   const [calendarDateHeader, SetCalendarDateHeader] = useState();
   const [calendarDate, SetCalendarDate] = useState(new Date());
   const [eventElements, SetEventElements] = useState();
-  
+  const [navigateToEvent, SetNavigateToEvent] = useState(false);
+  const [selectedEventID, SetSelectedEventID] = useState('');
+
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
@@ -25,12 +27,18 @@ const Upcoming = props => {
   }, [])
 
   useEffect(() => {
-    console.log(calendarDate);
+    // console.log(calendarDate);
     var calendarDateElement = React.createElement('h3', {id : 'selectedDateHeader'}, calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2}) + '/' + (calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2}) + '/' + calendarDate.getFullYear());
     SetCalendarDateHeader(calendarDateElement);
 
     SetEventDetails();
   }, [calendarDate]);
+
+  useEffect(() => {
+    if(selectedEventID !== ''){
+      SetNavigateToEvent(true);
+    }
+  }, [selectedEventID])
 
   function SetEventDetails(){
     get(child(dbRef, '/Events/')).then((snapshot) => {
@@ -40,8 +48,11 @@ const Upcoming = props => {
         var eventDate = calendarDate.getFullYear() + '-' + (calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2}) + "-" + calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2});
         Object.entries(eventData).forEach(([key, value]) => {
           if(value.EventDate === eventDate){
+            var lastEvent = false;
+            if(newEventElements.length === Object.keys(snapshot.val()).length-1)
+              lastEvent = true;
             var newEventElement =
-              React.createElement('div', {className : 'eventInfoDiv', key : 'eventInfoDiv' + key},
+              React.createElement('div', {className : 'eventInfoDiv' + (lastEvent ? '' : ' eventBottomBorder'), key : 'eventInfoDiv' + key},
                 React.createElement('div', {className : 'eventDetailsDiv'},
                   React.createElement('div', {className : 'eventLiveAtDiv'}, 
                      React.createElement('label', {className : 'eventInfoLabel'}, 'Live at: '),
@@ -57,12 +68,16 @@ const Upcoming = props => {
                 ),
                 React.createElement('div', {className : 'eventImageDiv'},
                   React.createElement('img', {className : 'eventImage', src : './BuckLogo.jpg', alt : 'An image representing the event'})
+                ),
+                React.createElement('div', {className : 'openEventButtonDiv'},
+                  React.createElement('button', {className : 'openEventButton', 'data-eventkey' : key, onClick : (e) => OpenUpcomingEvent(e.target)}, 'Song Requests'),
                 )
               );
             newEventElements.push(newEventElement);
           }
         });
       }
+      
       if(newEventElements.length <= 0)
         SetEventElements(React.createElement('span', {}, 'No events on selected date'));
       else
@@ -70,11 +85,20 @@ const Upcoming = props => {
     });
   }
 
+  function OpenUpcomingEvent(element){
+    console.log("made it. Key: " + element.dataset.eventkey);
+    props.upcomingEventHandler(element.dataset.eventkey);
+    SetSelectedEventID(element.dataset.eventkey);
+  }
+
+  if(navigateToEvent === true){
+    return <Navigate to={'/Upcoming/' + selectedEventID}/>;
+  }
   return (
     (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ?
     <div id='upcomingDiv'>
       <div id='calendarDiv'>
-        <Calendar id='upcomingCalendar' maxDate={new Date("2035, 9, 19")} onChange={SetCalendarDate} value={calendarDate} />
+        <Calendar id='upcomingCalendar' minDate={new Date()} maxDate={new Date("2035, 9, 19")} onChange={SetCalendarDate} value={calendarDate} />
       </div>
       <div id='selectedDateEventInfoDiv'>
         {calendarDateHeader}

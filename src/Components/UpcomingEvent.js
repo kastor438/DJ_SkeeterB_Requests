@@ -1,0 +1,105 @@
+import '../StyleSheets/UpcomingEvent.css';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, child, get } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
+  authDomain: "dj-skeeterb.firebaseapp.com",
+  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com",
+  projectId: "dj-skeeterb",
+  storageBucket: "dj-skeeterb.appspot.com",
+  messagingSenderId: "222672756825",
+  appId: "1:222672756825:web:974f65737776a233265148",
+  measurementId: "G-E5J0711GSP",
+  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+const UpcomingEvent = props => {
+  const [eventID, SetEventID] = useState('');
+  const [upcomingEventElement, SetUpcomingEventElement] = useState(null);
+
+  const eventVenueRef = useRef();
+  const eventStartTimeRef = useRef();
+  const eventDescriptionRef = useRef();
+
+  const dbref = ref(getDatabase());
+  useEffect(() => {
+    var urlSplit = window.location.href.split('/');
+    SetEventID(urlSplit[4]);
+  }, [])
+
+  useEffect(() => {
+    console.log(props)
+  }, [props.eventID])
+
+  useEffect(() => {
+    get(child(dbref, `Events/${eventID}/`)).then((snapshot) => {
+      if(snapshot.val()){
+        var newUpcomingEventElement =
+          React.createElement('div', {id : 'upcomingEventDiv'},
+            React.createElement('div', {id : 'upcomingEventInfo'},
+              React.createElement('div', {id : 'upcomingEventLocation'},
+                React.createElement('p', {}, snapshot.val().EventVenue)
+              ),
+              React.createElement('div', {id : 'upcomingEventStartTime'},
+                React.createElement('p', {}, snapshot.val().EventStartTime)
+              ),
+              React.createElement('div', {id : 'upcomingEventDescription'},
+                React.createElement('p', {}, snapshot.val().EventDescription)
+              ),
+              React.createElement('div', {id : 'upcomingEventImageDiv'},
+                React.createElement('img', {id : 'upcomingEventImage', src : '../BuckLogo.jpg', alt : 'Image Representing Event Location'})
+              ),
+            ),
+            React.createElement('div', {id : 'requestSongContainer'},
+              
+            )
+          );
+
+        SetUpcomingEventElement(newUpcomingEventElement);
+        // eventVenueRef.current.innerHTML = snapshot.val().EventVenue;
+        // eventStartTimeRef.current.innerHTML = snapshot.val().EventStartTime;
+        // eventDescriptionRef.current.innerHTML = snapshot.val().EventDescription;
+      }
+      else{
+        var newUpcomingEventElement =
+          React.createElement('p', {}, 'No event with ID: ' + eventID);
+
+        SetUpcomingEventElement(newUpcomingEventElement);
+      }
+    });
+  }, [eventID])
+
+  return (
+    <div>
+      {upcomingEventElement}
+    </div>
+    // <div id='upcomingEventDiv'>
+    //   <h4>Event ID: {eventID}</h4>
+    //   <div id='upcomingEventInfo'>
+    //     <div id='upcomingEventLocation'>
+    //       <p ref={eventVenueRef}>Kai Brady's Fancy Dive Bar</p>
+    //     </div>
+    //     <div id='upcomingEventStartTime'>
+    //       <p ref={eventStartTimeRef}>9:00pm</p>
+    //     </div>
+    //     <div id='upcomingEventDescription'>
+    //       <p ref={eventDescriptionRef}>Description text goes here... Description text goes here... Description text goes here... Description text goes here... Description text goes here... Description text goes here... Description text goes here... </p>
+    //     </div>
+    //     <div id='upcomingEventImageDiv'>
+    //       <img id='upcomingEventImage' src='../BuckLogo.jpg' alt='merp'/>
+    //     </div>
+    //   </div>
+    //   <div id='requestSongContainer'>
+    //     <h3>test</h3>
+    //   </div>
+    // </div>
+  );
+}
+
+export default UpcomingEvent;

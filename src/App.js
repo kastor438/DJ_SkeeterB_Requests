@@ -27,7 +27,8 @@ class App extends Component {
     super(props)
     this.state = {
       signedIn: false,
-      authUser: null
+      authUser: null,
+      upcomingEventID : ''
     };
     this.Setup = this.Setup.bind(this);
     this.SignInHandler = this.SignInHandler.bind(this);
@@ -65,13 +66,24 @@ class App extends Component {
     });
   }
 
+  UpcomingEventSelectedHandler(eventID){
+    console.log("App - EventID: " + eventID);
+    this.setState({
+      upcomingEventID : eventID
+    })
+  }
+
   render(){
     return (
       <div>
         <div className="App">
           <header className="App-header">
             <NavBar signoutHandler={() => this.SignOutHandler()} authUser={this.state.authUser} />
-            <Main signinHandler={(authUser) => this.SignInHandler(authUser)} authUser={this.state.authUser}/>
+            <Main 
+            signinHandler={(authUser) => this.SignInHandler(authUser)} 
+            upcomingEventHandler={(eventID) => this.UpcomingEventSelectedHandler(eventID)}
+            authUser={this.state.authUser}
+            eventID={this.state.upcomingEventID}/>
           </header>
         </div>
       </div>

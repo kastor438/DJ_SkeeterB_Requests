@@ -3,9 +3,7 @@ import '../StyleSheets/Login.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { Navigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import NavBar from './NavBar'
+import { Navigate, Link } from 'react-router-dom';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -24,20 +22,13 @@ const auth = getAuth(app);
 
 const Login = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
-  const [userEmail, SetUserEmail] = useState('');
-  const [userPassword, SetUserPassword] = useState('');
 
-  const userEmailRef = useRef('');
-  userEmailRef.current = userEmail;
-
-  const userPasswordRef = useRef('');
-  userPasswordRef.current = userPassword;
+  const userEmailRef = useRef();
+  const userPasswordRef = useRef();
 
   const LoginToFirebase = async () => {
     try {
-      await signInWithEmailAndPassword(auth, userEmailRef.current, userPasswordRef.current);
-      SetUserEmail('');
-      SetUserPassword('');
+      await signInWithEmailAndPassword(auth, userEmailRef.current.value, userPasswordRef.current.value);
       SetNavigateToHome(true);
     } catch (err) {
       console.error(err);
@@ -54,11 +45,11 @@ const Login = props => {
         </div>
         <div>
           <label>Email: </label>
-          <input id='emailInput' type='email' value={userEmail} placeholder='example@gmail.com' onChange={e => SetUserEmail(e.target.value)}/>
+          <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com'/>
         </div>
         <div>
           <label>Password: </label>
-          <input id='passwordInput' type='password' value={userPassword} placeholder='Password' onChange={e => SetUserPassword(e.target.value)}/>
+          <input id='passwordInput' type='password' ref={userPasswordRef} placeholder='Password'/>
         </div>
         <button id='loginButton' onClick={e => LoginToFirebase()}>Login</button>
         <div>

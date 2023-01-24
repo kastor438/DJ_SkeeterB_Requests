@@ -117,7 +117,6 @@ const NavBar = props => {
             <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
           </ul>
         </div>
-        {/* <span id='loginSignupOptions'><Link to='/login'>Login</Link> / <Link to='/signup'>Signup</Link></span> */}
       </nav>
     </div>
   );
