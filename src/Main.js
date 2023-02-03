@@ -6,6 +6,7 @@ import Upcoming from './Components/Upcoming';
 import Signup from './Components/Signup';
 import Login from './Components/Login';
 import UpcomingEvent from './Components/UpcomingEvent';
+import NewEvent from './Components/NewEvent';
 
 const Main = props => {
   return (
@@ -13,6 +14,7 @@ const Main = props => {
       <Routes>
         <Route index element={<SongRequests authUser={props.authUser}/>}/>
         <Route path='/Upcoming' element={<Upcoming authUser={props.authUser} upcomingEventHandler={(eventID) => props.upcomingEventHandler(eventID)}/>}/>
+        <Route path='/NewEvent' element={<NewEvent authUser={props.authUser}/>}/>
         <Route path='/Upcoming/:eventID' element={<UpcomingEvent authUser={props.authUser} eventID={props.eventID}/>}/>
         <Route path='/Signup' element={<Signup signupHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>

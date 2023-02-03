@@ -45,8 +45,10 @@ const Upcoming = props => {
       const eventData = snapshot.val();
       const newEventElements = [];
       if(eventData){
-        var eventDate = calendarDate.getFullYear() + '-' + (calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2}) + "-" + calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2});
+        var eventDate = `${calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${calendarDate.getFullYear()}`;
         Object.entries(eventData).forEach(([key, value]) => {
+          console.log(eventDate);
+          console.log(value.EventDate);
           if(value.EventDate === eventDate){
             var lastEvent = false;
             if(newEventElements.length === Object.keys(snapshot.val()).length-1)
@@ -66,7 +68,7 @@ const Upcoming = props => {
                   )
                 ),
                 React.createElement('div', {className : 'eventImageDiv'},
-                  React.createElement('img', {className : 'eventImage', src : './BuckLogo.jpg', alt : 'An image representing the event'})
+                  React.createElement('img', {className : 'eventImage', src : value.EventImageURL, alt : 'An image representing the event'})
                 )
               );
             newEventElements.push(newEventElement);
@@ -91,7 +93,6 @@ const Upcoming = props => {
     return <Navigate to={'/Upcoming/' + selectedEventID}/>;
   }
   return (
-    (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ?
     <div id='upcomingDiv'>
       <div id='calendarDiv'>
         <Calendar id='upcomingCalendar' minDate={new Date()} maxDate={new Date("2035, 9, 19")} onChange={SetCalendarDate} value={calendarDate} />
@@ -103,8 +104,6 @@ const Upcoming = props => {
         </div>
       </div>
     </div>
-    :
-    <div></div>
   );
 }
 

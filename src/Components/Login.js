@@ -14,7 +14,6 @@ const firebaseConfig = {
   messagingSenderId: "222672756825",
   appId: "1:222672756825:web:974f65737776a233265148",
   measurementId: "G-E5J0711GSP",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -39,25 +38,25 @@ const Login = props => {
     return <Navigate to='/'/>;
   }
   return (
-      <div id='loginDiv'>
-        <div>
-          <h2>Login</h2>
-        </div>
-        <div>
-          <label>Email: </label>
-          <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com'/>
-        </div>
-        <div>
-          <label>Password: </label>
-          <input id='passwordInput' type='password' ref={userPasswordRef} placeholder='Password'/>
-        </div>
-        <button id='loginButton' onClick={e => LoginToFirebase()}>Login</button>
-        <div>
-          <span id='alreadySignedUpSpan'>
-            <Link to='/signup'>Not registered? Signup here</Link>
-          </span>
-        </div>
+    <div id='loginDiv'>
+      <div>
+        <h2>Login</h2>
       </div>
+      <div>
+        <label>Email: </label>
+        <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com'/>
+      </div>
+      <div>
+        <label>Password: </label>
+        <input id='passwordInput' type='password' ref={userPasswordRef} placeholder='Password'/>
+      </div>
+      <button id='loginButton' onClick={e => LoginToFirebase()}>Login</button>
+      <div>
+        <span id='alreadySignedUpSpan'>
+          <Link to='/signup'>Not registered? Signup here</Link>
+        </span>
+      </div>
+    </div>
   );
 }
 

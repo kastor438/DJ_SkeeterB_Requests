@@ -1,0 +1,226 @@
+#newEventDiv div{
+  /* border: 1px solid red; */
+}
+
+#newEventDiv{
+  display: grid;
+  /* max-height: 85vh; */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 4fr 1fr 4fr;
+  column-gap: 2%;
+  /* border: 1px solid red; */
+  row-gap: 2%;
+}
+
+#newEventCalendarDiv{
+  grid-column: 1/2;
+  grid-row: 1/3;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  height: 80%;
+}
+
+#upcomingCalendar{
+
+}
+
+#newEventCenteringDiv{
+  display: flex;
+  align-items: start;
+  justify-content: left;
+  width: max-content;
+  height: max-content;
+}
+
+#newEventContainerDiv{
+  width: fit-content;
+  height: max-content;
+  grid-column: 2/3;
+  grid-row: 1/2;
+  background-color: rgb(35, 43, 66);
+  border-radius: 10%;
+  border: 2px outset black;
+  padding: 0 2% 4% 2%;
+}
+
+#calendarDateHeaderDiv{
+  display: flex;
+  height: fit-content;
+  
+}
+
+#calendarDateHeader{
+  margin-left: 4%;
+  /* border: 1px solid red; */
+}
+
+#newEventInfoContainerDiv{
+
+}
+
+#newEventVenueDiv{
+
+}
+
+#newEventVenueInput{
+
+}
+
+#newEventStartTimeDiv{
+  padding: 2% 0;
+}
+
+#hourSelect{
+  /* min-height: 190px;  */
+  overflow-y :auto; 
+  overflow-x:hidden; 
+  /* position:absolute; */
+  /* width:300px; */
+  /* display: contents; */
+}
+
+#minuteSelect{
+
+}
+
+#dayNightSelect{
+
+}
+
+select option{
+  font-size: 18px;
+}
+
+#newEventDescriptionDiv{
+
+}
+
+#newEventDescriptionInput{
+  width: 300px;
+  font-size: 16px;
+}
+
+#newEventImageDiv{
+
+}
+
+#newEventImageUploadInput{
+
+}
+
+.newEventInfoDiv{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 2% 2%;
+}
+
+.newEventInfoLabel{
+  /* text-align: left; */
+  padding-right: 2%;
+  height: 100%;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+#repeatsDiv{
+  grid-column: 2/3;
+  grid-row: 2/3;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  /* border: 1px solid red; */
+}
+
+#repeatsInfoDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: rgb(35, 43, 66);
+  border-radius: 4%;
+  border: 2px outset black;
+  height: 100%;
+  width: 75%;
+  padding: 0 5%;
+}
+
+#repeatsInputDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid black;
+}
+
+#repeatsTimeFrameSelectDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid black;
+}
+
+#reoccurringTimeFrameSelect{
+
+}
+
+#repeatsEndDateDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.repeatsInfoLabel{
+  padding-right: 2%;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+#selectImageAndSubmit{
+  grid-column: 1/3;
+  grid-row: 3/4;
+  display: grid;
+  grid-template-columns: 1fr;
+  height: fit-content;
+  row-gap: 16px;
+}
+
+#UploadedImagesDiv{
+  display: grid;
+  grid-gap: 4px;
+  grid-template-columns: repeat(auto-fill,minmax(18%,1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(18%,1fr);
+  overflow-x: auto;
+  width: 80%;
+  height: fit-content;
+  margin-left: 10%;
+  border: 3px solid black;
+  border: 5%;
+  padding: 8px 0;
+}
+
+.newEventImageDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  background-color: rgb(46, 46, 46);
+}
+
+.newEventImage{
+  width: 90%;
+  pointer-events: none;
+}
+
+.selectedEventImage{
+  border: 3px solid rgb(14, 131, 185);
+}
+
+#submitNewEventButtonDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#submitNewEventButton{
+  font-size: 20px;
+}

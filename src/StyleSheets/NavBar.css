@@ -177,6 +177,7 @@
   right: -25vw;
   height: 100vh;
   transition: transform .3s cubic-bezier(0, .52, 0, 1);
+  overflow: hidden;
 }
 
 #menuButtonDiv.openMenuPanel{
