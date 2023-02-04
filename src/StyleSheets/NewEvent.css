@@ -142,6 +142,11 @@ select option{
   height: 100%;
   width: 75%;
   padding: 0 5%;
+  column-gap: 8px;
+}
+
+#repeatsInfoDiv div{
+  padding-right: 8px;
 }
 
 #repeatsInputDiv{

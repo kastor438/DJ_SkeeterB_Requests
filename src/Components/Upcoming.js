@@ -43,41 +43,44 @@ const Upcoming = props => {
   function SetEventDetails(){
     get(child(dbRef, '/Events/')).then((snapshot) => {
       const eventData = snapshot.val();
-      const newEventElements = [];
+      var newEventElements = [];
       if(eventData){
         var eventDate = `${calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${calendarDate.getFullYear()}`;
+        var eventsOnDate = [];
         Object.entries(eventData).forEach(([key, value]) => {
-          console.log(eventDate);
-          console.log(value.EventDate);
           if(value.EventDate === eventDate){
-            var lastEvent = false;
-            if(newEventElements.length === Object.keys(snapshot.val()).length-1)
-              lastEvent = true;
-            var newEventElement =
-              React.createElement('div', {className : 'eventInfoDiv' + (lastEvent ? '' : ' eventBottomBorder'), key : 'eventInfoDiv' + key, 'data-eventkey' : key, onClick : (e) => OpenUpcomingEvent(e.target)},
-                React.createElement('div', {className : 'eventDetailsDiv'},
-                  React.createElement('div', {className : 'eventVenueDiv'}, 
-                    React.createElement('span', {className : 'eventVenue'}, value.EventVenue)
-                  ),
-                  React.createElement('div', {className : 'eventStartTimeDiv'}, 
-                     React.createElement('label', {className : 'eventInfoLabel'}, 'Start Time: '),
-                     React.createElement('span', {className : 'eventStartTimeContent'}, value.EventStartTime)
-                  ),
-                  React.createElement('div', {className : 'eventDescriptionDiv'}, 
-                     React.createElement('span', {className : 'eventDescription'}, value.EventDescription),
-                  )
-                ),
-                React.createElement('div', {className : 'eventImageDiv'},
-                  React.createElement('img', {className : 'eventImage', src : value.EventImageURL, alt : 'An image representing the event'})
-                )
-              );
-            newEventElements.push(newEventElement);
+            eventsOnDate.push({key : key, value : value});
           }
         });
+
+        for(var i = 0; i < eventsOnDate.length; i++){
+          var lastEvent = false;
+          if(i === eventsOnDate.length-1)
+            lastEvent = true;
+          var newEventElement =
+            React.createElement('div', {className : 'eventInfoDiv' + (lastEvent ? '' : ' eventBottomBorder'), key : 'eventInfoDiv' + eventsOnDate[i].key, 'data-eventkey' : eventsOnDate[i].key, onClick : (e) => OpenUpcomingEvent(e.target)},
+              React.createElement('div', {className : 'eventDetailsDiv'},
+                React.createElement('div', {className : 'eventVenueDiv'}, 
+                  React.createElement('span', {className : 'eventVenue'}, eventsOnDate[i].value.EventVenue)
+                ),
+                React.createElement('div', {className : 'eventStartTimeDiv'}, 
+                    React.createElement('label', {className : 'eventInfoLabel'}, 'Start Time: '),
+                    React.createElement('span', {className : 'eventStartTimeContent'}, eventsOnDate[i].value.EventStartTime)
+                ),
+                React.createElement('div', {className : 'eventDescriptionDiv'}, 
+                    React.createElement('span', {className : 'eventDescription'}, eventsOnDate[i].value.EventDescription),
+                )
+              ),
+              React.createElement('div', {className : 'eventImageDiv'},
+                React.createElement('img', {className : 'eventImage', src : eventsOnDate[i].value.EventImageURL, alt : 'An image representing the event'})
+              )
+            );
+          newEventElements.push(newEventElement);
+        }
       }
-      
+
       if(newEventElements.length <= 0)
-        SetEventElements(React.createElement('span', {}, 'No events on selected date'));
+        SetEventElements(React.createElement('span', {}, `Sorry I'm not live that day!`));
       else
         SetEventElements(newEventElements);
     });

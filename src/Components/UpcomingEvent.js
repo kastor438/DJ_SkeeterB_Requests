@@ -5,6 +5,9 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, child, get } from "firebase/database";
 import { useParams } from 'react-router-dom';
 
+// Component Imports
+import UpcomingEventRequests from './UpcomingEventRequests';
+
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
   authDomain: "dj-skeeterb.firebaseapp.com",
@@ -23,6 +26,11 @@ const UpcomingEvent = props => {
   // States
   const [upcomingEventElement, SetUpcomingEventElement] = useState(null);
 
+  // DB Refs
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
+
+  const invalidChars = '\'"\\/';
   const { eventID } = useParams();
 
   // DOM Refs
@@ -30,11 +38,8 @@ const UpcomingEvent = props => {
   const eventStartTimeRef = useRef();
   const eventDescriptionRef = useRef();
 
-  // DB Refs
-  const dbref = ref(getDatabase());
-
   useEffect(() => {
-    get(child(dbref, `Events/${eventID}/`)).then((snapshot) => {
+    get(child(dbRef, `Events/${eventID}/`)).then((snapshot) => {
       if(snapshot.val()){
         var newUpcomingEventElement =
           React.createElement('div', {id : 'upcomingEventDiv'},
@@ -52,8 +57,8 @@ const UpcomingEvent = props => {
                 React.createElement('img', {id : 'upcomingEventImage', src : snapshot.val().EventImageURL, alt : 'Image Representing Event Location'})
               ),
             ),
-            React.createElement('div', {id : 'requestSongContainer'},
-              
+            React.createElement('div', {id : 'requestSongContainer'}, 
+              // React.createElement(UpcomingEventRequests, {})
             )
           );
 

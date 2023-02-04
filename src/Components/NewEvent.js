@@ -27,6 +27,7 @@ const storage = getStorage(app);
 const NewEvent = props => {
   // States
   const [navigateToHome, SetNavigateToHome] = useState(false);
+  const [navigateToUpcoming, SetNavigateToUpcoming] = useState(false);
   const [calendarDate, SetCalendarDate] = useState(new Date());
   const [selectedEventImageURL, SetSelectedEventImageURL] = useState('');
   const [eventImageURLs, SetEventImageURLs] = useState([]);
@@ -223,11 +224,20 @@ const NewEvent = props => {
       if(nextEventDate <= endDate){
         RecursiveCreateNewEvent(eventID+1, nextEventDate, endDate, imageURL);
       }
+      else{
+        SetNavigateToUpcoming(true);
+      }
+    }
+    else{
+      SetNavigateToUpcoming(true);
     }
   }
 
   if(navigateToHome === true){
     return <Navigate to='/'/>;
+  }
+  else if(navigateToUpcoming === true){
+    return <Navigate to='/Upcoming'/>;
   }
   return (
     <div id='newEventDiv'>
@@ -242,7 +252,7 @@ const NewEvent = props => {
           <div id='newEventInfoContainerDiv'>
             <div id='newEventVenueDiv' className='newEventInfoDiv'>
               <label htmlFor='newEventVenueInput' className='newEventInfoLabel'>Event Venue:</label>
-              <input type='text' id='newEventVenueInput' ref={newEventVenueInputRef} onChange={CheckValidInput}/>
+              <input type='text' id='newEventVenueInput' ref={newEventVenueInputRef} autoComplete='off' onChange={CheckValidInput}/>
             </div>
             <div id='newEventStartTimeDiv' className='newEventInfoDiv'>
               <label className='newEventInfoLabel'>Event Start Time:</label>

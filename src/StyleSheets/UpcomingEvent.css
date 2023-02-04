@@ -1,6 +1,8 @@
 #upcomingEventDiv{
   display: grid;
   grid-template-columns: 3fr 2fr;
+  width: 90%;
+  margin-left: 5%;
 }
 
 #upcomingEventInfo{
@@ -23,6 +25,7 @@
 #upcomingEventDescription{
   grid-row: 3/4;
   grid-column: 1/3;
+  overflow-wrap: break-word;
 }
 
 #upcomingEventImageDiv{
@@ -39,6 +42,7 @@
 
 #requestSongContainer{
   grid-column: 2/3;
+  border: 1px solid red;
 }
 
 #upcomingEventDiv div{
