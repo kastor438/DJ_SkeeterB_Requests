@@ -14,7 +14,6 @@ const firebaseConfig = {
   messagingSenderId: "222672756825",
   appId: "1:222672756825:web:974f65737776a233265148",
   measurementId: "G-E5J0711GSP",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,21 +22,33 @@ const auth = getAuth(app);
 const NavBar = props => {
   const [isMenuPanelOpen, SetIsMenuPanelOpen] = useState(false);
   const [userInfo, SetUserInfo] = useState();
+  const [skeeterNerEventLink, SetSkeeterNewEventLink] = useState(null);
 
   const isMenuPanelOpenRef = useRef(false);
   isMenuPanelOpenRef.current = isMenuPanelOpen;
 
-  const menuButtonDivRef = useRef(null);
-  const menuBackgroundFadeRef = useRef(null);
-  const songRequestsLinkRef = useRef(null);
-  const upcomingLinkRef = useRef(null);
-  
+  const menuButtonDivRef = useRef();
+  const menuBackgroundFadeRef = useRef();
+  const songRequestsLinkRef = useRef();
+  const upcomingLinkRef = useRef();
+  const newEventLinkRef = useRef();
+
   useEffect(() => {
     SetNavBar();
   }, []);
 
   useEffect(() => {
-    SetNavBar()
+    SetNavBar();
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+      SetSkeeterNewEventLink(
+        React.createElement('li', {className : 'navBarLink'}, 
+          React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
+        )
+      );
+    }
+    else{
+      SetSkeeterNewEventLink(null);
+    }
   }, [props.authUser]);
 
   useEffect(() => {
@@ -115,6 +126,7 @@ const NavBar = props => {
           <ul id='navBarLinks'>
             <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
             <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
+            {skeeterNerEventLink}
           </ul>
         </div>
       </nav>

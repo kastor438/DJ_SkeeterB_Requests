@@ -13,7 +13,6 @@ const firebaseConfig = {
   messagingSenderId: "222672756825",
   appId: "1:222672756825:web:974f65737776a233265148",
   measurementId: "G-E5J0711GSP",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
 // Initialize Firebase
