@@ -9,7 +9,6 @@ import Main from "./Main";
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
   authDomain: "dj-skeeterb.firebaseapp.com",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com",
   projectId: "dj-skeeterb",
   storageBucket: "dj-skeeterb.appspot.com",
   messagingSenderId: "222672756825",
