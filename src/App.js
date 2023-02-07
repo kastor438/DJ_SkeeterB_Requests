@@ -9,6 +9,7 @@ import Main from "./Main";
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
   authDomain: "dj-skeeterb.firebaseapp.com",
+  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com",
   projectId: "dj-skeeterb",
   storageBucket: "dj-skeeterb.appspot.com",
   messagingSenderId: "222672756825",
@@ -41,7 +42,7 @@ class App extends Component {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // console.log(user);
+        console.log(user);
         this.SignInHandler(user);
       } 
       else {
@@ -62,13 +63,6 @@ class App extends Component {
       signedIn: false,
       authUser: null
     });
-  }
-
-  UpcomingEventSelectedHandler(eventID){
-    console.log("App - EventID: " + eventID);
-    this.setState({
-      upcomingEventID : eventID
-    })
   }
 
   render(){

@@ -33,6 +33,7 @@
 }
 
 .eventInfoDiv{
+  position: relative;
   display: grid;
   grid-template-columns: 8fr 3fr;
   grid-template-rows: 1fr;
@@ -43,8 +44,56 @@
   /* border: 1px solid rgb(45, 212, 54); */
 }
 
+.cancelledOverlay{
+  /* top: 0; */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  background-color: #2c2c2cda;
+  padding: 4%;
+  margin: -4% 0 0 -4%;
+}
+
+.cancelledHeader{
+  color: aliceblue;
+  transform: rotate(-25deg);
+}
+
+.eventInfoDiv .skeeterUpcomingButtonsDiv *{
+  pointer-events: all;
+}
+
 .eventInfoDiv *{
   pointer-events: none;
+}
+
+.skeeterUpcomingButtonsDiv{
+  position: relative;
+  /* left: 20vw; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  border: 1px solid black;
+  background-color: #273c61;
+  padding: 1%;
+  column-gap: 4%;
+  width: fit-content;
+  z-index: 100;
+}
+
+.skeeterUpcomingButtonsDiv div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.skeeterUpcomingButtonsDiv div button{
+  font-size: 16px;
 }
 
 .eventInfoDiv:hover * {
@@ -68,7 +117,7 @@
 
 .eventDetailsDiv{
   display: grid;
-  grid-row: 1/2;
+  grid-row: 2/3;
   grid-column: 1/2;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr 3fr;
@@ -89,6 +138,7 @@
   justify-content: center;
   grid-row: 1/2;
   grid-column: 1/2;
+  font-size: 42px;
 }
 
 .eventInfoDiv:hover .eventVenue{
@@ -120,7 +170,7 @@
 }
 
 .eventImageDiv{
-  grid-row: 1/2;
+  grid-row: 2/3;
   grid-column: 2/3;
   display: flex;
   justify-content: center;
@@ -186,12 +236,24 @@
     row-gap: 20px;
   }
   
+  .eventVenueDiv{
+    font-size: 28px;
+  }
+
   .eventImage{
     width: 80%;
   }
 }
 
 @media only screen and (max-width: 800px){
+  .eventInfoDiv{
+    color: aliceblue;
+  }
+
+  .skeeterUpcomingButtonsDiv div button{
+    font-size: 16px;
+  }
+
   .eventInfoLabel{
     font-size: 22px;
   }
@@ -212,6 +274,10 @@
 @media only screen and (max-width: 600px){
   .eventInfoDiv{
     grid-template-columns: 6fr 3fr;
+  }
+
+  .skeeterUpcomingButtonsDiv div button{
+    font-size: 12px;
   }
 
   .eventInfoLabel{

@@ -1,12 +1,12 @@
-import '../StyleSheets/NewEvent.css';
+import '../StyleSheets/ModifyEvent.css';
 import '../StyleSheets/ReactCalendar.css';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { getDatabase, ref, child, get, set, update } from "firebase/database";
 import { getDownloadURL, getStorage, ref as storageRef, uploadBytes, listAll } from "firebase/storage";
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 
 const firebaseConfig = {
@@ -24,13 +24,16 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-const NewEvent = props => {
+const ModifyEvent = props => {
+  const { eventID } = useParams();
   // States
   const [navigateToHome, SetNavigateToHome] = useState(false);
   const [navigateToUpcoming, SetNavigateToUpcoming] = useState(false);
+  const [originalCalendarDate, SetOriginalCalendarDate] = useState(new Date());
   const [calendarDate, SetCalendarDate] = useState(new Date());
   const [selectedEventImageURL, SetSelectedEventImageURL] = useState('');
   const [eventImageURLs, SetEventImageURLs] = useState([]);
+  const [originalEventInfo, SetOriginalEventInfo] = useState(null);
 
   const eventImageElements = eventImageURLs.map((val) => (
     React.createElement('div', {key : val, className : 'newEventImageDiv', 'data-imageurl' : val, onClick : (e) => SelectEventImage(e.target)},
@@ -39,15 +42,13 @@ const NewEvent = props => {
   ));
 
   // DOM Refs
+  const originalCalendarDateHeaderRef = useRef();
   const calendarDateHeaderRef = useRef();
   const newEventVenueInputRef = useRef();
   const hourSelectRef = useRef();
   const minuteSelectRef = useRef();
   const dayNightSelectRef = useRef();
   const newEventDescriptionInputRef = useRef();
-  const repeatsInputRef = useRef();
-  const repeatTimeFrameSelectRef = useRef();
-  const repeatsEndDateInputRef = useRef();
   const newUploadDivRef = useRef();
   const newUploadHeaderRef = useRef();
   const newEventImageUploadInputRef = useRef();
@@ -55,15 +56,16 @@ const NewEvent = props => {
   const selectImageRadioInputRef = useRef();
   const previousUploadsDivRef = useRef();
   const previousUploadsHeaderRef = useRef();
-  const submitNewEventButtonRef = useRef();
+  const submitModifiedEventButtonRef = useRef();
 
   // DB Refs
   const db = getDatabase();
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
-    submitNewEventButtonRef.current.disabled = true;
-    uploadImageRadioInputRef.current.checked = true;
+    submitModifiedEventButtonRef.current.disabled = false;
+    selectImageRadioInputRef.current.checked = true;
+    ToggleSelectImage();
     const fetchUploadedEventImageRefs = 
       listAll(storageRef(storage, 'EventImages/')).then((res) => {
         var eventImageRefs = [];
@@ -73,7 +75,30 @@ const NewEvent = props => {
         return eventImageRefs;
       });
 
-      fetchUploadedEventImageRefs.then((eventImageRefs) => {
+    get(child(dbRef, 'Events/')).then((snapshot) => {
+      if(snapshot.val()){
+        const eventInfo = snapshot.val()[eventID];
+        SetOriginalEventInfo(eventInfo);
+        if(eventInfo){
+          let modifyingEventDate = eventInfo.EventDate.split('/');
+          let modifyingYear = parseInt(modifyingEventDate[2]);
+          let modifyingMonthIndex = parseInt(modifyingEventDate[1])-1;
+          let modifyingDate = parseInt(modifyingEventDate[0]);
+          SetOriginalCalendarDate(new Date(modifyingYear, modifyingMonthIndex, modifyingDate));
+          SetCalendarDate(new Date(modifyingYear, modifyingMonthIndex, modifyingDate));
+          newEventVenueInputRef.current.value = eventInfo.EventVenue;
+          newEventDescriptionInputRef.current.value = eventInfo.EventDescription;
+          hourSelectRef.current.value = eventInfo.EventStartTime.split(':')[0];
+          minuteSelectRef.current.value = eventInfo.EventStartTime.split(':')[1].split(' ')[0];
+          dayNightSelectRef.current.value = eventInfo.EventStartTime.split(' ')[1];
+        }
+        else{
+          SetNavigateToHome(true);
+        }
+      }
+    });
+
+    fetchUploadedEventImageRefs.then((eventImageRefs) => {
       var uploadedEventImageURLs = [];
       for(var i = 0; i < eventImageRefs.length; i++){
         getDownloadURL(eventImageRefs[i]).then((imageURL) => {
@@ -82,18 +107,33 @@ const NewEvent = props => {
       }
       setTimeout(function(){
         SetEventImageURLs(uploadedEventImageURLs);
-        setTimeout(() => {
-          ToggleUploadImage();
-        }, 500)
       }, 500)
     });
   }, [])
 
   useEffect(() => {
+    setTimeout(() => {
+      let previousUploads = document.querySelectorAll('.newEventImageDiv');
+      for(var i = 0; i < previousUploads.length; i++){
+        // console.log(originalEventInfo);
+        if(originalEventInfo && previousUploads[i].dataset.imageurl === originalEventInfo.EventImageURL){
+          SelectEventImage(previousUploads[i]);
+          break;
+        }
+      }
+    }, 1000);
+  }, [originalEventInfo])
+
+  useEffect(() => {
     if(!auth.currentUser || (auth.currentUser.uid !== 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' && auth.currentUser.uid !== 'bExKDb4uJTbis2GZOL8fm6clrw83')){
-      SetNavigateToHome(true);
+      // SetNavigateToHome(true);
     }
   }, [props.authUser])
+
+  
+  useEffect(() => {
+    originalCalendarDateHeaderRef.current.innerHTML = `${originalCalendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(originalCalendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${originalCalendarDate.getFullYear()}`;
+  }, [originalCalendarDate]);
 
   useEffect(() => {
     calendarDateHeaderRef.current.innerHTML = `${calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${calendarDate.getFullYear()}`;
@@ -102,18 +142,6 @@ const NewEvent = props => {
   useEffect(() => {
     CheckValidInput();
   }, [selectedEventImageURL]);
-
-  function RepeatingOnChange(){
-    if(repeatsInputRef.current.checked){
-      repeatTimeFrameSelectRef.current.disabled = false;
-      repeatsEndDateInputRef.current.disabled = false;
-    }
-    else{
-      repeatTimeFrameSelectRef.current.disabled = true;
-      repeatsEndDateInputRef.current.disabled = true;
-    }
-    CheckValidInput();
-  }
   
   function ToggleUploadImage(){
     selectImageRadioInputRef.current.checked = false;
@@ -202,13 +230,6 @@ const NewEvent = props => {
       validInput = false;
     }
 
-    // Repeating Check
-    if(repeatsInputRef.current.checked){
-      if(repeatsEndDateInputRef.current.value === ''){
-        validInput = false;
-      }
-    }
-
     // Uploaded File Check
     if(uploadImageRadioInputRef.current.checked){
       if(newEventImageUploadInputRef.current.files[0] === undefined ||
@@ -228,67 +249,36 @@ const NewEvent = props => {
     }
 
     if(validInput){
-      submitNewEventButtonRef.current.disabled = false;
+      submitModifiedEventButtonRef.current.disabled = false;
     }
     else{
-      submitNewEventButtonRef.current.disabled = true;
+      submitModifiedEventButtonRef.current.disabled = true;
     }
   }
 
   function SubmitNewEvent(){
-    let nextEventDate = calendarDate;
-    let endDate = repeatsEndDateInputRef.current.value !== '' ? new Date(repeatsEndDateInputRef.current.value) : null;
-    const fetchNewEventKey = get(child(dbRef, 'Events/')).then((snapshot) => {
-      if(snapshot.val()){
-        var highestEventKey = Object.keys(snapshot.val()).reduce((k1, k2) => parseInt(k1) > parseInt(k2) ? parseInt(k1) : parseInt(k2));
-        let newEventKey = highestEventKey + 1;
-        return newEventKey;
-      }
-      else{
-        return 1;
-      }
-    });
-
     if(uploadImageRadioInputRef.current.checked){
-      fetchNewEventKey.then((newEventKey) => {
-        uploadBytes(storageRef(storage, `EventImages/EventImage-ID-${newEventKey}`), newEventImageUploadInputRef.current.files[0]).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((imageURL) => {
-            RecursiveCreateNewEvent(newEventKey, nextEventDate, endDate, imageURL);
-          });
+      uploadBytes(storageRef(storage, `EventImages/EventImage-ID-${eventID}`), newEventImageUploadInputRef.current.files[0]).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((imageURL) => {
+          UpdateEvent(imageURL);
         });
       });
     }
     else{
-      fetchNewEventKey.then((newEventKey) => {
-        RecursiveCreateNewEvent(newEventKey, nextEventDate, endDate, selectedEventImageURL);
-      });
+      UpdateEvent(selectedEventImageURL);
     }
   }
 
-  function RecursiveCreateNewEvent(eventID, nextEventDate, endDate, imageURL){
-    set(ref(db, `Events/${eventID}/`), {
+  function UpdateEvent(imageURL){
+    update(ref(db, `Events/${eventID}/`), {
       EventVenue : newEventVenueInputRef.current.value,
-      EventDate : `${nextEventDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(nextEventDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${nextEventDate.getFullYear()}`,
+      EventDate : `${calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${calendarDate.getFullYear()}`,
       EventStartTime : `${hourSelectRef.current.value}:${minuteSelectRef.current.value} ${dayNightSelectRef.current.value}`,
       EventDescription : newEventDescriptionInputRef.current.value,
-      EventImageURL : imageURL,
-      Cancelled : false
+      EventImageURL : imageURL
     });
-    
-    if(endDate != null && repeatsInputRef.current.checked){
-      if(repeatTimeFrameSelectRef.current.value === 'Weekly')
-        nextEventDate.setDate(nextEventDate.getDate() + 7);
-      
-      if(nextEventDate <= endDate){
-        RecursiveCreateNewEvent(eventID+1, nextEventDate, endDate, imageURL);
-      }
-      else{
-        SetNavigateToUpcoming(true);
-      }
-    }
-    else{
-      SetNavigateToUpcoming(true);
-    }
+
+    SetNavigateToUpcoming(true);
   }
 
   if(navigateToHome === true){
@@ -305,6 +295,8 @@ const NewEvent = props => {
             <Calendar id='upcomingCalendar' minDate={new Date()} maxDate={new Date("2035, 9, 19")} onChange={SetCalendarDate} value={calendarDate} />
           </div>
           <div id='calendarDateHeaderDiv'>
+            <h3 id='originalCalendarDateHeader' ref={originalCalendarDateHeaderRef}></h3>
+            <span>--&gt;</span>
             <h3 id='calendarDateHeader' ref={calendarDateHeaderRef}></h3>
           </div>
         </div>
@@ -346,22 +338,6 @@ const NewEvent = props => {
           </div>
         </div>
       </div>
-      <div id='repeatsDiv'>
-        <div id='repeatsInputDiv'>
-          <label htmlFor='repeatsInput' className='repeatsInfoLabel'>Repeating: </label>
-          <input type='checkbox' id='repeatsInput' ref={repeatsInputRef} onChange={RepeatingOnChange}/>
-        </div>
-        <div id='repeatsTimeFrameSelectDiv'>
-          <label>Cycle: </label>
-          <select id='repeatsTimeFrameSelect' ref={repeatTimeFrameSelectRef} defaultValue={'Weekly'} onChange={CheckValidInput} size={1} disabled>
-            <option value={'Weekly'}>Weekly</option>
-          </select>
-        </div>
-        <div id='repeatsEndDateDiv'>
-          <label htmlFor='repeatsEndDateInput' className='repeatsInfoLabel'>End Date: </label>
-          <input type='date' id='repeatsEndDateInput' ref={repeatsEndDateInputRef} onChange={CheckValidInput} disabled/>
-        </div>
-      </div>
       <div id='uploadOrSelectImageDiv'>
         <div id='newUploadDiv' ref={newUploadDivRef}>
           <div id='newUploadHeaderDiv'>
@@ -394,10 +370,10 @@ const NewEvent = props => {
         </div>
       </div>
       <div id='submitNewEventButtonDiv'>
-          <button id='submitNewEventButton' ref={submitNewEventButtonRef} onClick={() => SubmitNewEvent()}>Submit</button>
+          <button id='submitNewEventButton' ref={submitModifiedEventButtonRef} onClick={() => SubmitNewEvent()}>Submit</button>
       </div>
     </div>
   );
 }
 
-export default NewEvent;
+export default ModifyEvent;

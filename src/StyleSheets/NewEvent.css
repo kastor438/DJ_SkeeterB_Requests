@@ -4,200 +4,242 @@
 
 #newEventDiv{
   display: grid;
-  /* max-height: 85vh; */
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 4fr 1fr 4fr;
-  column-gap: 2%;
-  /* border: 1px solid red; */
-  row-gap: 2%;
-}
-
-#newEventCalendarDiv{
-  grid-column: 1/2;
-  grid-row: 1/3;
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  height: 80%;
-}
-
-#upcomingCalendar{
-
-}
-
-#newEventCenteringDiv{
-  display: flex;
-  align-items: start;
-  justify-content: left;
-  width: max-content;
-  height: max-content;
+  grid-template-columns: 1fr;
+  width: 70vw;
+  row-gap: 10px;
 }
 
 #newEventContainerDiv{
-  width: fit-content;
-  height: max-content;
-  grid-column: 2/3;
-  grid-row: 1/2;
-  background-color: rgb(35, 43, 66);
+  display: grid;
+  grid-template-columns: auto;
+  background-color: rgb(31, 44, 60);
+  border: 1px solid rgb(0, 0, 0);
   border-radius: 10%;
-  border: 2px outset black;
-  padding: 0 2% 4% 2%;
+  overflow: hidden;
+}
+
+#calendarAndDateDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid black;
+  padding: 2%;
+}
+
+#calendarDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #calendarDateHeaderDiv{
   display: flex;
-  height: fit-content;
-  
-}
-
-#calendarDateHeader{
-  margin-left: 4%;
-  /* border: 1px solid red; */
+  justify-content: start;
+  align-items: center;
 }
 
 #newEventInfoContainerDiv{
-
-}
-
-#newEventVenueDiv{
-
-}
-
-#newEventVenueInput{
-
-}
-
-#newEventStartTimeDiv{
-  padding: 2% 0;
-}
-
-#hourSelect{
-  /* min-height: 190px;  */
-  overflow-y :auto; 
-  overflow-x:hidden; 
-  /* position:absolute; */
-  /* width:300px; */
-  /* display: contents; */
-}
-
-#minuteSelect{
-
-}
-
-#dayNightSelect{
-
-}
-
-select option{
-  font-size: 18px;
-}
-
-#newEventDescriptionDiv{
-
-}
-
-#newEventDescriptionInput{
-  width: 300px;
-  font-size: 16px;
-}
-
-#newEventImageDiv{
-
-}
-
-#newEventImageUploadInput{
-
-}
-
-.newEventInfoDiv{
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  padding: 2% 2%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  padding: 2.5%;
 }
 
 .newEventInfoLabel{
-  /* text-align: left; */
-  padding-right: 2%;
-  height: 100%;
-  font-size: 18px;
   white-space: nowrap;
 }
 
-#repeatsDiv{
-  grid-column: 2/3;
-  grid-row: 2/3;
+#newEventVenueDiv{
+  grid-column: 1/2;
+  grid-row: 1/3;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+#newEventVenueInput{
+  font-size: 1em;
+  width: 70%;
+}
+
+#newEventStartTimeDiv{
+  grid-column: 1/2;
+  grid-row: 3/5;
   display: flex;
   align-items: center;
-  justify-content: start;
-  /* border: 1px solid red; */
+  justify-content: left;
 }
 
-#repeatsInfoDiv{
+#newEventStartTimeDiv select{
+  font-size: 0.8em;
+}
+
+#newEventDescriptionDiv{
+  grid-column: 2/3;
+  grid-row: 1/5;
+}
+
+#newEventDescriptionInput{
+  width: 90%;
+  font-size: 0.8em;
+}
+
+#repeatsDiv{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  background-color: rgb(35, 43, 66);
-  border-radius: 4%;
-  border: 2px outset black;
-  height: 100%;
-  width: 75%;
-  padding: 0 5%;
-  column-gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  background-color: rgb(31, 44, 60);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 4% / 100% 100%;
+  padding: 5% 2%;
 }
 
-#repeatsInfoDiv div{
-  padding-right: 8px;
+#repeatsDiv label{
+  line-height: 100%;
+  height: 100%;
 }
 
 #repeatsInputDiv{
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-right: 1px solid black;
+  justify-content: flex-start;
+}
+
+#repeatsInput{
+  width: 22px;
+  height: 22px;
+  margin: calc(0.75em - 11px) 0.25rem 0 0;
+  vertical-align: top;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background: #fff no-repeat center center;
+}
+
+input[type="radio"]{
+  border-radius: 50%;
 }
 
 #repeatsTimeFrameSelectDiv{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-right: 1px solid black;
+  grid-column: 1/2;
+  grid-row: 2/3;
 }
 
-#reoccurringTimeFrameSelect{
-
+#repeatsTimeFrameSelect{
+  font-size: 0.8em;
 }
 
 #repeatsEndDateDiv{
+  grid-column: 2/3;
+  grid-row: 2/3;
+}
+
+#repeatsEndDateInput{
+  font-size: 0.8em;
+}
+
+#uploadOrSelectImageDiv{
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: #1f2c3c;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 10%;
+  overflow: hidden;
+}
+
+#newUploadDiv{
+  border: 1px solid black;
+  padding: 0 0 7.5% 0;
+}
+
+.disabledNewUploadDiv *{
+  color: #949494AC
+}
+
+#newUploadHeaderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 10%;
+}
+
+#newUploadHeader{
+
+}
+
+#newEventImageDiv{
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.repeatsInfoLabel{
-  padding-right: 2%;
+#newEventImageUploadInput{
+  padding: 2%;
   font-size: 18px;
+}
+
+#imageChoiceSpacer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  border: 2px solid black;
+  z-index: 10;
+}
+
+#imageChoiceDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #35475d;
+  padding: 0 2%;
+  border: 2px solid black;
+}
+
+#imageChoiceDiv div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8%;
   white-space: nowrap;
 }
 
-#selectImageAndSubmit{
-  grid-column: 1/3;
-  grid-row: 3/4;
-  display: grid;
-  grid-template-columns: 1fr;
-  height: fit-content;
-  row-gap: 16px;
+#uploadImageRadioInputDiv{
+  border-right: 1px solid rgb(0, 0, 0);
+}
+
+#selectImageRadioInputDiv{
+  border-left: 1px solid rgb(0, 0, 0);
+}
+
+#uploadImageRadioInput, 
+#selectImageRadioInput{
+  width: 60px;
+}
+
+#previousUploadsDiv{
+  border: 1px solid black;
+  padding: 2.5%;
+}
+
+#previousUploadsHeaderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 10%;
+}
+
+#previousUploadsHeader{
+  
 }
 
 #UploadedImagesDiv{
   display: grid;
   grid-gap: 4px;
-  grid-template-columns: repeat(auto-fill,minmax(18%,1fr));
+  grid-template-columns: repeat(auto-fill,minmax(19%,1fr));
   grid-auto-flow: column;
-  grid-auto-columns: minmax(18%,1fr);
+  grid-auto-columns: minmax(19%,1fr);
   overflow-x: auto;
-  width: 80%;
+  width: 90%;
   height: fit-content;
-  margin-left: 10%;
+  margin-left: 5%;
   border: 3px solid black;
   border: 5%;
   padding: 8px 0;
@@ -208,7 +250,15 @@ select option{
   align-items: center;
   justify-content: center;
   border: 1px solid black;
-  background-color: rgb(46, 46, 46);
+  background-color: #2e2e2e;
+}
+
+.disabledUpload{
+  pointer-events: none;
+}
+
+.disabledUpload .newEventImage{
+  opacity: 50%;
 }
 
 .newEventImage{
@@ -216,7 +266,7 @@ select option{
   pointer-events: none;
 }
 
-.selectedEventImage{
+.newEventImageDiv.selectedEventImage{
   border: 3px solid rgb(14, 131, 185);
 }
 
@@ -228,4 +278,53 @@ select option{
 
 #submitNewEventButton{
   font-size: 20px;
+}
+
+@media only screen and (max-width: 900px){
+  #newEventDiv{
+    width: 90vw;
+  }
+  
+  #calendarAndDateDiv{
+    grid-template-columns: 1fr;
+  }
+
+  #calendarDateHeaderDiv{
+    grid-row: 1/2;
+    justify-content: center;
+  }
+
+  #calendarDiv{
+    grid-row: 2/3;
+  }
+}
+
+@media only screen and (max-width: 650px){
+  #newEventInfoContainerDiv{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr 3fr;
+  }
+
+  #newEventVenueDiv{
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+
+  #newEventStartTimeDiv{
+    grid-column: 1/2;
+    grid-row: 2/3;
+  }
+
+  #newEventDescriptionDiv{
+    grid-column: 1/2;
+    grid-row: 3/4;
+    
+    vertical-align: middle;
+  }
+
+  #newEventDescriptionDiv label{
+    width: 100%;
+    display: block;
+    text-align: left;
+  }
 }
