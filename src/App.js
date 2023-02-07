@@ -1,9 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase } from "firebase/database";
 
 import NavBar from "./Components/NavBar";
 import Main from "./Main";
@@ -17,7 +15,6 @@ const firebaseConfig = {
   messagingSenderId: "222672756825",
   appId: "1:222672756825:web:974f65737776a233265148",
   measurementId: "G-E5J0711GSP",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
 const publicRecaptchaKey = '6LdqIxskAAAAADVCIjtf00Sj76bY2vB3KA-J-6-D';
@@ -25,20 +22,14 @@ const publicRecaptchaKey = '6LdqIxskAAAAADVCIjtf00Sj76bY2vB3KA-J-6-D';
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
   
 class App extends Component {
   constructor(props) {
     super(props)
-
-    // Bind the this context to the handler function
-    // this.SignInHandler = this.SignInHandler.bind(this);
-
-    // Set some state
     this.state = {
       signedIn: false,
-      authUser: null
+      authUser: null,
+      upcomingEventID : ''
     };
     this.Setup = this.Setup.bind(this);
     this.SignInHandler = this.SignInHandler.bind(this);
@@ -53,7 +44,7 @@ class App extends Component {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // console.log(user);
+        console.log(user);
         this.SignInHandler(user);
       } 
       else {
@@ -82,7 +73,11 @@ class App extends Component {
         <div className="App">
           <header className="App-header">
             <NavBar signoutHandler={() => this.SignOutHandler()} authUser={this.state.authUser} />
-            <Main signinHandler={(authUser) => this.SignInHandler(authUser)} authUser={this.state.authUser}/>
+            <Main 
+            signinHandler={(authUser) => this.SignInHandler(authUser)} 
+            upcomingEventHandler={(eventID) => this.UpcomingEventSelectedHandler(eventID)}
+            authUser={this.state.authUser}
+            eventID={this.state.upcomingEventID}/>
           </header>
         </div>
       </div>

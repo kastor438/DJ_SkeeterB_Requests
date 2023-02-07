@@ -1,4 +1,3 @@
-import logo from '../skeeterB-Logo.png';
 import '../StyleSheets/SongRequests.css';
 import '../StyleSheets/SkeeterSpecificsSongRequests.css'
 import '../StyleSheets/RequestLineup.css';
@@ -6,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set, remove, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, set, remove, child, get, onValue, update } from "firebase/database";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
@@ -27,7 +26,6 @@ const firebaseConfig = {
   messagingSenderId: "222672756825",
   appId: "1:222672756825:web:974f65737776a233265148",
   measurementId: "G-E5J0711GSP",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
 // Initialize Firebase
@@ -43,7 +41,6 @@ const SongRequests = props => {
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [accessToken, SetAccessToken] = useState("");
   const [canSubmit, SetCanSubmit] = useState(false);
-  const [invalidChars, SetInvalidChars] = useState('\'"\\/');
   const [inputSongName, SetInputSongName] = useState("");
   const [inputArtistName, SetInputArtistName] = useState("");
   const [hasListener, SetHasListener] = useState(false);
@@ -105,18 +102,31 @@ const SongRequests = props => {
 
   const db = getDatabase();
   const dbRef = ref(getDatabase());
+  const invalidChars = '\'"\\/';
+
+  // DOM Refs
+  const requestSongButtonRef = useRef();
+  const lineupButtonRef = useRef();
+  const requestGridContainerRef = useRef();
+  const lineupGridContainerRef = useRef();
+  const spotifyTabRef = useRef();
+  const customTabRef = useRef();
+  const songNameInputRef = useRef();
+  const artistNameInputRef = useRef();
+  const tracksDivRef = useRef();
+  const renderedTracksDivRef = useRef();
+  const submitSongRequestButtonRef = useRef();
+  const submissionTextRef = useRef();
 
   useEffect(() => {
     var currentUrl = window.location.href;
-    var requestSongButton = document.getElementById("requestSongButton");
-    requestSongButton.style.borderBottom = "1px solid white";
-    requestSongButton.style.color = "#b1afaf";
-    document.getElementById("requestGridContainer").style.display = "grid";
+    requestSongButtonRef.current.style.borderBottom = "1px solid white";
+    requestSongButtonRef.current.style.color = "#b1afaf";
+    requestGridContainerRef.current.style.display = "grid";
 
-    var lineupButton = document.getElementById("lineupButton");
-    lineupButton.style.borderBottom = "none";
-    lineupButton.style.color = "white";
-    document.getElementById("lineupGridContainer").style.display = "none"
+    lineupButtonRef.current.style.borderBottom = "none";
+    lineupButtonRef.current.style.color = "white";
+    lineupGridContainerRef.current.style.display = "none"
     
     if(currentUrl.includes("dj")){
       SetTrackStats(true);
@@ -142,10 +152,10 @@ const SongRequests = props => {
 
   useEffect(() => {
     if(!canSubmitRef.current){
-      document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+      submitSongRequestButtonRef.current.setAttribute("disabled", "disabled");
     }
     else{
-      document.getElementById('submitBtn').removeAttribute("disabled");
+      submitSongRequestButtonRef.current.removeAttribute("disabled");
     }
   }, [canSubmit]);
   
@@ -200,115 +210,62 @@ const SongRequests = props => {
       .then(data => SetAccessToken(data.access_token));
   }
 
-  function InitializeAppleMusic(){
-
-  }
-
   function SwitchToRequestSong(){
-    var requestSongButton = document.getElementById("requestSongButton");
-    requestSongButton.style.borderBottom = "1px solid white";
-    requestSongButton.style.color = "#b1afaf";
-    document.getElementById("requestGridContainer").style.display = "grid";
+    requestSongButtonRef.current.style.borderBottom = "1px solid white";
+    requestSongButtonRef.current.style.color = "#b1afaf";
+    requestGridContainerRef.current.style.display = "grid";
 
-    var lineupButton = document.getElementById("lineupButton");
-    lineupButton.style.borderBottom = "none";
-    lineupButton.style.color = "white";
-    document.getElementById("lineupGridContainer").style.display = "none"
+    lineupButtonRef.current.style.borderBottom = "none";
+    lineupButtonRef.current.style.color = "white";
+    lineupGridContainerRef.current.style.display = "none"
   }
 
   function SwitchToCurrentLineup(){
-    var requestSongButton = document.getElementById("requestSongButton");
-    requestSongButton.style.borderBottom = "none";
-    requestSongButton.style.color = "white";
-    document.getElementById("requestGridContainer").style.display = "none";
+    requestSongButtonRef.current.style.borderBottom = "none";
+    requestSongButtonRef.current.style.color = "white";
+    requestGridContainerRef.current.style.display = "none";
 
-    var lineupButton = document.getElementById("lineupButton");
-    lineupButton.style.borderBottom = "1px solid white";
-    lineupButton.style.color = "#b1afaf";
-    document.getElementById("lineupGridContainer").style.display = "block";
+    lineupButtonRef.current.style.borderBottom = "1px solid white";
+    lineupButtonRef.current.style.color = "#b1afaf";
+    lineupGridContainerRef.current.style.display = "block";
   }
 
-  function SwitchToSpotify(e){
+  function SwitchToSpotify(){
     if(!spotifyActiveRef.current){
       let screenWidth = window.innerWidth;
-      var spotifyTab = document.getElementById("spotifyTab");
-      spotifyTab.style.backgroundColor = "#36393f";
-      spotifyTab.style.zIndex = "3";
-      // spotifyTab.style.borderWidth = "1px 1px 0 1px";
-      spotifyTab.children[0].style.width = "55%";
-      spotifyTab.children[0].style.marginTop = "8%";
+      spotifyTabRef.current.style.backgroundColor = "#36393f";
+      spotifyTabRef.current.style.zIndex = "3";
+      spotifyTabRef.current.children[0].classList.add('selectedTab')
 
-      if(screenWidth <= 660){
-        spotifyTab.children[0].style.marginTop = "4%";
-        spotifyTab.children[0].style.width = "50%";
-      }
+      customTabRef.current.style.backgroundColor = "#2e2f32";
+      customTabRef.current.style.zIndex = "2";
+      customTabRef.current.children[0].classList.remove('selectedTab')
 
-      var customTab = document.getElementById("customTab");
-      customTab.style.backgroundColor = "#2e2f32";
-      customTab.style.zIndex = "2";
-      // appleMusicTab.style.borderWidth = "1px";
-      // if(screenWidth >= 1465){
-      //   customTab.children[0].style.marginTop = "10%";
-      //   customTab.children[0].style.fontSize = "24px";
-      // }
-      // else if(screenWidth >= 1250){
-      //   customTab.children[0].style.marginTop = "8%";
-      //   customTab.children[0].style.fontSize = "20px";
-      // }
-      // else if(screenWidth >= 1100){
-      //   customTab.children[0].style.marginTop = "5%";
-      //   customTab.children[0].style.fontSize = "18px";
-      // }
-      // else if(screenWidth >= 660){
-      //   customTab.children[0].style.marginTop = "0%";
-      //   customTab.children[0].style.fontSize = "16px";
-      // }
       if(screenWidth <= 800)
-        document.getElementById("renderedTracksDiv").style.height = "95%";
+        renderedTracksDivRef.current.style.height = "95%";
       else
-        document.getElementById("renderedTracksDiv").style.height = "320px";
+        renderedTracksDivRef.current.style.height = "320px";
 
       SetSpotifyActive(true);
       SetCustomActive(false);
     }
   }
 
-  function SwitchToCustom(e){
+  function SwitchToCustom(){
     if(!customActiveRef.current){
-      var spotifyTab = document.getElementById("spotifyTab");
-      spotifyTab.style.backgroundColor = "#2e2f32";
-      spotifyTab.style.zIndex = "2";
-      // spotifyTab.style.borderWidth = "1px";
-      spotifyTab.children[0].style.width = "40%";
-      spotifyTab.children[0].style.marginTop = "9%";
+      spotifyTabRef.current.style.backgroundColor = "#2e2f32";
+      spotifyTabRef.current.style.zIndex = "2";
+      spotifyTabRef.current.children[0].classList.remove('selectedTab')
 
-      var customTab = document.getElementById("customTab");
-      customTab.style.backgroundColor = "#36393f";
-      customTab.style.zIndex = "3";
-      // appleMusicTab.style.borderWidth = "1px 1px 0 1px";
-      // if(screenWidth >= 1465){
-      //   customTab.children[0].style.marginTop = "10%";
-      //   customTab.children[0].style.fontSize = "28px";
-      // }
-      // else if(screenWidth >= 1250){
-      //   // customTab.children[0].style.marginTop = "10%";
-      //   customTab.children[0].style.fontSize = "26px";
-      // }
-      // else if(screenWidth >= 1100){
-      //   customTab.children[0].style.marginTop = "6%";
-      //   customTab.children[0].style.fontSize = "20px";
-      // }
-      // else if(screenWidth >= 660){
-      //   customTab.children[0].style.marginTop = "6%";
-      //   customTab.children[0].style.fontSize = "18px";
-      // }
-      // document.getElementById("tracksDiv").style.display = "none";
-      document.getElementById("tracksDiv").style.height = "0";
-      document.getElementById("renderedTracksDiv").style.height = "0px";
+      customTabRef.current.style.backgroundColor = "#36393f";
+      customTabRef.current.style.zIndex = "3";
+      customTabRef.current.children[0].classList.add('selectedTab')
+
+      tracksDivRef.current.style.height = "0";
+      renderedTracksDivRef.current.style.height = "0px";
 
       SetSpotifyActive(false);
       SetCustomActive(true);
-      // CheckValidInput();
     }
   }
 
@@ -323,45 +280,47 @@ const SongRequests = props => {
   function CheckValidInput(){
     let screenWidth = window.innerWidth;
     if(screenWidth <= 800)
-      document.getElementById("tracksDiv").style.height = "0px";
+      tracksDivRef.current.style.height = "0px";
 
-    for(var i = 0; i < 50; i++){
-      var option = document.getElementById("option" + i);
-      if(option){
-        option.style.color = "white";
-      }
+    // Reset all song options to be visually unselected.
+    var songOptions = document.querySelectorAll('.songOption');
+    for(var i = 0; i < songOptions.length; i++){
+      songOptions[i].classList.remove('selectedSongOption');
     }
-      
+    
+    // Initial resets
     if(!customActiveRef.current || inputSongNameRef.current.length <= 1 || inputArtistNameRef.current.length <= 1){
       SetTrackName("");
       SetArtistName("");
-      document.getElementById('submitBtn').setAttribute("disabled", "disabled");
+      submitSongRequestButtonRef.current.setAttribute("disabled", "disabled");
       SetCanSubmit(false);
       SetRenderedTracks([]);
     }
+    renderedTracksDivRef.current.style.overflowY = "hidden";
 
-    document.getElementById("renderedTracksDiv").style.overflowY = "hidden";
-
+    // Checks for valid input to proceed.
     if(inputSongNameRef.current.length <= 1){
-      document.getElementById("renderedTracksDiv").style.display = "none";
+      renderedTracksDivRef.current.style.display = "none";
       return;
     }
     else{
       for(var i = 0; i < inputSongNameRef.current.length; i++){
         if(invalidChars.includes(inputSongNameRef.current.substring(i, i+1))){
-          document.getElementById("renderedTracksDiv").style.display = "none";
+          renderedTracksDivRef.current.style.display = "none";
           return;
         }
       }
       for(i = 0; i < inputArtistNameRef.current.length; i++){
         if(invalidChars.includes(inputArtistNameRef.current.substring(i, i+1))){
-          document.getElementById("renderedTracksDiv").style.display = "none";
+          renderedTracksDivRef.current.style.display = "none";
           return;
         }
       }
     }
+
+    // All checks passed, allow submission or fetch spotify song options.
     if (hasListener === false) {
-      document.getElementById('submitBtn').addEventListener("click", () => SubmitRequest());
+      submitSongRequestButtonRef.current.addEventListener("click", () => SubmitRequest());
       SetHasListener(true);
     }
     if(spotifyActiveRef.current){
@@ -381,8 +340,8 @@ const SongRequests = props => {
         AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '');
       }
       
-      document.getElementById('songNameInput').value = '';
-      document.getElementById('artistNameInput').value = '';
+      songNameInputRef.current.value = '';
+      artistNameInputRef.current.value = '';
 
       SetInputSongName('');
       SetInputArtistName('');
@@ -434,11 +393,11 @@ const SongRequests = props => {
             Voters : {},
             RequestedBy : (auth.currentUser ? auth.currentUser.uid : '')
           });
-          document.getElementById('submissionText').innerHTML = "Request Sent!";
+          submissionTextRef.current.innerHTML = "Request Sent!";
         }
         else{
           set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
-          document.getElementById('submissionText').innerHTML = "Request Already in Pool.";
+          submissionTextRef.current.innerHTML = "Request Already in Pool.";
         }
       } 
       else {
@@ -450,14 +409,13 @@ const SongRequests = props => {
           SpotifyImageURL: spotifyImageLink,
           Upvotes: 0,
           Downvotes: 0,
-          Voters : {},
           RequestedBy: (auth.currentUser ? auth.currentUser.uid : '')
         });
-        document.getElementById('submissionText').innerHTML = "Request Sent!";
+        submissionTextRef.current.innerHTML = "Request Sent!";
       }
       setTimeout(function(){
-        if(document.getElementById('submissionText') != null){
-          document.getElementById('submissionText').innerHTML = "";
+        if(submissionTextRef.current != null){
+          submissionTextRef.current.innerHTML = "";
         }
       }, 5000);
     }).catch((error) => {
@@ -508,10 +466,14 @@ const SongRequests = props => {
       }
     }
 
-    var songID = await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
+    await fetch('https://api.spotify.com/v1/search?q=' + inputSongName + '&type=track&limit=50', songParams)
       .then(response => response.json())
-      .then(data => {
+      .then(data => { 
         // console.log(data);
+
+        if(data.error != null)
+          return;
+        
         var tracks = [];
         var searchedTracks = data.tracks.items;
         for(var i = 0; i < 50; i++){
@@ -556,80 +518,23 @@ const SongRequests = props => {
             break;
         }
         SetRenderedTracks(tracks);
-        document.getElementById("renderedTracksDiv").style.display = "block";
-        document.getElementById("renderedTracksDiv").style.overflowY = "scroll";
+        renderedTracksDivRef.current.style.display = "block";
+        renderedTracksDivRef.current.style.overflowY = "scroll";
         let screenWidth = window.innerWidth;
         if(screenWidth <= 800){
-          document.getElementById("tracksDiv").style.height = "40vh";      
-          document.getElementById("renderedTracksDiv").style.height = "95%";
+          tracksDivRef.current.style.height = "40vh";      
+          renderedTracksDivRef.current.style.height = "95%";
         }
         else{
-          document.getElementById("renderedTracksDiv").style.height = "320px";
-          document.getElementById("tracksDiv").style.height = "fit-content"
+          renderedTracksDivRef.current.style.height = "320px";
+          tracksDivRef.current.style.height = "fit-content"
         }  
       }).catch((error) => {
+        console.log(error);
         InitializeSpotify();
-        FetchSpotifySongs();
+        // FetchSpotifySongs();
       });        
   }
-
-  // async function FetchAppleMusicSongs(){
-  //   var songParams = {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer ' + accessToken
-  //     }
-  //   }
-
-  //   var songID = await fetch('https://api.music.apple.com/v1/catalog/ca/search?types=songs&term=' + inputSongName, songParams)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       // console.log(data);
-  //       var tracks = [];
-  //       var searchedTracks = data.tracks.items;
-  //       for(var i = 0; i < 10; i++){
-  //         if(searchedTracks[i] == null)
-  //             break;
-
-  //         var artistFound = false;
-  //         var searchingArtist = inputArtistName.length > 0 ? true : false;
-  //         if(searchingArtist){
-  //           for(var j = 0; j < searchedTracks[i].artists.length; j++){
-  //             var currArtistName = searchedTracks[i].artists[j].name;
-  //             var inputArtistNameIndex = 0;
-  //             for(var k = 0; k < currArtistName.length; k++){
-  //               if(currArtistName.length > k && currArtistName.substring(k, k+1).toLowerCase() == inputArtistName.substring(inputArtistNameIndex, inputArtistNameIndex+1).toLowerCase()){
-  //                 inputArtistNameIndex++;
-  //                 if(inputArtistNameIndex == inputArtistName.length){
-  //                   artistFound = true;
-  //                   break;
-  //                 }
-  //               }
-  //             }
-  //             if(artistFound){
-  //               break;
-  //             }
-  //           }
-  //         }
-  //         var artistNames = searchedTracks[i].artists[0].name;
-  //         for(var j = 1; j < searchedTracks[i].artists.length; j++){
-  //           artistNames += ", " + searchedTracks[i].artists[j].name;
-  //         }
-  //         if(artistFound || !searchingArtist){
-  //           var track = React.createElement('div', {key : 'option' + i, id : 'option' + i, className : 'songOption', onClick : (e) => SelectSong(e)},
-  //               React.createElement('img', {className : 'songOptionImage', src : searchedTracks[i].album.images[0].url, alt : ''}),
-  //               React.createElement('div', {className : 'songOptionInfo'},
-  //                   React.createElement('p', {id : 'trackName' + i}, searchedTracks[i].name),
-  //                   React.createElement('p', {id : 'artistName' + i}, artistNames)
-  //               )
-  //           );
-  //           tracks.push(track);
-  //         }
-  //       }
-  //       SetRenderedTracks(tracks);
-  //     });        
-  // }
 
   function CustomSetup(){
     SetCanSubmit(true);
@@ -637,19 +542,15 @@ const SongRequests = props => {
 
   function SelectSong(e){
     var element = e.target;
-    while(element.nodeName !== "DIV" || element.className != "songOption"){
-      element = element.parentNode;
-    }
 
-    for(var i = 0; i < 50; i++){
-      var option = document.getElementById("option" + i);
-      if(option){
-        option.style.color = "white";
-      }
+    var songOptions = document.querySelectorAll('.songOption');
+    for(var i = 0; i < songOptions.length; i++){
+      songOptions[i].classList.remove('selectedSongOption');
     }
 
     if(trackNameRef.current != element.children[1].children[0].innerHTML && artistNameRef.current != element.children[1].children[1].innerHTML){
-      element.style.color = "red";   
+      element.classList.add('selectedSongOption');
+
       SetTrackImageLink(element.children[0].src); 
       var newTrackName = element.children[1].children[0].innerHTML;
       while(newTrackName.includes('&amp;')){
@@ -658,7 +559,6 @@ const SongRequests = props => {
       SetTrackName(newTrackName);
       SetArtistName(element.children[1].children[1].innerHTML);
       SetTrackSpotifyURL(element.children[1].children[0].dataset.spotifyurl);
-      // console.log(trackSpotifyURLRef.current + " " + element.children[1].children[0].dataset.spotifyurl);
       SetCanSubmit(true);
     }
     else{
@@ -682,6 +582,7 @@ const SongRequests = props => {
           var userVote = 'none';
           var upvoteOn = false;
           var downvoteOn = false;
+
           // userID check
           if(auth.currentUser && data[sortedKeys[i]].Voters != null && data[sortedKeys[i]].Voters[auth.currentUser.uid]){
             userVote = data[sortedKeys[i]].Voters[auth.currentUser.uid];
@@ -692,7 +593,6 @@ const SongRequests = props => {
               downvoteOn = true;
             }
           }
-
           var track = 
           React.createElement('div', {key : 'lineup' + sortedKeys[i], id : 'lineup' + sortedKeys[i], className : 'lineupSong'},
             data[sortedKeys[i]].SpotifyImageURL != '' ?
@@ -713,7 +613,7 @@ const SongRequests = props => {
               React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => DownvoteSong(e.target)}, )
             ), 
             React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
-              (props.authUser && (props.authUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || props.authUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 
+              (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 
                 React.createElement('button', {id : 'removeRequestButton', 'data-requestkey' : sortedKeys[i], onClick : (e) => SkeeterRemoveSong(e.target)}, 'X')
                 :
                 React.createElement('span', {}, '')
@@ -723,9 +623,6 @@ const SongRequests = props => {
           );
           lineup.push(track);
         }
-        // else if(localStorage.getItem('voted' + sortedKeys[i])){
-        //   localStorage.removeItem('voted' + sortedKeys[i]);
-        // }
       }
     }
     else{
@@ -748,8 +645,6 @@ const SongRequests = props => {
         element.classList.remove('upvote-on');
         parent.dataset.currvote = 'none';
         voteChange = -1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
-        remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid));
       }
       else if(parent.dataset.currvote === 'down'){
         element.classList.add('upvote-on');
@@ -757,22 +652,27 @@ const SongRequests = props => {
         parent.dataset.currvote = 'up';
         voteChange = 1;
         downvoteChange = true;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'up');
       }
       else if(parent.dataset.currvote === 'none'){
         element.classList.add('upvote-on');
         parent.dataset.currvote = 'up';
         voteChange = 1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'up');
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'up');
       }
 
       get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
+        var voters = {};
+        if(snapshot.val() != null && snapshot.val().Voters != null){
+          Object.entries(snapshot.val().Voters).forEach(([key, value]) => {
+            voters[key] = value;
+          });
+        }
+        voters[auth.currentUser.uid] = parent.dataset.currvote !== 'none' ? parent.dataset.currvote : null;
         currUpvotes = snapshot.val().Upvotes;
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Upvotes'), currUpvotes + voteChange);
-        if(downvoteChange == true)
-          set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Downvotes'), snapshot.val().Downvotes -1);
+        update(ref(db, 'Requests/' + parent.dataset.requestkey + '/'), {
+          Upvotes : currUpvotes + voteChange,
+          Downvotes : downvoteChange ? snapshot.val().Downvotes -1 : snapshot.val().Downvotes,
+          Voters : voters
+        });
       }).catch((error) => {
         console.error(error);
       });
@@ -790,8 +690,6 @@ const SongRequests = props => {
         element.classList.remove('downvote-on');
         parent.dataset.currvote = 'none';
         voteChange = -1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'none');
-        remove(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid));
       }
       else if(parent.dataset.currvote === 'up'){
         element.classList.add('downvote-on');
@@ -799,22 +697,27 @@ const SongRequests = props => {
         parent.dataset.currvote = 'down';
         voteChange = 1;
         upvoteChange = true;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'down');
       }
       else if(parent.dataset.currvote === 'none'){
         element.classList.add('downvote-on');
         parent.dataset.currvote = 'down';
         voteChange = 1;
-        // localStorage.setItem('voted' + parent.dataset.requestkey, 'down');
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Voters/' + auth.currentUser.uid), 'down');
       }
 
       get(child(dbRef, 'Requests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
+        var voters = {};
+        if(snapshot.val() != null && snapshot.val().Voters != null){
+          Object.entries(snapshot.val().Voters).forEach(([key, value]) => {
+            voters[key] = value;
+          });
+        }
+        voters[auth.currentUser.uid] = parent.dataset.currvote !== 'none' ? parent.dataset.currvote : null;
         currDownvotes = snapshot.val().Downvotes;
-        set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Downvotes'), currDownvotes + voteChange);
-        if(upvoteChange == true)
-          set(ref(db, 'Requests/' + parent.dataset.requestkey + '/Upvotes'), snapshot.val().Upvotes -1);
+        update(ref(db, 'Requests/' + parent.dataset.requestkey + '/'), {
+          Upvotes : upvoteChange ? snapshot.val().Upvotes -1 : snapshot.val().Upvotes,
+          Downvotes : currDownvotes + voteChange,
+          Voters : voters
+        });
       }).catch((error) => {
         console.error(error);
       });
@@ -831,6 +734,11 @@ const SongRequests = props => {
     if(sortChoiceRef.current == 'Chronological'){
       Object.entries(data).forEach(([key, value]) => {
         sortedKeys.push(key);
+      });
+    }
+    else if(sortChoiceRef.current == 'MostRecent'){
+      Object.entries(data).forEach(([key, value]) => {
+        sortedKeys.unshift(key);
       });
     }
     else if(sortChoiceRef.current == 'SongName'){
@@ -927,62 +835,40 @@ const SongRequests = props => {
     set(ref(db, 'Requests/' + element.dataset.requestkey), null);
   }
 
-  // function SkeeterRemoveAllSongs(){
-  //   get(child(dbRef, 'Requests/')).then((snapshot) => {
-  //     if(snapshot.val()){
-  //       set(ref(db, 'LastRequests/'), recentSnapshotRef.current.Requests);
-  //       set(ref(db, 'Requests/'), null);
-  //       document.getElementById('skeeterRemoveAllButton').disabled = true;
-  //       document.getElementById('skeeterRecoverLastButton').disabled = false;
-  //     }
-  //   });
-  // }
-
-  // function SkeeterRecoverLast(){
-  //   get(child(dbRef, 'LastRequests/')).then((snapshot) => {
-  //     if(snapshot.val()){
-  //       set(ref(db, 'Requests/'), snapshot.val());
-  //       set(ref(db, 'LastRequests/'), null);
-  //       document.getElementById('skeeterRemoveAllButton').disabled = false;
-  //       document.getElementById('skeeterRecoverLastButton').disabled = true;
-  //     }
-  //   });
-  // }
-
   return (
     <div id='songRequestsDiv'>
       <ul id='requestAndLineupList'>
-          <li id='requestSongOption' className='contentOption'><button id='requestSongButton' onClick={SwitchToRequestSong}>Request Song</button></li>
-          <li id='lineupOption' className='contentOption'><button id='lineupButton' onClick={SwitchToCurrentLineup}>Current Lineup</button></li>
+          <li id='requestSongOption' className='contentOption'><button id='requestSongButton' ref={requestSongButtonRef} onClick={SwitchToRequestSong}>Request Song</button></li>
+          <li id='lineupOption' className='contentOption'><button id='lineupButton' ref={lineupButtonRef} onClick={SwitchToCurrentLineup}>Current Lineup</button></li>
       </ul>
       <div id='contentDiv'>
-        <div id='requestGridContainer'>
+        <div id='requestGridContainer' ref={requestGridContainerRef}>
           <div id='formDiv'>
             <div id='songSearchTabs'>
-              <div id='spotifyTab' onClick={e => SwitchToSpotify(e)}>
-                <img id='spotifyImage' src='SpotifyLogo.png'/>
+              <div id='spotifyTab' ref={spotifyTabRef} onClick={() => SwitchToSpotify()}>
+                <img id='spotifyImage' src='SpotifyLogo.png' alt='Spotify Logo'/>
               </div>
-              <div id='customTab' onClick={e => SwitchToCustom(e)}>
-                <h4 id='customTag'>Custom</h4>
+              <div id='customTab' ref={customTabRef} onClick={() => SwitchToCustom()}>
+                <img id='customImage' src='CustomLogo.png' alt='Custom Logo'/>
               </div>
             </div>
             <div id='searchDiv'>
               <div id='songDiv'>
                 <label htmlFor='songNameInput' className='requestLabel'>
-                  <input id='songNameInput' className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateSongName(e.target.value)}/>
+                  <input id='songNameInput' ref={songNameInputRef} className='requestInput' name='songNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateSongName(e.target.value)}/>
                   <span className='label'>Song</span>
                   <span className='focus-bg'></span>
                 </label>
               </div>
               <div id='artistDiv'>
                 <label htmlFor='artistNameInput' className='requestLabel'>
-                  <input id='artistNameInput' className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateArtistName(e.target.value)}/>
+                  <input id='artistNameInput' ref={artistNameInputRef} className='requestInput' name='artistNameInput' type='text' placeholder="&nbsp;" autoComplete="off" onChange={e => UpdateArtistName(e.target.value)}/>
                   <span className='label'>Artist</span>
                   <span className='focus-bg'></span>
                 </label>
               </div>
-              <div id='tracksDiv'>
-                <div id='renderedTracksDiv'>
+              <div id='tracksDiv' ref={tracksDivRef}>
+                <div id='renderedTracksDiv' ref={renderedTracksDivRef}>
                   {renderedTracksRef.current}
                 </div>
               </div>
@@ -990,18 +876,19 @@ const SongRequests = props => {
             <div>
               {/* <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 300 }} title="Must provide a song and artist name." placement="top-start"> */}
                   <span>
-                    <button type='submit' id='submitBtn' disabled='disabled'>Submit Request</button>
+                    <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
                   </span>
               {/* </Tooltip> */}
             </div>
             <div id='submissionTextDiv'>
-              <h4 id='submissionText'></h4>
+              <h4 id='submissionText' ref={submissionTextRef}></h4>
             </div>
           </div>
         </div>
-        <div id='lineupGridContainer'>
+        <div id='lineupGridContainer' ref={lineupGridContainerRef}>
           <select id='sortSelect' defaultValue={'Chronological'} onChange={SortMethodOnChange}>
             <option value='Chronological'>Chronological</option>
+            <option value='MostRecent'>Most Recent</option>
             <option value='SongName'>Song A&#8594;Z</option>
             <option value='RevSongName'>Song Z&#8594;A</option>
             <option value='ArtistName'>Artist A&#8594;Z</option>

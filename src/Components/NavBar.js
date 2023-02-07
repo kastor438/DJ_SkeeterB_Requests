@@ -2,8 +2,8 @@ import logo from '../skeeterB-Logo.png';
 import '../StyleSheets/NavBar.css';
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut } from "firebase/auth";
-import React, { Component, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -14,24 +14,53 @@ const firebaseConfig = {
   messagingSenderId: "222672756825",
   appId: "1:222672756825:web:974f65737776a233265148",
   measurementId: "G-E5J0711GSP",
-  databaseURL: "https://dj-skeeterb-default-rtdb.firebaseio.com/"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const NavBar = props => {
+  const [isMenuPanelOpen, SetIsMenuPanelOpen] = useState(false);
   const [userInfo, SetUserInfo] = useState();
+  const [skeeterNerEventLink, SetSkeeterNewEventLink] = useState(null);
+
+  const isMenuPanelOpenRef = useRef(false);
+  isMenuPanelOpenRef.current = isMenuPanelOpen;
+
+  const menuButtonDivRef = useRef();
+  const menuBackgroundFadeRef = useRef();
+  const songRequestsLinkRef = useRef();
+  const upcomingLinkRef = useRef();
+  const newEventLinkRef = useRef();
 
   useEffect(() => {
-    SetNavBar(null);
+    SetNavBar();
   }, []);
 
   useEffect(() => {
-    SetNavBar(null)
+    SetNavBar();
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+      SetSkeeterNewEventLink(
+        React.createElement('li', {className : 'navBarLink'}, 
+          React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
+        )
+      );
+    }
+    else{
+      SetSkeeterNewEventLink(null);
+    }
   }, [props.authUser]);
 
-  function SetNavBar(element){
+  useEffect(() => {
+    if(isMenuPanelOpen){
+      menuBackgroundFadeRef.current.classList.add('menuOpen');
+    }
+    else{
+      menuBackgroundFadeRef.current.classList.remove('menuOpen');
+    }
+  }, [isMenuPanelOpen])
+
+  function SetNavBar(){
     var user = auth.currentUser;
     if (user){
       var userInfo = 
@@ -47,9 +76,9 @@ const NavBar = props => {
       var userLoginSignupElement = 
         React.createElement('div', {id : 'loginSignupDiv'},
           React.createElement('span', {id : 'loginSignupOptions'}, 
-            React.createElement(Link, {to : '/login', onClick : (e) => SetNavBar(e.target)}, 'Login'), 
+            React.createElement(NavLink, {to : '/Login', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Login'), 
             '/',
-            React.createElement(Link, {to : '/signup', onClick : (e) => SetNavBar(e.target)}, 'Signup')
+            React.createElement(NavLink, {to : '/Signup', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Signup')
           )
         );
       SetUserInfo(userLoginSignupElement);
@@ -59,12 +88,19 @@ const NavBar = props => {
   async function SignOutUser(element){
     try{
       await signOut(auth);
-      // props.signoutHandler();
-      // SetNavBar(null)
     }
     catch(err){
       console.log(err);
     }
+  }
+
+  function ToggleMenuPanel(element){
+    if(element.classList.toString().includes('activeLink')){
+      console.log("i see");
+      return;
+    }
+    menuButtonDivRef.current.classList.toggle('change');
+    SetIsMenuPanelOpen(!isMenuPanelOpenRef.current);
   }
 
   return (
@@ -72,13 +108,27 @@ const NavBar = props => {
       <nav id='navBar'>
         <div id='logoTitleDiv'>
           <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
-          <Link to='/' onClick={e => SetNavBar(e.target)}>
+          <NavLink to='/' onClick={e => SetNavBar(e.target)}>
             <h2 id='pageHeader'>DJSkeeterB</h2>
-          </Link>
+          </NavLink>
             {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
         </div>
-        {userInfo}
-        {/* <span id='loginSignupOptions'><Link to='/login'>Login</Link> / <Link to='/signup'>Signup</Link></span> */}
+        <div id='menuButtonContainer'>
+          <div id='menuButtonDiv' ref={menuButtonDivRef} className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'} onClick={(e) => ToggleMenuPanel(e.target)}>
+            <div className="bar1"></div>
+            <div className="bar2"></div>
+            <div className="bar3"></div>
+          </div>
+        </div>
+        <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
+        <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
+          {userInfo}
+          <ul id='navBarLinks'>
+            <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
+            <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
+            {skeeterNerEventLink}
+          </ul>
+        </div>
       </nav>
     </div>
   );

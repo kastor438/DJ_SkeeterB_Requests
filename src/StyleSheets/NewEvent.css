@@ -1,0 +1,330 @@
+#newEventDiv div{
+  /* border: 1px solid red; */
+}
+
+#newEventDiv{
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 70vw;
+  row-gap: 10px;
+}
+
+#newEventContainerDiv{
+  display: grid;
+  grid-template-columns: auto;
+  background-color: rgb(31, 44, 60);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 10%;
+  overflow: hidden;
+}
+
+#calendarAndDateDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid black;
+  padding: 2%;
+}
+
+#calendarDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#calendarDateHeaderDiv{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+#newEventInfoContainerDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  padding: 2.5%;
+}
+
+.newEventInfoLabel{
+  white-space: nowrap;
+}
+
+#newEventVenueDiv{
+  grid-column: 1/2;
+  grid-row: 1/3;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+#newEventVenueInput{
+  font-size: 1em;
+  width: 70%;
+}
+
+#newEventStartTimeDiv{
+  grid-column: 1/2;
+  grid-row: 3/5;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+#newEventStartTimeDiv select{
+  font-size: 0.8em;
+}
+
+#newEventDescriptionDiv{
+  grid-column: 2/3;
+  grid-row: 1/5;
+}
+
+#newEventDescriptionInput{
+  width: 90%;
+  font-size: 0.8em;
+}
+
+#repeatsDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  background-color: rgb(31, 44, 60);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 4% / 100% 100%;
+  padding: 5% 2%;
+}
+
+#repeatsDiv label{
+  line-height: 100%;
+  height: 100%;
+}
+
+#repeatsInputDiv{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#repeatsInput{
+  width: 22px;
+  height: 22px;
+  margin: calc(0.75em - 11px) 0.25rem 0 0;
+  vertical-align: top;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background: #fff no-repeat center center;
+}
+
+input[type="radio"]{
+  border-radius: 50%;
+}
+
+#repeatsTimeFrameSelectDiv{
+  grid-column: 1/2;
+  grid-row: 2/3;
+}
+
+#repeatsTimeFrameSelect{
+  font-size: 0.8em;
+}
+
+#repeatsEndDateDiv{
+  grid-column: 2/3;
+  grid-row: 2/3;
+}
+
+#repeatsEndDateInput{
+  font-size: 0.8em;
+}
+
+#uploadOrSelectImageDiv{
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: #1f2c3c;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 10%;
+  overflow: hidden;
+}
+
+#newUploadDiv{
+  border: 1px solid black;
+  padding: 0 0 7.5% 0;
+}
+
+.disabledNewUploadDiv *{
+  color: #949494AC
+}
+
+#newUploadHeaderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 10%;
+}
+
+#newUploadHeader{
+
+}
+
+#newEventImageDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#newEventImageUploadInput{
+  padding: 2%;
+  font-size: 18px;
+}
+
+#imageChoiceSpacer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  border: 2px solid black;
+  z-index: 10;
+}
+
+#imageChoiceDiv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #35475d;
+  padding: 0 2%;
+  border: 2px solid black;
+}
+
+#imageChoiceDiv div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8%;
+  white-space: nowrap;
+}
+
+#uploadImageRadioInputDiv{
+  border-right: 1px solid rgb(0, 0, 0);
+}
+
+#selectImageRadioInputDiv{
+  border-left: 1px solid rgb(0, 0, 0);
+}
+
+#uploadImageRadioInput, 
+#selectImageRadioInput{
+  width: 60px;
+}
+
+#previousUploadsDiv{
+  border: 1px solid black;
+  padding: 2.5%;
+}
+
+#previousUploadsHeaderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 10%;
+}
+
+#previousUploadsHeader{
+  
+}
+
+#UploadedImagesDiv{
+  display: grid;
+  grid-gap: 4px;
+  grid-template-columns: repeat(auto-fill,minmax(19%,1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(19%,1fr);
+  overflow-x: auto;
+  width: 90%;
+  height: fit-content;
+  margin-left: 5%;
+  border: 3px solid black;
+  border: 5%;
+  padding: 8px 0;
+}
+
+.newEventImageDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  background-color: #2e2e2e;
+}
+
+.disabledUpload{
+  pointer-events: none;
+}
+
+.disabledUpload .newEventImage{
+  opacity: 50%;
+}
+
+.newEventImage{
+  width: 90%;
+  pointer-events: none;
+}
+
+.newEventImageDiv.selectedEventImage{
+  border: 3px solid rgb(14, 131, 185);
+}
+
+#submitNewEventButtonDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#submitNewEventButton{
+  font-size: 20px;
+}
+
+@media only screen and (max-width: 900px){
+  #newEventDiv{
+    width: 90vw;
+  }
+  
+  #calendarAndDateDiv{
+    grid-template-columns: 1fr;
+  }
+
+  #calendarDateHeaderDiv{
+    grid-row: 1/2;
+    justify-content: center;
+  }
+
+  #calendarDiv{
+    grid-row: 2/3;
+  }
+}
+
+@media only screen and (max-width: 650px){
+  #newEventInfoContainerDiv{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr 3fr;
+  }
+
+  #newEventVenueDiv{
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+
+  #newEventStartTimeDiv{
+    grid-column: 1/2;
+    grid-row: 2/3;
+  }
+
+  #newEventDescriptionDiv{
+    grid-column: 1/2;
+    grid-row: 3/4;
+    
+    vertical-align: middle;
+  }
+
+  #newEventDescriptionDiv label{
+    width: 100%;
+    display: block;
+    text-align: left;
+  }
+}
