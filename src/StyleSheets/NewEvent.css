@@ -300,6 +300,10 @@ input[type="radio"]{
 }
 
 @media only screen and (max-width: 650px){
+  #newEventContainerDiv{
+    border-radius: 2%;
+  }
+
   #newEventInfoContainerDiv{
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 2fr 3fr;
@@ -326,5 +330,9 @@ input[type="radio"]{
     width: 100%;
     display: block;
     text-align: left;
+  }
+
+  #uploadOrSelectImageDiv{
+    border-radius: 2%;
   }
 }

@@ -315,7 +315,7 @@ const NewEvent = props => {
           </div>
           <div id='newEventStartTimeDiv' className='newEventInfoDiv'>
             <label className='newEventInfoLabel'>Event Start Time:</label>
-            <select id='hourSelect' ref={hourSelectRef} defaultValue={'9'} size={4}>
+            <select id='hourSelect' ref={hourSelectRef} defaultValue={'10'} size={4}>
               <option value={'1'}>1</option>
               <option value={'2'}>2</option>
               <option value={'3'}>3</option>
