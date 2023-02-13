@@ -73,8 +73,11 @@ const Upcoming = props => {
         var eventDate = `${calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${calendarDate.getFullYear()}`;
         var eventsOnDate = [];
         Object.entries(eventData).forEach(([key, value]) => {
-          if(value.EventDate === eventDate){
-            eventsOnDate.push({key : key, value : value});
+          if(value.EventDate === eventDate && (value.Visible ||
+            (auth.currentUser &&
+            (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' ||
+            auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')))){
+              eventsOnDate.push({key : key, value : value});
           }
         });
 
@@ -93,14 +96,20 @@ const Upcoming = props => {
               ((auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ?
               React.createElement('div', {className : 'skeeterUpcomingButtonsDiv'},
                 React.createElement('div', {},
-                  React.createElement('button', {className : 'modifyUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => ModifyEvent(e.target)}, 'Modify Event')
+                  React.createElement('button', {className : 'skeeterUpcomingButton modifyUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => ModifyEvent(e.target)}, 'Modify Event')
                 ),
                 React.createElement('div', {},
                   !eventsOnDate[i].value.Cancelled ? 
-                  React.createElement('button', {className : 'cancelUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => CancelEvent(e.target)}, 'Cancel Event')
+                  React.createElement('button', {className : 'skeeterUpcomingButton cancelUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => CancelEvent(e.target)}, 'Cancel Event')
                   :
-                  React.createElement('button', {className : 'reactivateUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => ReactivateEvent(e.target)}, 'Reactivate Event')
+                  React.createElement('button', {className : 'skeeterUpcomingButton reactivateUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => ReactivateEvent(e.target)}, 'Reactivate Event')
                 ),
+                React.createElement('div', {},
+                  eventsOnDate[i].value.Visible ? 
+                  React.createElement('button', {className : 'skeeterUpcomingButton hideUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => HideEvent(e.target)}, '\u29BBHide Event')
+                  :
+                  React.createElement('button', {className : 'skeeterUpcomingButton showUpcomingEventButton', 'data-eventid' : eventsOnDate[i].key, onClick : (e) => ShowEvent(e.target)}, '\uD83D\uDC41Show Event')
+                )
               )
               :
               null),
@@ -139,14 +148,22 @@ const Upcoming = props => {
   }
 
   function CancelEvent(element){
-    console.log('cancelling: ' + element.dataset.eventid);
     set(ref(db, `Events/${element.dataset.eventid}/Cancelled`), true);
     SetEventDetails();
   }
 
   function ReactivateEvent(element){
-    console.log('Reactivating: ' + element.dataset.eventid);
     set(ref(db, `Events/${element.dataset.eventid}/Cancelled`), false);
+    SetEventDetails();
+  }
+
+  function HideEvent(element){
+    set(ref(db, `Events/${element.dataset.eventid}/Visible`), false);
+    SetEventDetails();
+  }
+
+  function ShowEvent(element){
+    set(ref(db, `Events/${element.dataset.eventid}/Visible`), true);
     SetEventDetails();
   }
 

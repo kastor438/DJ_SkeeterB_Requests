@@ -200,7 +200,6 @@ div.upvote a.star.star-on {
 }
 
 .disabledVoteButton{
-  pointer-events: none;
   opacity: 60%;
 }
 
@@ -242,14 +241,33 @@ div.upvote a.star.star-on {
     /* border: 1px solid blue; */
 }
 
-/* #comingSoonP{
-  display: inline-block;
-  margin-left: 50%;
-  width: 40%;
-  line-height: 0%;
-  text-align: right;
-  font-size: 12px;
-} */
+#popupDiv{
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
+
+#popupDiv.popupOn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#popupSpan{
+  border-radius: 2% 2% / 50% 50%;
+  border: 2px solid rgb(41, 27, 69);
+  background-color: rgb(48, 69, 91);
+  font-size: 0.8em;
+  font-weight: 600;
+  white-space: nowrap;
+  width: fit-content;
+  padding: 1vh 2vw;
+  opacity: 95%;
+}
 
 @media only screen and (max-width: 1465px){
   #lineupDiv{
@@ -379,6 +397,10 @@ div.upvote a.star.star-on {
 @media only screen and (max-width: 800px){
   div.upvote{
     margin-left: -10%;
+  }
+
+  #popupDiv{
+    top: -20vh;
   }
 }
 

@@ -36,7 +36,6 @@
   position: relative;
   display: grid;
   grid-template-columns: 8fr 3fr;
-  grid-template-rows: 1fr;
   color: #898989;
   cursor: pointer;
   transition: all 0.4s ease-in-out;
@@ -69,19 +68,16 @@
 
 .eventInfoDiv *{
   pointer-events: none;
+  /* border: 1px solid red; */
 }
 
 .skeeterUpcomingButtonsDiv{
-  position: relative;
-  /* left: 20vw; */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-column: 1/3;
+  display: flex;
   border: 1px solid black;
   background-color: #273c61;
-  padding: 1%;
-  column-gap: 4%;
-  width: fit-content;
+  column-gap: 8px;
+  padding: 1% 2%;
   z-index: 100;
 }
 
@@ -93,7 +89,13 @@
 }
 
 .skeeterUpcomingButtonsDiv div button{
-  font-size: 16px;
+  font-size: 0.6em;
+  background-color: rgb(188, 205, 219);
+  width: 100%;
+}
+
+.skeeterUpcomingButtonsDiv div button:hover{
+  background-color: aliceblue;
 }
 
 .eventInfoDiv:hover * {
@@ -277,7 +279,7 @@
   }
 
   .skeeterUpcomingButtonsDiv div button{
-    font-size: 12px;
+    font-size: 0.6em;
   }
 
   .eventInfoLabel{
@@ -294,5 +296,19 @@
 
   .eventImage{
     width: 85%;
+  }
+}
+
+@media only screen and (max-width: 550px){
+  .eventInfoDiv{
+    grid-template-columns: 5fr 3fr;
+  }
+
+  .skeeterUpcomingButtonsDiv div button{
+    font-size: 0.6em;
+  }
+
+  .eventImage{
+    width: 100%;
   }
 }

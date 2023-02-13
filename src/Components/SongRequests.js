@@ -117,6 +117,8 @@ const SongRequests = props => {
   const renderedTracksDivRef = useRef();
   const submitSongRequestButtonRef = useRef();
   const submissionTextRef = useRef();
+  const popupDivRef = useRef();
+  const popupSpanRef = useRef();
 
   useEffect(() => {
     var currentUrl = window.location.href;
@@ -166,14 +168,14 @@ const SongRequests = props => {
   }, [sortChoice]);
 
   useEffect(() => {
-    if(trackStatsRef.current){
+    if(!trackStatsRef.current){
       getUserData();
     }
   }, [trackStats]);
 
   const getUserData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/');
-    // console.log(res.data);
+    console.log(res.data);
 
     if(trackStatsRef.current){
       var visitorCount = 0;
@@ -391,12 +393,16 @@ const SongRequests = props => {
             Upvotes: 0,
             Downvotes: 0,
             Voters : {},
-            RequestedBy : (auth.currentUser ? auth.currentUser.uid : '')
+            RequestedBy : (auth.currentUser ? auth.currentUser.uid : ''),
+            DateTime : (new Date()).toUTCString()
           });
           submissionTextRef.current.innerHTML = "Request Sent!";
         }
         else{
-          set(ref(db, 'Requests/' + songExistsID + '/RequestCount'), (prevRequestCount+1));
+          update(ref(db, 'Requests/' + songExistsID + '/'), {
+            RequestCount : (prevRequestCount+1),
+            DateTime : (new Date()).toUTCString()
+          });
           submissionTextRef.current.innerHTML = "Request Already in Pool.";
         }
       } 
@@ -409,7 +415,8 @@ const SongRequests = props => {
           SpotifyImageURL: spotifyImageLink,
           Upvotes: 0,
           Downvotes: 0,
-          RequestedBy: (auth.currentUser ? auth.currentUser.uid : '')
+          RequestedBy: (auth.currentUser ? auth.currentUser.uid : ''),
+          DateTime : (new Date()).toUTCString()
         });
         submissionTextRef.current.innerHTML = "Request Sent!";
       }
@@ -677,6 +684,13 @@ const SongRequests = props => {
         console.error(error);
       });
     }
+    else{
+      popupSpanRef.current.innerHTML = 'You must be signed in to vote on requests!';
+      popupDivRef.current.classList.add('popupOn');
+      setTimeout(function(){
+        popupDivRef.current.classList.remove('popupOn');
+      }, 4000);
+    }
   }
 
   function DownvoteSong(element){
@@ -722,6 +736,13 @@ const SongRequests = props => {
         console.error(error);
       });
     }
+    else{
+      popupSpanRef.current.innerHTML = 'You must be signed in to vote on requests!';
+      popupDivRef.current.classList.add('popupOn');
+      setTimeout(function(){
+        popupDivRef.current.classList.remove('popupOn');
+      }, 4000);
+    }
   }
 
   function SortMethodOnChange(e){
@@ -738,8 +759,16 @@ const SongRequests = props => {
     }
     else if(sortChoiceRef.current == 'MostRecent'){
       Object.entries(data).forEach(([key, value]) => {
-        sortedKeys.unshift(key);
+        sortedDataType.push(value.DateTime);
       });
+      sortedDataType.sort();
+      for(var i = 0; i < sortedDataType.length; i++){
+        Object.entries(data).forEach(([key, value]) => {
+          if(value.DateTime === sortedDataType[i] && !sortedKeys.includes(key)){
+            sortedKeys.unshift(key);
+          }
+        });
+      }
     }
     else if(sortChoiceRef.current == 'SongName'){
       Object.entries(data).forEach(([key, value]) => {
@@ -748,7 +777,7 @@ const SongRequests = props => {
       sortedDataType.sort();
       for(var i = 0; i < sortedDataType.length; i++){
         Object.entries(data).forEach(([key, value]) => {
-          if(value.SongName === sortedDataType[i]){
+          if(value.SongName === sortedDataType[i] && !sortedKeys.includes(key)){
             sortedKeys.push(key);
           }
         });
@@ -761,7 +790,7 @@ const SongRequests = props => {
       sortedDataType.sort();
       for(var i = sortedDataType.length -1; i >= 0; i--){
         Object.entries(data).forEach(([key, value]) => {
-          if(value.SongName === sortedDataType[i]){
+          if(value.SongName === sortedDataType[i] && !sortedKeys.includes(key)){
             sortedKeys.push(key);
           }
         });
@@ -774,7 +803,7 @@ const SongRequests = props => {
       sortedDataType.sort();
       for(var i = 0; i < sortedDataType.length; i++){
         Object.entries(data).forEach(([key, value]) => {
-          if(value.ArtistName === sortedDataType[i]){
+          if(value.ArtistName === sortedDataType[i] && !sortedKeys.includes(key)){
             sortedKeys.push(key);
           }
         });
@@ -787,7 +816,7 @@ const SongRequests = props => {
       sortedDataType.sort();
       for(var i = sortedDataType.length - 1; i >= 0; i--){
         Object.entries(data).forEach(([key, value]) => {
-          if(value.ArtistName === sortedDataType[i]){
+          if(value.ArtistName === sortedDataType[i] && !sortedKeys.includes(key)){
             sortedKeys.push(key);
           }
         });
@@ -846,10 +875,10 @@ const SongRequests = props => {
           <div id='formDiv'>
             <div id='songSearchTabs'>
               <div id='spotifyTab' ref={spotifyTabRef} onClick={() => SwitchToSpotify()}>
-                <img id='spotifyImage' src='SpotifyLogo.png' alt='Spotify Logo'/>
+                <img id='spotifyImage' src='/SpotifyLogo.png' alt='Spotify Logo'/>
               </div>
               <div id='customTab' ref={customTabRef} onClick={() => SwitchToCustom()}>
-                <img id='customImage' src='CustomLogo.png' alt='Custom Logo'/>
+                <img id='customImage' src='/CustomLogo.png' alt='Custom Logo'/>
               </div>
             </div>
             <div id='searchDiv'>
@@ -900,6 +929,9 @@ const SongRequests = props => {
             <div id='lineupTracksDiv'>
               {lineupTracksRef.current}
             </div>
+          </div>
+          <div id='popupDiv' ref={popupDivRef}>
+            <span id='popupSpan' ref={popupSpanRef}></span>
           </div>
         </div>
         <SkeeterPanel authUser={props.authUser}/>

@@ -77,7 +77,7 @@ const NavBar = props => {
         React.createElement('div', {id : 'loginSignupDiv'},
           React.createElement('span', {id : 'loginSignupOptions'}, 
             React.createElement(NavLink, {to : '/Login', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Login'), 
-            '/',
+            ' / ',
             React.createElement(NavLink, {to : '/Signup', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Signup')
           )
         );

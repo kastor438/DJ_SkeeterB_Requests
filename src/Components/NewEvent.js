@@ -272,6 +272,7 @@ const NewEvent = props => {
       EventStartTime : `${hourSelectRef.current.value}:${minuteSelectRef.current.value} ${dayNightSelectRef.current.value}`,
       EventDescription : newEventDescriptionInputRef.current.value,
       EventImageURL : imageURL,
+      Visible : true,
       Cancelled : false
     });
     
@@ -368,7 +369,7 @@ const NewEvent = props => {
             <h4 id='newUploadHeader'  ref={newUploadHeaderRef}>Upload Image</h4>
           </div>
           <div id='newEventImageDiv'>
-            <label htmlFor='newEventImageUploadInput'>Event Image:</label>
+            <label id='newEventImageUploadInputLabel' htmlFor='newEventImageUploadInput'>Event Image:</label>
             <input type='file' id='newEventImageUploadInput' ref={newEventImageUploadInputRef} onChange={ImageUploadOnChange}/>
           </div>
         </div>

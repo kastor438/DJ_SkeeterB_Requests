@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, child, get, onValue } from "firebase/database";
+import axios from 'axios';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -21,9 +22,11 @@ const auth = getAuth(app);
 
 const SkeeterPanel = props => {
   const [isPanelOpen, SetIsPanelOpen] = useState(false);
+  const [requestsData, SetRequestsData] = useState(null);
 
   // DOM Refs
   const SkeeterRemoveAllButtonRef = useRef();
+  const SkeeterExportRequestsButtonRef = useRef();
 
   const db = getDatabase();
   const dbRef = ref(getDatabase());
@@ -33,12 +36,15 @@ const SkeeterPanel = props => {
     if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
       onValue(rootRef, (snapshot) => {
         const data = snapshot.val();
+        SetRequestsData(data.Requests);
         if(data && SkeeterRemoveAllButtonRef.current != null){
           if(!data.Requests){
             SkeeterRemoveAllButtonRef.current.disabled = true;
+            SkeeterExportRequestsButtonRef.current.disabled = true;
           }
           else{
             SkeeterRemoveAllButtonRef.current.disabled = false;
+            SkeeterExportRequestsButtonRef.current.disabled = false;
           }
         } 
       });
@@ -65,6 +71,33 @@ const SkeeterPanel = props => {
     });
   }
 
+  function SkeeterExportSongs(){
+    if(requestsData != null){
+      // Google sheet connection URL found on sheet.best
+      const deleteSheetData = axios.delete('https://sheet.best/api/sheets/9974aba4-b745-4c88-acbf-f18abcb2c4d2/ID/*');
+      deleteSheetData.then(() => {
+        const sheetsData = [];
+        Object.entries(requestsData).forEach(([key, value]) => {
+          sheetsData.push({
+            ID : key,
+            'Song Name' : value.SongName,
+            'Artist Name' : value.ArtistName,
+            'Request Count' : value.RequestCount,
+            'Spotify URL' : value.SpotifyURL,
+            'Spotify Image URL' : value.SpotifyImageURL,
+            Upvotes : value.Upvotes,
+            Downvotes : value.Downvotes,
+            'Vote Count' : value.Upvotes - value.Downvotes
+          });
+        });
+        console.log(sheetsData);
+        axios.post('https://sheet.best/api/sheets/9974aba4-b745-4c88-acbf-f18abcb2c4d2', sheetsData).then((response) => {
+          console.log(response);
+        });
+      });
+    }
+  }
+
   return (
       (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ?
       <div id='skeeterPanel' className={isPanelOpen ? "openSkeeterPanel" : 'closeSkeeterPanel'}>
@@ -72,7 +105,12 @@ const SkeeterPanel = props => {
           <button id='slidingButton' onClick={(e) => ToggleSkeeterPanel(e.target)}>&#8592;</button>
         </div>
         <div id='skeeterButtonsDiv'>
-          <button id='skeeterRemoveAllButton' ref ={SkeeterRemoveAllButtonRef} onClick={() => SkeeterRemoveAllSongs()}>Remove All Requests</button>
+          <div className='skeeterButtonDiv'>
+            <button id='skeeterRemoveAllButton' ref ={SkeeterRemoveAllButtonRef} className='skeeterPanelButton' onClick={() => SkeeterRemoveAllSongs()}>Remove All Requests</button>
+          </div>
+          <div className='skeeterButtonDiv'>
+            <button id='skeeterExportRequestsButton' ref ={SkeeterExportRequestsButtonRef} className='skeeterPanelButton' onClick={() => SkeeterExportSongs()}>Export Songs</button>
+          </div>
         </div>
       </div>
       :

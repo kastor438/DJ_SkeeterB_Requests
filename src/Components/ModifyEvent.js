@@ -126,7 +126,7 @@ const ModifyEvent = props => {
 
   useEffect(() => {
     if(!auth.currentUser || (auth.currentUser.uid !== 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' && auth.currentUser.uid !== 'bExKDb4uJTbis2GZOL8fm6clrw83')){
-      // SetNavigateToHome(true);
+      SetNavigateToHome(true);
     }
   }, [props.authUser])
 
