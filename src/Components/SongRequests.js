@@ -370,20 +370,21 @@ const SongRequests = props => {
         // Check if request is already accepted.
         var songAlreadyApproved = false;
         var songAlreadyApprovedKey = -1;
-        Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
-          if(!songAlreadyApproved && value.SongName === songName && value.ArtistName === artistName){
-            songAlreadyApproved = true;
-            songAlreadyApprovedKey = key;
-            prevRequestCount = value.RequestCount;
+        if(snapshot.val().Requests){
+          Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
+            if(!songAlreadyApproved && value.SongName === songName && value.ArtistName === artistName){
+              songAlreadyApproved = true;
+              songAlreadyApprovedKey = key;
+              prevRequestCount = value.RequestCount;
+            }
+          });  
+          if(songAlreadyApproved){
+            update(ref(db, 'Requests/' + songAlreadyApprovedKey + '/'), {
+              RequestCount : (prevRequestCount+1),
+              DateTime : (new Date()).toUTCString()
+            });
+            submissionTextRef.current.innerHTML = "Request Already in Pool.";
           }
-        });
-
-        if(songAlreadyApproved){
-          update(ref(db, 'Requests/' + songAlreadyApprovedKey + '/'), {
-            RequestCount : (prevRequestCount+1),
-            DateTime : (new Date()).toUTCString()
-          });
-          submissionTextRef.current.innerHTML = "Request Already in Pool.";
         }
         else{
           var songInPreapproval = false;

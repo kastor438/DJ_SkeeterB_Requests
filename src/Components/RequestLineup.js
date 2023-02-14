@@ -62,9 +62,19 @@ const RequestLineup = props => {
   const lineupGridContainerRef = useRef();
   const popupDivRef = useRef();
   const popupSpanRef = useRef();
+  const skeeterLineupSelectDivRef = useRef();
+  const skeeterLineupSelectButtonsDivRef = useRef();
+  const preapprovalLineupOptionDivRef = useRef();
+  const skeeterPreapprovalButtonRef = useRef();
+  const approvedLineupOptionDivRef = useRef();
+  const skeeterLineupButtonRef = useRef();
+  const preapprovalLineupDivRef = useRef();
+  const lineupDivRef = useRef();
 
   useEffect(() => {
-    
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+      SwitchToPreapproval();
+    }
     const dbRootRef = ref(db, '/');
     onValue(dbRootRef, (snapshot) => {
       const data = snapshot.val();
@@ -103,6 +113,42 @@ const RequestLineup = props => {
       }
     });
   }, [props.authUser]);
+
+  function SwitchToPreapproval(){
+    preapprovalLineupDivRef.current.style.display = 'block';
+    preapprovalLineupOptionDivRef.current.style.backgroundColor = '#36393f';
+    skeeterPreapprovalButtonRef.current.style.color = '#f0f8ff'
+    skeeterPreapprovalButtonRef.current.style.borderBottom = '0px';
+    skeeterPreapprovalButtonRef.current.style.borderRight = '0px';
+    preapprovalLineupOptionDivRef.current.style.borderRadius = '0 0 0 0';
+    skeeterPreapprovalButtonRef.current.style.borderRadius = '0 0 0 0';
+
+    lineupDivRef.current.style.display = 'none';
+    approvedLineupOptionDivRef.current.style.backgroundColor = '#292c33';
+    skeeterLineupButtonRef.current.style.color = '#b4b7bb'
+    skeeterLineupButtonRef.current.style.borderBottom = '1px solid black';
+    skeeterLineupButtonRef.current.style.borderLeft = '1px solid black';
+    approvedLineupOptionDivRef.current.style.borderRadius = '0 0 0 20px';
+    skeeterLineupButtonRef.current.style.borderRadius = '0 0 0 20px';
+  }
+
+  function SwitchToLineup(){
+    preapprovalLineupDivRef.current.style.display = 'none';
+    preapprovalLineupOptionDivRef.current.style.backgroundColor = '#292c33';
+    skeeterPreapprovalButtonRef.current.style.color = '#b4b7bb'
+    skeeterPreapprovalButtonRef.current.style.borderBottom = '1px solid black';
+    skeeterPreapprovalButtonRef.current.style.borderRight = '1px solid black';
+    preapprovalLineupOptionDivRef.current.style.borderRadius = '0 0 20px 0';
+    skeeterPreapprovalButtonRef.current.style.borderRadius = '0 0 20px 0';
+
+    lineupDivRef.current.style.display = 'block';
+    approvedLineupOptionDivRef.current.style.backgroundColor = '#36393f';
+    skeeterLineupButtonRef.current.style.color = '#f0f8ff'
+    skeeterLineupButtonRef.current.style.borderBottom = '0px';
+    skeeterLineupButtonRef.current.style.borderLeft = '0px';
+    approvedLineupOptionDivRef.current.style.borderRadius = '0 0 0 0';
+    skeeterLineupButtonRef.current.style.borderRadius = '0 0 0 0';
+  }
 
   function UpdateLineup(data){
     var lineup = [];
@@ -500,14 +546,24 @@ const RequestLineup = props => {
         <option value='TopRated'>Top Rated</option>
         <option value='MostHated'>Most Hated</option>
       </select>
-      <div id='lineupDiv'>
-        <div id='lineupTracksDiv'>
-          {lineupTracksRef.current}
+      <div id='skeeterLineupSelectDiv' ref={skeeterLineupSelectDivRef}>
+        <div id='skeeterLineupSelectButtonsDiv' ref={skeeterLineupSelectButtonsDivRef}>
+          <div id='preapprovalLineupOptionDiv' ref={preapprovalLineupOptionDivRef} className='skeeterLineupSelectButtonDiv'>
+            <button ref={skeeterPreapprovalButtonRef} className='skeeterLineupSelectButton' onClick={() => SwitchToPreapproval()}>Preapproval</button>
+          </div>
+          <div id='approvedLineupOptionDiv' ref={approvedLineupOptionDivRef} className='skeeterLineupSelectButtonDiv'>
+            <button ref={skeeterLineupButtonRef} className='skeeterLineupSelectButton' onClick={() => SwitchToLineup()}>Lineup</button>
+          </div>
         </div>
-      </div>
-      <div id='pre-approvalLineupDiv'>
-        <div id='pre-approvalLineupTracksDiv'>
-          {preapprovalLineupTracksRef.current}
+        <div id='pre-approvalLineupDiv' ref={preapprovalLineupDivRef}>
+          <div id='pre-approvalLineupTracksDiv'>
+            {preapprovalLineupTracksRef.current}
+          </div>
+        </div>
+        <div id='lineupDiv' ref={lineupDivRef}>
+          <div id='lineupTracksDiv'>
+            {lineupTracksRef.current}
+          </div>
         </div>
       </div>
       <div id='popupDiv' ref={popupDivRef}>
