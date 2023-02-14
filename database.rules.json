@@ -3,6 +3,9 @@
     ".read": true,
     ".write": false,
     "Requests": {
+      ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
+    },
+    "PreapprovalRequests": {
       ".write": true
     },
     "LastRequests": {

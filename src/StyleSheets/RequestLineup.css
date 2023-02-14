@@ -8,6 +8,11 @@
   /* overflow: hidden; */
 }
 
+#lineupGridContainer.skeeterLineupGridContainer{
+  grid-template-columns: 1fr;
+  row-gap: 2%;
+}
+
 #sortSelect{
   width: 25%;
   text-align: center;
@@ -54,6 +59,38 @@
 }
 
 #lineupTracksDiv::-webkit-scrollbar-thumb {
+  background: #847d7d; 
+}
+
+#pre-approvalLineupDiv{
+  position: relative;
+  background-color: #36393f;
+  border-width: 1px 1px 1px 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 20px 20px 20px 20px;
+  padding-bottom: 1%;
+}
+
+#pre-approvalLineupTracksDiv{
+  /* padding: 0px 1%; */
+  margin-top: 1%;
+  margin-left: 5%;
+  width: 90%;
+  height: 65vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#pre-approvalLineupTracksDiv::-webkit-scrollbar-track {
+  background: #484646;
+}
+
+#pre-approvalLineupTracksDiv::-webkit-scrollbar{
+  width: 8px;
+}
+
+#pre-approvalLineupTracksDiv::-webkit-scrollbar-thumb {
   background: #847d7d; 
 }
 
