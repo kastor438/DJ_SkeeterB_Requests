@@ -90,9 +90,10 @@ const SkeeterPanel = props => {
             'Vote Count' : value.Upvotes - value.Downvotes
           });
         });
-        console.log(sheetsData);
+
+        // console.log(sheetsData);
         axios.post('https://sheet.best/api/sheets/9974aba4-b745-4c88-acbf-f18abcb2c4d2', sheetsData).then((response) => {
-          console.log(response);
+          // console.log(response);
         });
       });
     }
