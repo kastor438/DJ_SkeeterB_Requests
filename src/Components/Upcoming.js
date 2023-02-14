@@ -128,8 +128,12 @@ const Upcoming = props => {
                     React.createElement('span', {className : 'eventDescription'}, eventsOnDate[i].value.EventDescription),
                 )
               ),
-              React.createElement('div', {className : 'eventImageDiv'},
-                React.createElement('img', {className : 'eventImage', src : eventsOnDate[i].value.EventImageURL, alt : 'An image representing the event'})
+              React.createElement('div', {className : 'eventImageSectionDiv'},
+                React.createElement('div', {className : 'eventImageFlexDiv'},
+                  React.createElement('a', {href : '#', target : 'blank'},
+                    React.createElement('img', {className : 'eventImage', src : eventsOnDate[i].value.EventImageURL, alt : 'An image representing the event'})
+                  )
+                )
               )
             );
           newEventElements.push(newEventElement);
