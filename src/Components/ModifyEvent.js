@@ -44,6 +44,7 @@ const ModifyEvent = props => {
   // DOM Refs
   const originalCalendarDateHeaderRef = useRef();
   const calendarDateHeaderRef = useRef();
+  const newEventTitleInputRef = useRef();
   const newEventVenueInputRef = useRef();
   const hourSelectRef = useRef();
   const minuteSelectRef = useRef();
@@ -86,6 +87,7 @@ const ModifyEvent = props => {
           let modifyingDate = parseInt(modifyingEventDate[0]);
           SetOriginalCalendarDate(new Date(modifyingYear, modifyingMonthIndex, modifyingDate));
           SetCalendarDate(new Date(modifyingYear, modifyingMonthIndex, modifyingDate));
+          newEventTitleInputRef.current.value = eventInfo.EventTitle;
           newEventVenueInputRef.current.value = eventInfo.EventVenue;
           newEventDescriptionInputRef.current.value = eventInfo.EventDescription;
           hourSelectRef.current.value = eventInfo.EventStartTime.split(':')[0];
@@ -217,6 +219,11 @@ const ModifyEvent = props => {
   function CheckValidInput(){
     var validInput = true;
 
+    // Event Title Check
+    if(newEventTitleInputRef.current.value.length <= 0){
+      validInput = false;
+    }
+
     // Event Venue Check
     if(newEventVenueInputRef.current.value.length <= 0){
       validInput = false;
@@ -271,6 +278,7 @@ const ModifyEvent = props => {
 
   function UpdateEvent(imageURL){
     update(ref(db, `Events/${eventID}/`), {
+      EventTitle : newEventTitleInputRef.current.value,
       EventVenue : newEventVenueInputRef.current.value,
       EventDate : `${calendarDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(calendarDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${calendarDate.getFullYear()}`,
       EventStartTime : `${hourSelectRef.current.value}:${minuteSelectRef.current.value} ${dayNightSelectRef.current.value}`,
@@ -301,6 +309,10 @@ const ModifyEvent = props => {
           </div>
         </div>
         <div id='newEventInfoContainerDiv'>
+          <div id='newEventTitleDiv' className='newEventInfoDiv'>
+            <label htmlFor='newEventTitleInput' className='newEventInfoLabel'>Event Title: </label>
+            <input type='text' id='newEventTitleInput' ref={newEventTitleInputRef} autoComplete='off' onChange={CheckValidInput}/>
+          </div>
           <div id='newEventVenueDiv' className='newEventInfoDiv'>
             <label htmlFor='newEventVenueInput' className='newEventInfoLabel'>Event Venue: </label>
             <input type='text' id='newEventVenueInput' ref={newEventVenueInputRef} autoComplete='off' onChange={CheckValidInput}/>

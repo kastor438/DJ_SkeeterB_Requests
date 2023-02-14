@@ -40,6 +40,7 @@ const NewEvent = props => {
 
   // DOM Refs
   const calendarDateHeaderRef = useRef();
+  const newEventTitleInputRef = useRef();
   const newEventVenueInputRef = useRef();
   const hourSelectRef = useRef();
   const minuteSelectRef = useRef();
@@ -189,6 +190,11 @@ const NewEvent = props => {
   function CheckValidInput(){
     var validInput = true;
 
+    // Event Title Check
+    if(newEventTitleInputRef.current.value.length <= 0){
+      validInput = false;
+    }
+
     // Event Venue Check
     if(newEventVenueInputRef.current.value.length <= 0){
       validInput = false;
@@ -267,6 +273,7 @@ const NewEvent = props => {
 
   function RecursiveCreateNewEvent(eventID, nextEventDate, endDate, imageURL){
     set(ref(db, `Events/${eventID}/`), {
+      EventTitle : newEventTitleInputRef.current.value,
       EventVenue : newEventVenueInputRef.current.value,
       EventDate : `${nextEventDate.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2})}/${(nextEventDate.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})}/${nextEventDate.getFullYear()}`,
       EventStartTime : `${hourSelectRef.current.value}:${minuteSelectRef.current.value} ${dayNightSelectRef.current.value}`,
@@ -310,6 +317,10 @@ const NewEvent = props => {
           </div>
         </div>
         <div id='newEventInfoContainerDiv'>
+          <div id='newEventTitleDiv' className='newEventInfoDiv'>
+            <label htmlFor='newEventTitleInput' className='newEventInfoLabel'>Event Title: </label>
+            <input type='text' id='newEventTitleInput' ref={newEventTitleInputRef} autoComplete='off' onChange={CheckValidInput}/>
+          </div>
           <div id='newEventVenueDiv' className='newEventInfoDiv'>
             <label htmlFor='newEventVenueInput' className='newEventInfoLabel'>Event Venue: </label>
             <input type='text' id='newEventVenueInput' ref={newEventVenueInputRef} autoComplete='off' onChange={CheckValidInput}/>
@@ -343,7 +354,7 @@ const NewEvent = props => {
           </div>
           <div id='newEventDescriptionDiv' className='newEventInfoDiv'>
             <label htmlFor='newEventDescriptionInput' className='newEventInfoLabel'>Event Description:</label>
-            <textarea id='newEventDescriptionInput' ref={newEventDescriptionInputRef} maxLength={150} rows={7} onChange={CheckValidInput}/>
+            <textarea id='newEventDescriptionInput' ref={newEventDescriptionInputRef} maxLength={300} rows={9} onChange={CheckValidInput}/>
           </div>
         </div>
       </div>

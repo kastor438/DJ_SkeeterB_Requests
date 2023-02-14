@@ -113,6 +113,9 @@ const Upcoming = props => {
               )
               :
               null),
+              React.createElement('div', {className : 'eventTitleDiv'}, 
+                React.createElement('span', {className : 'eventTitle'}, eventsOnDate[i].value.EventTitle)
+              ),
               React.createElement('div', {className : 'eventDetailsDiv'},
                 React.createElement('div', {className : 'eventVenueDiv'}, 
                   React.createElement('span', {className : 'eventVenue'}, eventsOnDate[i].value.EventVenue)
