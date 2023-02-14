@@ -443,24 +443,44 @@ const RequestLineup = props => {
       var nextKey = 1;
       if(snapshot.val().Requests){
         Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
-          console.log('key: ' + key);
           if(parseInt(key) >= nextKey){
             nextKey = parseInt(key) + 1;
           }
         });
       }
-
-      console.log('nextKey: ' + nextKey);
-      set(ref(db, `Requests/${nextKey}`), snapshot.val().PreapprovalRequests[parent.dataset.requestkey]);
+      const songData = snapshot.val().PreapprovalRequests[parent.dataset.requestkey];
+      set(ref(db, `Requests/${nextKey}`), {
+        SongName : songData.SongName,
+        ArtistName : songData.ArtistName,
+        RequestCount: songData.RequestCount,
+        SpotifyURL: songData.SpotifyURL,
+        SpotifyImageURL: songData.SpotifyImageURL,
+        Upvotes: songData.Upvotes,
+        Downvotes: songData.Downvotes,
+        RequestedBy: songData.RequestedBy,
+        DateTime : (new Date()).toUTCString(),
+        Approved : true
+      });
       remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
     });
-    console.log('Accepting: ' + parent.dataset.requestkey);
   }
 
   function DeclineSong(element){
     var parent = element.parentNode;
+    // get(child(dbRef, `/`)).then((snapshot) => {
+    //   var nextKey = 1;
+    //   if(snapshot.val().Requests){
+    //     Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
+    //       if(parseInt(key) >= nextKey){
+    //         nextKey = parseInt(key) + 1;
+    //       }
+    //     });
+    //   }
 
-    console.log('Declining: ' + parent.dataset.requestkey);
+    //   set(ref(db, `Requests/${nextKey}`), snapshot.val().PreapprovalRequests[parent.dataset.requestkey]);
+    //   remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
+    // });
+    remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
   }
 
   function SkeeterRemoveSong(element){
