@@ -22,7 +22,7 @@ const auth = getAuth(app);
 const NavBar = props => {
   const [isMenuPanelOpen, SetIsMenuPanelOpen] = useState(false);
   const [userInfo, SetUserInfo] = useState();
-  const [skeeterNerEventLink, SetSkeeterNewEventLink] = useState(null);
+  const [skeeterSpecificLinks, SkeeterSpecificLinksLink] = useState([]);
 
   const isMenuPanelOpenRef = useRef(false);
   isMenuPanelOpenRef.current = isMenuPanelOpen;
@@ -32,6 +32,7 @@ const NavBar = props => {
   const songRequestsLinkRef = useRef();
   const upcomingLinkRef = useRef();
   const newEventLinkRef = useRef();
+  const settingsLinkRef = useRef();
 
   useEffect(() => {
     SetNavBar();
@@ -40,14 +41,17 @@ const NavBar = props => {
   useEffect(() => {
     SetNavBar();
     if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
-      SetSkeeterNewEventLink(
-        React.createElement('li', {className : 'navBarLink'}, 
+      var skeeterLinks = 
+        [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
           React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
-        )
-      );
+        ),
+        React.createElement('li', {key : 'settingsLink', className : 'navBarLink'}, 
+          React.createElement(NavLink, {ref : settingsLinkRef, to : '/Settings', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Settings')
+        )];
+        SkeeterSpecificLinksLink(skeeterLinks);
     }
     else{
-      SetSkeeterNewEventLink(null);
+      SkeeterSpecificLinksLink(null);
     }
   }, [props.authUser]);
 
@@ -126,7 +130,7 @@ const NavBar = props => {
           <ul id='navBarLinks'>
             <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
             <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
-            {skeeterNerEventLink}
+            {skeeterSpecificLinks}
           </ul>
         </div>
       </nav>

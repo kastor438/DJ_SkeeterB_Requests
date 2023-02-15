@@ -72,9 +72,6 @@ const RequestLineup = props => {
   const lineupDivRef = useRef();
 
   useEffect(() => {
-    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
-      SwitchToPreapproval();
-    }
     const dbRootRef = ref(db, '/');
     onValue(dbRootRef, (snapshot) => {
       const data = snapshot.val();
@@ -106,6 +103,10 @@ const RequestLineup = props => {
   }, [sortChoice]);
 
   useEffect(() => {
+    // console.log(props.authUser)
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+      SwitchToPreapproval();
+    }
     get(child(dbRef, '/')).then((snapshot) => {
       if(snapshot != null){
         SetRecentSnapshot(snapshot.val());

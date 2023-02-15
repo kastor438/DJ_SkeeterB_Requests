@@ -70,7 +70,7 @@
 }
 
 #pre-approvalLineupTracksDiv{
-  margin: 2.5% 0;
+  margin: 2.5% 5%;
   width: 90%;
   height: 65vh;
   overflow-y: scroll;
@@ -94,7 +94,7 @@
 }
 
 #lineupTracksDiv{
-  margin: 2.5% 0;
+  margin: 2.5% 5%;
   width: 90%;
   height: 65vh;
   overflow-y: scroll;
@@ -479,13 +479,13 @@ div.upvote a.star.star-on {
   }
 
   #pre-approvalLineupTracksDiv{
-    margin: 2.5% 0;
+    margin: 2.5% 2.5%;
     width: 95%;
     height: 65vh;
   }
 
   #lineupTracksDiv{
-    margin: 2.5% 0;
+    margin: 2.5% 2.5%;
     width: 95%;
     height: 65vh;
   }

@@ -941,7 +941,7 @@ const SongRequests = props => {
             </div>
           </div>
         </div>
-        <RequestLineup showLineup={lineupActive}/>
+        <RequestLineup showLineup={lineupActive} authUser={props.authUser}/>
         <SkeeterPanel authUser={props.authUser}/>
       </div>
     </div>
