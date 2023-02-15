@@ -113,6 +113,9 @@ const Upcoming = props => {
               )
               :
               null),
+              React.createElement('div', {className : 'eventTitleDiv'}, 
+                React.createElement('span', {className : 'eventTitle'}, eventsOnDate[i].value.EventTitle)
+              ),
               React.createElement('div', {className : 'eventDetailsDiv'},
                 React.createElement('div', {className : 'eventVenueDiv'}, 
                   React.createElement('span', {className : 'eventVenue'}, eventsOnDate[i].value.EventVenue)
@@ -125,8 +128,12 @@ const Upcoming = props => {
                     React.createElement('span', {className : 'eventDescription'}, eventsOnDate[i].value.EventDescription),
                 )
               ),
-              React.createElement('div', {className : 'eventImageDiv'},
-                React.createElement('img', {className : 'eventImage', src : eventsOnDate[i].value.EventImageURL, alt : 'An image representing the event'})
+              React.createElement('div', {className : 'eventImageSectionDiv'},
+                React.createElement('div', {className : 'eventImageFlexDiv'},
+                  React.createElement('a', {href : '#', target : 'blank'},
+                    React.createElement('img', {className : 'eventImage', src : eventsOnDate[i].value.EventImageURL, alt : 'An image representing the event'})
+                  )
+                )
               )
             );
           newEventElements.push(newEventElement);
