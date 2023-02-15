@@ -11,6 +11,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
 import axios from 'axios';
 
+// Component Imports
+import RequestLineup from './RequestLineup';
 import SkeeterPanel from './SkeeterPanel';
 
 require('upvote/lib/jquery.upvote.js');
@@ -54,6 +56,7 @@ const SongRequests = props => {
   const [customActive, SetCustomActive] = useState(false);
   const [trackStats, SetTrackStats] = useState(false);
   const [requestSnapshot, SetRequestSnapShot] = useState({});
+  const [lineupActive, SetLineupActive] = useState(false);
 
   const recentSnapshotRef = useRef({});
   recentSnapshotRef.current = requestSnapshot;
@@ -128,7 +131,6 @@ const SongRequests = props => {
 
     lineupButtonRef.current.style.borderBottom = "none";
     lineupButtonRef.current.style.color = "white";
-    lineupGridContainerRef.current.style.display = "none"
     
     if(currentUrl.includes("dj")){
       SetTrackStats(true);
@@ -168,7 +170,7 @@ const SongRequests = props => {
   }, [sortChoice]);
 
   useEffect(() => {
-    if(!trackStatsRef.current){
+    if(trackStatsRef.current){
       getUserData();
     }
   }, [trackStats]);
@@ -219,7 +221,7 @@ const SongRequests = props => {
 
     lineupButtonRef.current.style.borderBottom = "none";
     lineupButtonRef.current.style.color = "white";
-    lineupGridContainerRef.current.style.display = "none"
+    SetLineupActive(false);
   }
 
   function SwitchToCurrentLineup(){
@@ -229,7 +231,7 @@ const SongRequests = props => {
 
     lineupButtonRef.current.style.borderBottom = "1px solid white";
     lineupButtonRef.current.style.color = "#b1afaf";
-    lineupGridContainerRef.current.style.display = "block";
+    SetLineupActive(true);
   }
 
   function SwitchToSpotify(){
@@ -361,53 +363,76 @@ const SongRequests = props => {
     var songExistsID = -1;
     var prevRequestCount = 0;
 
-    get(child(dbRef, 'Requests/')).then((snapshot) => {
-      if (snapshot.exists()) {
+    get(child(dbRef, '/')).then((snapshot) => {
+      if (snapshot.val() && (snapshot.val().PreapprovalRequests || snapshot.val().Requests)) {
         //console.log(snapshot.val());
 
-        Object.entries(snapshot.val()).forEach(([key, value]) => {
-          songIDs.push(key);
-          songRequests.push(value);
-        });
-
-        for(var i = 0; i < songRequests.length; i++){
-          if(songRequests[i].SongName == songName && songRequests[i].ArtistName == artistName){
-            addRequestBool = false;
-            prevRequestCount = songRequests[i].RequestCount;
-            songExistsID = songIDs[i];
-          }
-        }
-
-        if(addRequestBool){
-          for(i = 0; i < songIDs.length; i++){
-            if(songIDs[i] >= nextSongID){
-              nextSongID = parseInt(songIDs[i]) + 1;
+        // Check if request is already accepted.
+        var songAlreadyApproved = false;
+        var songAlreadyApprovedKey = -1;
+        if(snapshot.val().Requests){
+          Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
+            if(!songAlreadyApproved && value.SongName === songName && value.ArtistName === artistName){
+              songAlreadyApproved = true;
+              songAlreadyApprovedKey = key;
+              prevRequestCount = value.RequestCount;
             }
+          });  
+          if(songAlreadyApproved){
+            update(ref(db, 'Requests/' + songAlreadyApprovedKey + '/'), {
+              RequestCount : (prevRequestCount+1),
+              DateTime : (new Date()).toUTCString()
+            });
+            submissionTextRef.current.innerHTML = "Request Already in Pool.";
           }
-          set(ref(db, 'Requests/' + nextSongID + '/'), {
-            SongName: songName,
-            ArtistName: artistName,
-            RequestCount: 1,
-            SpotifyURL: spotifyURL,
-            SpotifyImageURL: spotifyImageLink,
-            Upvotes: 0,
-            Downvotes: 0,
-            Voters : {},
-            RequestedBy : (auth.currentUser ? auth.currentUser.uid : ''),
-            DateTime : (new Date()).toUTCString()
-          });
-          submissionTextRef.current.innerHTML = "Request Sent!";
         }
         else{
-          update(ref(db, 'Requests/' + songExistsID + '/'), {
-            RequestCount : (prevRequestCount+1),
-            DateTime : (new Date()).toUTCString()
-          });
-          submissionTextRef.current.innerHTML = "Request Already in Pool.";
+          var songInPreapproval = false;
+          var songInPreapprovalKey = -1;
+          if(snapshot.val().PreapprovalRequests){
+            Object.entries(snapshot.val().PreapprovalRequests).forEach(([key, value]) => {
+              songIDs.push(key);
+              songRequests.push(value);
+              if(!songInPreapproval && value.SongName === songName && value.ArtistName === artistName){
+                songInPreapproval = true;
+                songInPreapprovalKey = key;
+                prevRequestCount = value.RequestCount;
+              }
+            });
+          }
+
+          if(songInPreapproval){
+            update(ref(db, 'PreapprovalRequests/' + songInPreapprovalKey + '/'), {
+              RequestCount : (prevRequestCount+1),
+              DateTime : (new Date()).toUTCString()
+            });
+            submissionTextRef.current.innerHTML = "Request Already in Pool.";
+          }
+          else{
+            for(var i = 0; i < songIDs.length; i++){
+              if(songIDs[i] >= nextSongID){
+                nextSongID = parseInt(songIDs[i]) + 1;
+              }
+            }
+            set(ref(db, 'PreapprovalRequests/' + nextSongID + '/'), {
+              SongName: songName,
+              ArtistName: artistName,
+              RequestCount: 1,
+              SpotifyURL: spotifyURL,
+              SpotifyImageURL: spotifyImageLink,
+              Upvotes: 0,
+              Downvotes: 0,
+              Voters : {},
+              RequestedBy : (auth.currentUser ? auth.currentUser.uid : ''),
+              DateTime : (new Date()).toUTCString(),
+              Approved : false
+            });
+            submissionTextRef.current.innerHTML = "Request Sent!";
+          }
         }
-      } 
+      }
       else {
-        set(ref(db, 'Requests/1/'), {
+        set(ref(db, 'PreapprovalRequests/1/'), {
           SongName: songName,
           ArtistName: artistName,
           RequestCount: 1,
@@ -416,7 +441,8 @@ const SongRequests = props => {
           Upvotes: 0,
           Downvotes: 0,
           RequestedBy: (auth.currentUser ? auth.currentUser.uid : ''),
-          DateTime : (new Date()).toUTCString()
+          DateTime : (new Date()).toUTCString(),
+          Approved : false
         });
         submissionTextRef.current.innerHTML = "Request Sent!";
       }
@@ -424,7 +450,8 @@ const SongRequests = props => {
         if(submissionTextRef.current != null){
           submissionTextRef.current.innerHTML = "";
         }
-      }, 5000);
+      }, 5000); 
+        
     }).catch((error) => {
       console.error(error);
     });
@@ -914,26 +941,7 @@ const SongRequests = props => {
             </div>
           </div>
         </div>
-        <div id='lineupGridContainer' ref={lineupGridContainerRef}>
-          <select id='sortSelect' defaultValue={'Chronological'} onChange={SortMethodOnChange}>
-            <option value='Chronological'>Chronological</option>
-            <option value='MostRecent'>Most Recent</option>
-            <option value='SongName'>Song A&#8594;Z</option>
-            <option value='RevSongName'>Song Z&#8594;A</option>
-            <option value='ArtistName'>Artist A&#8594;Z</option>
-            <option value='RevArtistName'>Artist Z&#8594;A</option>
-            <option value='TopRated'>Top Rated</option>
-            <option value='MostHated'>Most Hated</option>
-          </select>
-          <div id='lineupDiv'>
-            <div id='lineupTracksDiv'>
-              {lineupTracksRef.current}
-            </div>
-          </div>
-          <div id='popupDiv' ref={popupDivRef}>
-            <span id='popupSpan' ref={popupSpanRef}></span>
-          </div>
-        </div>
+        <RequestLineup showLineup={lineupActive} authUser={props.authUser}/>
         <SkeeterPanel authUser={props.authUser}/>
       </div>
     </div>
