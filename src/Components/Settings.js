@@ -24,7 +24,9 @@ const storage = getStorage(app);
 
 const Settings = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
-
+  const [activeSettingsSection, SetActiveSettingsSection] = useState('NavBar');
+  const settingsSections = ['NavBar', 'Theme', 'Venues', 'Socials', 'Security'];
+  
   // DOM Refs
   const logoPreviewImageRef = useRef();
   
@@ -84,24 +86,26 @@ const Settings = props => {
               </div>
             </div>
           </div>
-          <div id='themeSettingsDiv' className='settingsSection'>
-            <div>
-              <h3>Themes</h3>
+          <div id='settingsSectionContainer'>
+            <div id='themeSettingsDiv' className='settingsSection'>
+              <div>
+                <h3>Themes</h3>
+              </div>
             </div>
-          </div>
-          <div id='venueSettingsDiv' className='settingsSection'>
-            <div>
-              <h3>Venues</h3>
+            <div id='venueSettingsDiv' className='settingsSection'>
+              <div>
+                <h3>Venues</h3>
+              </div>
             </div>
-          </div>
-          <div id='socialsSettingsDiv' className='settingsSection'>
-            <div>
-              <h3>Socials</h3>
+            <div id='socialsSettingsDiv' className='settingsSection'>
+              <div>
+                <h3>Socials</h3>
+              </div>
             </div>
-          </div>
-          <div id='securitySettingsDiv' className='settingsSection'>
-            <div>
-              <h3>Security</h3>
+            <div id='securitySettingsDiv' className='settingsSection'>
+              <div>
+                <h3>Security</h3>
+              </div>
             </div>
           </div>
         </div>
