@@ -356,13 +356,14 @@ const SongRequests = props => {
   }
 
   function AddRequest(songName, artistName, spotifyURL, spotifyImageLink){
-    var nextSongID = 1;
-    var songIDs = [];
+    var nextPreapprovalSongID = 1;
+    var preapprovalSongIDs = [];
     var songRequests = [];
     var addRequestBool = true;
     var songExistsID = -1;
     var prevRequestCount = 0;
 
+    console.log("Adding");
     get(child(dbRef, '/')).then((snapshot) => {
       if (snapshot.val() && (snapshot.val().PreapprovalRequests || snapshot.val().Requests)) {
         //console.log(snapshot.val());
@@ -378,20 +379,21 @@ const SongRequests = props => {
               prevRequestCount = value.RequestCount;
             }
           });  
-          if(songAlreadyApproved){
-            update(ref(db, 'Requests/' + songAlreadyApprovedKey + '/'), {
-              RequestCount : (prevRequestCount+1),
-              DateTime : (new Date()).toUTCString()
-            });
-            submissionTextRef.current.innerHTML = "Request Already in Pool.";
-          }
+        }
+
+        if(songAlreadyApproved){
+          update(ref(db, 'Requests/' + songAlreadyApprovedKey + '/'), {
+            RequestCount : (prevRequestCount+1),
+            DateTime : (new Date()).toUTCString()
+          });
+          submissionTextRef.current.innerHTML = "Request Already in Pool.";
         }
         else{
           var songInPreapproval = false;
           var songInPreapprovalKey = -1;
           if(snapshot.val().PreapprovalRequests){
             Object.entries(snapshot.val().PreapprovalRequests).forEach(([key, value]) => {
-              songIDs.push(key);
+              preapprovalSongIDs.push(key);
               songRequests.push(value);
               if(!songInPreapproval && value.SongName === songName && value.ArtistName === artistName){
                 songInPreapproval = true;
@@ -409,12 +411,12 @@ const SongRequests = props => {
             submissionTextRef.current.innerHTML = "Request Already in Pool.";
           }
           else{
-            for(var i = 0; i < songIDs.length; i++){
-              if(songIDs[i] >= nextSongID){
-                nextSongID = parseInt(songIDs[i]) + 1;
+            for(var i = 0; i < preapprovalSongIDs.length; i++){
+              if(preapprovalSongIDs[i] >= nextPreapprovalSongID){
+                nextPreapprovalSongID = parseInt(preapprovalSongIDs[i]) + 1;
               }
             }
-            set(ref(db, 'PreapprovalRequests/' + nextSongID + '/'), {
+            set(ref(db, 'PreapprovalRequests/' + nextPreapprovalSongID + '/'), {
               SongName: songName,
               ArtistName: artistName,
               RequestCount: 1,

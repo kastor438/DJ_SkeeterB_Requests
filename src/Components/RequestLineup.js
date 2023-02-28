@@ -258,7 +258,10 @@ const RequestLineup = props => {
     }
     else{
       var noLineup = 
-        React.createElement('p', {id : 'noUnapprovedLineup', key : 'noUnapprovedLineup'}, 'No unapproved requests!\nGet the word out bro...');
+        React.createElement('div', {key : 'noUnapprovedLineup'}, 
+          React.createElement('p', {className : 'noUnapprovedLineupText'}, 'No preapproval requests!'),
+          React.createElement('p', {className : 'noUnapprovedLineupText'}, 'Get the word out bro...')
+        );
         lineup.push(noLineup);
     }
     SetPreapprovalLineupTracks(lineup);

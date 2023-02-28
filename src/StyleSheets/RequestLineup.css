@@ -89,6 +89,21 @@
   background: #847d7d; 
 }
 
+.preapprovalLineupOptionsDiv{
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.preapprovalLineupAcceptButton,
+.preapprovalLineupDeclineButton{
+  background-color: #7f27f0;
+  color: aliceblue;
+  border-radius: 10px;
+}
+
 #lineupDiv{
   background-color: #36393f;
 }
@@ -624,5 +639,8 @@ div.upvote a.star.star-on {
 }
 
 @media only screen and (max-width: 500px){
-
+  .preapprovalLineupAcceptButton,
+  .preapprovalLineupDeclineButton{
+    font-size: 12px;
+  }
 }
