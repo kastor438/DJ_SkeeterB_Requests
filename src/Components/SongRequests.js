@@ -425,7 +425,7 @@ const SongRequests = props => {
               Upvotes: 0,
               Downvotes: 0,
               Voters : {},
-              RequestedBy : (auth.currentUser ? auth.currentUser.uid : ''),
+              RequestedBy: (auth.currentUser ? (auth.currentUser.displayName ? auth.currentUser.displayName : auth.currentUser.uid) : ''),
               DateTime : (new Date()).toUTCString(),
               Approved : false
             });
@@ -442,7 +442,7 @@ const SongRequests = props => {
           SpotifyImageURL: spotifyImageLink,
           Upvotes: 0,
           Downvotes: 0,
-          RequestedBy: (auth.currentUser ? auth.currentUser.uid : ''),
+          RequestedBy: (auth.currentUser ? (auth.currentUser.displayName ? auth.currentUser.displayName : auth.currentUser.uid) : ''),
           DateTime : (new Date()).toUTCString(),
           Approved : false
         });
