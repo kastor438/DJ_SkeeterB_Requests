@@ -6,6 +6,7 @@ import Settings from './Components/Settings';
 import Upcoming from './Components/Upcoming';
 import Signup from './Components/Signup';
 import Login from './Components/Login';
+import ForgotPassword from './Components/ForgotPassword';
 import UpcomingEvent from './Components/UpcomingEvent';
 import NewEvent from './Components/NewEvent';
 import ModifyEvent from './Components/ModifyEvent';
@@ -22,6 +23,7 @@ const Main = props => {
         {/* <Route path='/Upcoming/:eventID' element={<UpcomingEvent authUser={props.authUser} eventID={props.eventID}/>}/> */}
         <Route path='/Signup' element={<Signup signupHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
+        <Route path='/Login/ForgotPassword' element={<ForgotPassword signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='*' element={<Navigate to="/" replace />}/>
       </Routes>
     </div>

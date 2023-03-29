@@ -20,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const Login = props => {
+  const [userEmail, SetUserEmail] = useState("");
   const [navigateToHome, SetNavigateToHome] = useState(false);
 
   const userEmailRef = useRef();
@@ -44,7 +45,7 @@ const Login = props => {
       </div>
       <div className='loginInfoDiv'>
         <label>Email: </label>
-        <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com'/>
+        <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com' onChange={(e) => SetUserEmail(e.target.value)}/>
       </div>
       <div className='loginInfoDiv'>
         <label>Password: </label>
@@ -55,7 +56,12 @@ const Login = props => {
       </div>
       <div id='notSignedUpDiv'>
         <span id='notSignedUpSpan'>
-          <Link to='/signup'>Not registered? Signup here</Link>
+          <Link to='/Signup'>Not registered? Signup here</Link>
+        </span>
+      </div>
+      <div id='notSignedUpDiv'>
+        <span id='notSignedUpSpan'>
+          <Link to={`/Login/ForgotPassword`} state={{ userEmail: userEmail }}>Forgot password?</Link>
         </span>
       </div>
     </div>
