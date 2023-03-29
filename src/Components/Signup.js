@@ -1,4 +1,4 @@
-import '../StyleSheets/Singup.css';
+import '../StyleSheets/Signup.css';
 
 import React, { useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
@@ -75,6 +75,12 @@ const Signup = props => {
         else if(err.code == "auth/email-already-in-use"){
           signupDisplayInfoRef.current.innerHTML = "Email already in use!"
         }
+        else if(err.code == "auth/weak-password"){
+          signupDisplayInfoRef.current.innerHTML = "Weak password! Password must be at least 6 characters long."
+        }
+        else if(err.code == "auth/internal-error"){
+          signupDisplayInfoRef.current.innerHTML = "Missing Password..."
+        }
       }
     }
   }
@@ -87,20 +93,22 @@ const Signup = props => {
       <div>
         <h2>Signup</h2>
       </div>
-      <div>
+      <div className='signupInfoDiv'>
         <label>Display Name: </label>
         <input id='displayNameInput' type='text' ref={userDisplayNameRef} placeholder='example123' autoComplete='off'/>
       </div>
-      <div>
+      <div className='signupInfoDiv'>
         <label>Email: </label>
         <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com' autoComplete='off'/>
       </div>
-      <div>
+      <div className='signupInfoDiv'>
         <label>Password: </label>
         <input id='passwordInput' type='password' ref={userPasswordRef} placeholder='Password' autoComplete='new-password'/>
       </div>
-      <button id='signupButton' onClick={e => SignupToFirebase()}>Signup</button>
-      <div>
+      <div id='signupButtonDiv'>
+        <button id='signupButton' onClick={e => SignupToFirebase()}>Signup</button>
+      </div>
+      <div id='alreadySignedUpDiv'>
         <span id='alreadySignedUpSpan'>
           <Link to='/login'>Already have an account?</Link>
         </span>

@@ -41,11 +41,11 @@
 }
 
 #slidingButtonDiv{
-  /* width: 100%; */
-  /* height: 100%; */
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: right;
   overflow: hidden;
   border-right: 1px solid black;
   background-color: rgb(36, 36, 36);
@@ -63,13 +63,13 @@
 
 #slidingButton{
   height: 100%;
-  width: 100%;
+  width: 10%;
   font-size: xx-large;
   font-weight: 700;
   background-color: transparent;
   color: antiquewhite;
   border: none;
-  text-align: left;
+  padding-right: 35px;
   /* border: 1px solid red; */
 }
 
@@ -112,6 +112,6 @@
   }
 
   #slidingButton{
-    padding-right: 60px;
+    vertical-align: middle;
   }
 }

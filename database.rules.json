@@ -3,6 +3,17 @@
     ".read": true,
     ".write": false,
     "Requests": {
+      "$x": {
+        "Voters": {
+        ".write": true
+        },
+        "Upvotes": {
+          ".write": true
+        },
+        "Downvotes": {
+          ".write": true
+        }
+      },
       ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
     },
     "PreapprovalRequests": {

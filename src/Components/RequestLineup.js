@@ -517,19 +517,6 @@ const RequestLineup = props => {
 
   function DeclineSong(element){
     var parent = element.parentNode;
-    // get(child(dbRef, `/`)).then((snapshot) => {
-    //   var nextKey = 1;
-    //   if(snapshot.val().Requests){
-    //     Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
-    //       if(parseInt(key) >= nextKey){
-    //         nextKey = parseInt(key) + 1;
-    //       }
-    //     });
-    //   }
-
-    //   set(ref(db, `Requests/${nextKey}`), snapshot.val().PreapprovalRequests[parent.dataset.requestkey]);
-    //   remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
-    // });
     remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
   }
 

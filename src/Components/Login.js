@@ -42,17 +42,19 @@ const Login = props => {
       <div>
         <h2>Login</h2>
       </div>
-      <div>
+      <div className='loginInfoDiv'>
         <label>Email: </label>
         <input id='emailInput' type='email' ref={userEmailRef} placeholder='example@gmail.com'/>
       </div>
-      <div>
+      <div className='loginInfoDiv'>
         <label>Password: </label>
         <input id='passwordInput' type='password' ref={userPasswordRef} placeholder='Password'/>
       </div>
-      <button id='loginButton' onClick={e => LoginToFirebase()}>Login</button>
-      <div>
-        <span id='alreadySignedUpSpan'>
+      <div id='loginButtonDiv'>
+        <button id='loginButton' onClick={e => LoginToFirebase()}>Login</button>
+      </div>
+      <div id='notSignedUpDiv'>
+        <span id='notSignedUpSpan'>
           <Link to='/signup'>Not registered? Signup here</Link>
         </span>
       </div>

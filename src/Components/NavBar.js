@@ -100,7 +100,6 @@ const NavBar = props => {
 
   function ToggleMenuPanel(element){
     if(element.classList.toString().includes('activeLink')){
-      console.log("i see");
       return;
     }
     menuButtonDivRef.current.classList.toggle('change');
