@@ -177,7 +177,7 @@ const SongRequests = props => {
 
   const getUserData = async () => {
     const res = await axios.get('https://geolocation-db.com/json/');
-    console.log(res.data);
+    // console.log(res.data);
 
     if(trackStatsRef.current){
       var visitorCount = 0;
@@ -363,7 +363,6 @@ const SongRequests = props => {
     var songExistsID = -1;
     var prevRequestCount = 0;
 
-    console.log("Adding");
     get(child(dbRef, '/')).then((snapshot) => {
       if (snapshot.val() && (snapshot.val().PreapprovalRequests || snapshot.val().Requests)) {
         //console.log(snapshot.val());
