@@ -305,6 +305,14 @@ input:-webkit-autofill:focus{
   transition: background-color 5000s ease-in-out 0s;
 }
 
+#submitAndShareDiv{
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+}
+
+#submissionDiv{
+  grid-column: 2;
+}
 
 #submitBtn{
   margin-top: 3vmax;
@@ -332,6 +340,26 @@ input:-webkit-autofill:focus{
   border-color: rgba(148, 148, 148, 0.76);
   background: linear-gradient(to right, #326cad , #910e96);
   box-shadow: inset 0 -3px 0 #540681;
+}
+
+#QRCodeButtonDiv{
+  grid-column: 3;
+  padding: 0.6vmax;
+}
+
+#QRCodeButton{
+  width: 100%;
+}
+
+#QRCodeButton:active{
+  animation: ShrinkQRCode 20ms ease-in-out 1 forwards;
+  opacity: 60%;
+}
+
+@keyframes ShrinkQRCode {
+  to {
+    transform: scale(0.8);
+  }
 }
 
 @media only screen and (max-width: 1465px){

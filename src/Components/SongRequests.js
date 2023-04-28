@@ -930,13 +930,20 @@ const SongRequests = props => {
                 </div>
               </div>
             </div>
-            <div>
-              {/* <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 300 }} title="Must provide a song and artist name." placement="top-start"> */}
-                  <span>
-                    <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
-                  </span>
-              {/* </Tooltip> */}
+            <div id='submitAndShareDiv'>
+              <div id='submissionDiv'>
+                {/* <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 300 }} title="Must provide a song and artist name." placement="top-start"> */}
+                    <span>
+                      <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
+                    </span>
+                {/* </Tooltip> */}
+              </div>
+              <div id='QRCodeButtonDiv'>
+                {/* <button>test</button> */}
+                <img id='QRCodeButton' src='./qr-code-12-256.png'/>
+              </div>
             </div>
+            
             <div id='submissionTextDiv'>
               <h4 id='submissionText' ref={submissionTextRef}></h4>
             </div>
