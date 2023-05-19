@@ -30,25 +30,25 @@
   background-color: #465060;
 }
 
-#skeeterLineupSelectDiv{
+#preapprovalAndLineupSelectDiv{
   background-color: #363940;
   border: 2px solid black;
   border-radius: 20px 20px 20px 20px;
   overflow: hidden;
 }
 
-#skeeterLineupSelectButtonsDiv{
+#lineupSelectButtonsDiv{
   display: grid;
   grid-template-columns: 1fr 1fr;
   border: none;
 }
 
-.skeeterLineupSelectButtonDiv{
+.lineupSelectButtonDiv{
   display: flex;
   align-items: center;
 }
 
-.skeeterLineupSelectButton{
+.lineupSelectButton{
   width: 100%;
   height: 60px;
   font-size: 22px;
@@ -65,11 +65,11 @@
   justify-content: flex-start;
 }
 
-#pre-approvalLineupDiv{
+#preapprovalLineupDiv{
   background-color: #36393f;
 }
 
-#pre-approvalLineupTracksDiv{
+#preapprovalLineupTracksDiv{
   margin: 2.5% 5%;
   width: 90%;
   height: 65vh;
@@ -77,15 +77,15 @@
   overflow-x: hidden;
 }
 
-#pre-approvalLineupTracksDiv::-webkit-scrollbar-track {
+#preapprovalLineupTracksDiv::-webkit-scrollbar-track {
   background: #484646;
 }
 
-#pre-approvalLineupTracksDiv::-webkit-scrollbar{
+#preapprovalLineupTracksDiv::-webkit-scrollbar{
   width: 8px;
 }
 
-#pre-approvalLineupTracksDiv::-webkit-scrollbar-thumb {
+#preapprovalLineupTracksDiv::-webkit-scrollbar-thumb {
   background: #847d7d; 
 }
 
@@ -494,7 +494,7 @@ div.upvote a.star.star-on {
    width: 90%;
   }
 
-  #pre-approvalLineupTracksDiv{
+  #preapprovalLineupTracksDiv{
     margin: 2.5% 2.5%;
     width: 95%;
     height: 65vh;

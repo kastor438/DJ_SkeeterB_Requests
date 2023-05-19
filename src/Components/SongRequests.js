@@ -1,6 +1,5 @@
 import '../StyleSheets/SongRequests.css';
 import '../StyleSheets/SkeeterSpecificsSongRequests.css'
-import '../StyleSheets/RequestLineup.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -383,7 +382,7 @@ const SongRequests = props => {
         if(songAlreadyApproved){
           update(ref(db, 'Requests/' + songAlreadyApprovedKey + '/'), {
             RequestCount : (prevRequestCount+1),
-            DateTime : (new Date()).toUTCString()
+            DateTime : (new Date()).toString()
           });
           submissionTextRef.current.innerHTML = "Request Already in Pool.";
         }
@@ -405,7 +404,7 @@ const SongRequests = props => {
           if(songInPreapproval){
             update(ref(db, 'PreapprovalRequests/' + songInPreapprovalKey + '/'), {
               RequestCount : (prevRequestCount+1),
-              DateTime : (new Date()).toUTCString()
+              DateTime : (new Date()).toString()
             });
             submissionTextRef.current.innerHTML = "Request Already in Pool.";
           }
@@ -425,7 +424,7 @@ const SongRequests = props => {
               Downvotes: 0,
               Voters : {},
               RequestedBy: (auth.currentUser ? (auth.currentUser.displayName ? auth.currentUser.displayName : auth.currentUser.uid) : ''),
-              DateTime : (new Date()).toUTCString(),
+              DateTime : (new Date()).toString(),
               Approved : false
             });
             submissionTextRef.current.innerHTML = "Request Sent!";
@@ -442,7 +441,7 @@ const SongRequests = props => {
           Upvotes: 0,
           Downvotes: 0,
           RequestedBy: (auth.currentUser ? (auth.currentUser.displayName ? auth.currentUser.displayName : auth.currentUser.uid) : ''),
-          DateTime : (new Date()).toUTCString(),
+          DateTime : (new Date()).toString(),
           Approved : false
         });
         submissionTextRef.current.innerHTML = "Request Sent!";

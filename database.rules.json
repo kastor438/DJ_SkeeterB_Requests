@@ -22,6 +22,9 @@
     "LastRequests": {
       ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
     },
+    "History": {
+      ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
+    },
     "SongStatistics": {
       ".write": true
     },
