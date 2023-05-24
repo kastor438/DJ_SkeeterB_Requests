@@ -34,11 +34,7 @@ const auth = getAuth(app);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
 
-const clientID = '822b607fa31944ca91f198b9f5e31613';
-const clientSecret = '4aae0065891841c197af65473ac00b49';
-
 const RequestLineup = props => {
-  const [selectedPreapprovalSongIDs, SetSelectedPreapprovalSongIDs] = useState([]);
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [lineupTracks, SetLineupTracks] = useState([]);
   const [preapprovalLineupTracks, SetPreapprovalLineupTracks] = useState([]);
@@ -55,6 +51,8 @@ const RequestLineup = props => {
   
   const preapprovalLineupTracksRef = useRef([]);
   preapprovalLineupTracksRef.current = preapprovalLineupTracks;
+  
+  const selectedPreapprovalSongIDsRef = useRef([]);
 
   const db = getDatabase();
   const dbRef = ref(getDatabase());
@@ -133,7 +131,7 @@ const RequestLineup = props => {
     lineupButtonRef.current.style.borderLeft = '1px solid black';
     approvedLineupOptionDivRef.current.style.borderRadius = '0 0 0 20px';
     lineupButtonRef.current.style.borderRadius = '0 0 0 20px';
-    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') && selectedPreapprovalSongIDs.length > 0){
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') && selectedPreapprovalSongIDsRef.current.length > 0){
       skeeterPreapprovalOptionsDivRef.current.style.display = 'grid';
     }
   }
@@ -211,7 +209,8 @@ const RequestLineup = props => {
             );
           lineup.push(track);
         }
-        lineupButtonRef.current.innerHTML = `Lineup (${lineup.length})`;
+        if(lineupButtonRef.current != null)
+          lineupButtonRef.current.innerHTML = `Lineup (${lineup.length})`;
       }
     }
     else{
@@ -274,7 +273,8 @@ const RequestLineup = props => {
           preapprovalLineup.push(track);
         }
       }
-      preapprovalButtonRef.current.innerHTML = `Preapproval (${preapprovalLineup.length})`
+      if(preapprovalButtonRef.current != null)
+        preapprovalButtonRef.current.innerHTML = `Preapproval (${preapprovalLineup.length})`
     }
     else{
       var noLineup = 
@@ -499,7 +499,7 @@ const RequestLineup = props => {
 
   function SelectPreapprovalSong(element){
     if(element.tagName == 'DIV'){
-      var currSelectedSongIDs = selectedPreapprovalSongIDs;
+      var currSelectedSongIDs = selectedPreapprovalSongIDsRef.current;
       while(element.classList.contains('lineupSong') == false){
         element = element.parentNode;
       }
@@ -511,11 +511,11 @@ const RequestLineup = props => {
       else{
         currSelectedSongIDs.push(element.dataset.requestkey);
         element.classList.add('selectedPreapprovalSongOption');
-        SetSelectedPreapprovalSongIDs(currSelectedSongIDs);
       }
+      selectedPreapprovalSongIDsRef.current = currSelectedSongIDs;
   
-      console.log(currSelectedSongIDs);
-      if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') && selectedPreapprovalSongIDs.length > 0){
+      // console.log(selectedPreapprovalSongIDsRef.current);
+      if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') && selectedPreapprovalSongIDsRef.current.length > 0){
         skeeterPreapprovalOptionsDivRef.current.style.display = 'grid';
       }
       else{
@@ -641,16 +641,13 @@ const RequestLineup = props => {
     return sortedKeys;
   }
 
-  async function ApproveSongs(){
+  function ApproveSongs(){
     skeeterPreapprovalOptionsDivRef.current.style.display = 'none';
-    await get(child(dbRef, `/`)).then((snapshot) => {
-      var nextKey = 1;
-      if(snapshot.val().Requests){
-        nextKey = Object.keys(snapshot.val().Requests).reduce((k1, k2) => parseInt(k1) >= parseInt(k2) ? parseInt(k1) : parseInt(k2)) + 1;
-      }
-      for(var i = 0; i < selectedPreapprovalSongIDs.length; i++){
-        const songData = snapshot.val().PreapprovalRequests[selectedPreapprovalSongIDs[i]];
-        set(ref(db, `Requests/${nextKey}`), {
+    for(var i = 0; i < selectedPreapprovalSongIDsRef.current.length; i++){
+      if(recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]] != null){
+        const songData = recentSnapshotRef.current.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]];
+        const requestDateTime = new Date(songData.DateTime);
+        set(ref(db, `Requests/${selectedPreapprovalSongIDsRef.current[i]}`), {
           SongName : songData.SongName,
           ArtistName : songData.ArtistName,
           RequestCount: songData.RequestCount,
@@ -659,52 +656,86 @@ const RequestLineup = props => {
           Upvotes: songData.Upvotes,
           Downvotes: songData.Downvotes,
           RequestedBy: songData.RequestedBy,
-          DateTime : (new Date()).toUTCString(),
-          Approved : true
+          DateTime : requestDateTime.toString()
         });
-        remove(ref(db, `PreapprovalRequests/${selectedPreapprovalSongIDs[i]}`));
+        if(songData.RequestedBy != ''){
+          update(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${selectedPreapprovalSongIDsRef.current[i]}/`),{
+            Approved: true,
+            NotificationRead: false
+          });
+        }
+        remove(ref(db, `PreapprovalRequests/${selectedPreapprovalSongIDsRef.current[i]}`));
       }
-    });
-    var currSelectedSongElements = document.querySelectorAll('.selectedPreapprovalSongOption');
-    for(var i = 0; i < currSelectedSongElements.length; i++){
-      currSelectedSongElements.classList.remove('selectedPreapprovalSongOption');
     }
-    SetSelectedPreapprovalSongIDs([]);
+    selectedPreapprovalSongIDsRef.current = [];
   }
 
-  async function DenySongs(){
+  function DenySongs(){
     skeeterPreapprovalOptionsDivRef.current.style.display = 'none';
-    for(var i = 0; i < selectedPreapprovalSongIDs.length; i++){
-      if(recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDs[i]] != null){
-        const songData = recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDs[i]];
+    for(var i = 0; i < selectedPreapprovalSongIDsRef.current.length; i++){
+      if(recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]] != null){
+        const songData = recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]];
         const requestDateTime = new Date(songData.DateTime);
-        await get(child(dbRef, `/History/${requestDateTime.getDate()}-${requestDateTime.getMonth()+1}-${requestDateTime.getFullYear()}/`)).then((snapshot) => {
-          var nextKey = 1;
-          console.log(snapshot.val())
-          if(snapshot.exists()){
-            nextKey = parseInt(Object.keys(snapshot.val()).reduce((k1, k2) => parseInt(k1) >= parseInt(k2) ? parseInt(k1) : parseInt(k2))) + 1;
-          }
-          set(ref(db, `History/${requestDateTime.getDate()}-${requestDateTime.getMonth()+1}-${requestDateTime.getFullYear()}/${nextKey}`), {
-            SongName : songData.SongName,
-            ArtistName : songData.ArtistName,
-            RequestCount: songData.RequestCount,
-            SpotifyURL: songData.SpotifyURL,
-            SpotifyImageURL: songData.SpotifyImageURL,
-            Upvotes: songData.Upvotes,
-            Downvotes: songData.Downvotes,
-            RequestedBy: songData.RequestedBy,
-            DateTime : songData.DateTime,
-            Approved : false
-          });
-          remove(ref(db, `PreapprovalRequests/${selectedPreapprovalSongIDs[i]}`));
+        set(ref(db, `History/${requestDateTime.getDate()}-${requestDateTime.getMonth()+1}-${requestDateTime.getFullYear()}/${selectedPreapprovalSongIDsRef.current[i]}`), {
+          SongName : songData.SongName,
+          ArtistName : songData.ArtistName,
+          RequestCount: songData.RequestCount,
+          SpotifyURL: songData.SpotifyURL,
+          SpotifyImageURL: songData.SpotifyImageURL,
+          Upvotes: songData.Upvotes,
+          Downvotes: songData.Downvotes,
+          RequestedBy: songData.RequestedBy,
+          DateTime : songData.DateTime,
+          Approved : false
         });
+        if(songData.RequestedBy != ''){
+          set(ref(db, `Users/${songData.RequestedBy}/Requests/History/${selectedPreapprovalSongIDsRef.current[i]}/`), {
+            SongName: songData.SongName,
+            ArtistName: songData.ArtistName,
+            SpotifyImageURL: songData.SpotifyImageURL,
+            DateTime : (new Date()).toString(),
+            Approved : false,
+            NotificationRead : false
+          });
+          remove(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${selectedPreapprovalSongIDsRef.current[i]}/`));
+        }
+        remove(ref(db, `PreapprovalRequests/${selectedPreapprovalSongIDsRef.current[i]}`));
       }
     }
-    SetSelectedPreapprovalSongIDs([]);
+    selectedPreapprovalSongIDsRef.current = [];
   }
 
   function SkeeterRemoveSong(element){
-    set(ref(db, 'Requests/' + element.dataset.requestkey), null);
+    var requestkey = element.dataset.requestkey;
+    const songData = recentSnapshotRef.current.Requests[requestkey];
+    const requestDateTime = new Date(songData.DateTime);
+    // If song was requested by a signed up user, Add to users requested History.
+    if(songData.RequestedBy != ''){
+      set(ref(db, `Users/${songData.RequestedBy}/Requests/History/${requestkey}/`), {
+        SongName: songData.SongName,
+        ArtistName: songData.ArtistName,
+        SpotifyImageURL: songData.SpotifyImageURL,
+        DateTime : requestDateTime.toString(),
+        Approved : true,
+        NotificationRead : false
+      });
+      remove(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${requestkey}/`));
+    }
+    // Add song to history list.
+    set(ref(db, `History/${requestDateTime.getDate()}-${requestDateTime.getMonth()+1}-${requestDateTime.getFullYear()}/${requestkey}`), {
+      SongName : songData.SongName,
+      ArtistName : songData.ArtistName,
+      RequestCount: songData.RequestCount,
+      SpotifyURL: songData.SpotifyURL,
+      SpotifyImageURL: songData.SpotifyImageURL,
+      Upvotes: songData.Upvotes,
+      Downvotes: songData.Downvotes,
+      RequestedBy: songData.RequestedBy,
+      DateTime : songData.DateTime,
+      Approved : true
+    });
+    // Remove request from lineup.
+    remove(ref(db, `Requests/${requestkey}`));    
   }
 
   return (

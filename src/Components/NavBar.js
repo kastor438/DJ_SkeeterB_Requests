@@ -1,9 +1,11 @@
 import logo from '../skeeterB-Logo.png';
 import '../StyleSheets/NavBar.css';
-import { initializeApp } from "firebase/app";
-import { getAuth, signOut } from "firebase/auth";
+import '../StyleSheets/NotificationSystem.css'
+import { initializeApp } from 'firebase/app';
+import { getAuth, signOut } from 'firebase/auth';
 import React, { useEffect, useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
+import { getDatabase, ref, onValue, get, child } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -26,32 +28,56 @@ const NavBar = props => {
 
   const isMenuPanelOpenRef = useRef(false);
   isMenuPanelOpenRef.current = isMenuPanelOpen;
+  const isNotificationMenuOpenRef = useRef(false);
+  const notificationElements = useRef([]);
 
+  // DOM Refs
   const menuButtonDivRef = useRef();
   const menuBackgroundFadeRef = useRef();
   const songRequestsLinkRef = useRef();
   const upcomingLinkRef = useRef();
   const newEventLinkRef = useRef();
   const settingsLinkRef = useRef();
+  const notificationBellRef = useRef();
+  
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
 
   useEffect(() => {
     SetNavBar();
+
+    notificationBellRef.current.addEventListener('animationend', function(event){
+      notificationBellRef.current.classList.remove('notify');
+    });
   }, []);
 
   useEffect(() => {
     SetNavBar();
-    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
-      var skeeterLinks = 
-        [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
-          React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
-        ),
-        React.createElement('li', {key : 'settingsLink', className : 'navBarLink'}, 
-          React.createElement(NavLink, {ref : settingsLinkRef, to : '/Settings', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Settings')
-        )];
-        SkeeterSpecificLinksLink(skeeterLinks);
+    
+    if(auth.currentUser != null){
+      const dbCurrUserRef = ref(db, `Users/${auth.currentUser.uid}/`);
+      onValue(dbCurrUserRef, (snapshot) => {
+        // console.log(snapshot.val());
+        UpdateNotifications(snapshot.val());
+      });
+
+      get(child(dbRef, `Users/${auth.currentUser.uid}/`)).then((snapshot) => {
+        UpdateNotifications(snapshot.val());
+      });
+      if((auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+        var skeeterLinks = 
+          [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
+            React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
+          ),
+          React.createElement('li', {key : 'settingsLink', className : 'navBarLink'}, 
+            React.createElement(NavLink, {ref : settingsLinkRef, to : '/Settings', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Settings')
+          )];
+          SkeeterSpecificLinksLink(skeeterLinks);
+      }
     }
     else{
       SkeeterSpecificLinksLink(null);
+      UpdateNotifications(null);
     }
   }, [props.authUser]);
 
@@ -106,6 +132,68 @@ const NavBar = props => {
     SetIsMenuPanelOpen(!isMenuPanelOpenRef.current);
   }
 
+  function ToggleNotificationMenu(element){
+    if(element.id != 'notificationBell')
+      return;
+    if(isNotificationMenuOpenRef.current == true){
+      notificationBellRef.current.classList.remove('openMenu');
+    }
+    else{
+      notificationBellRef.current.classList.add('openMenu');
+    }
+    isNotificationMenuOpenRef.current = !isNotificationMenuOpenRef.current;
+  }
+
+  function UpdateNotifications(data){
+    var unreadNotificationCount = 0;
+    var userNotifications = [];
+    if(data != null && data.Requests != null){
+      // History Check
+      if(data.Requests.History != null){
+        Object.entries(data.Requests.History).forEach(([key, value]) => {
+          if(!value.NotificationRead)
+            unreadNotificationCount++;
+          var notification = {
+            SongName: value.SongName,
+            ArtistName: value.ArtistName,
+            SpotifyImageURL: value.SpotifyImageURL,
+            Approved: value.Approved,
+            DateTime: value.DateTime,
+            NotificationRead: value.NotificationRead,
+            SkeeterResponse: value.SkeeterResponse ? value.SkeeterResponse : ''
+          }
+          userNotifications.unshift(notification);
+        });
+      }
+      // Live Requests Check
+      if(data.Requests.LiveRequests != null){
+        Object.entries(data.Requests.LiveRequests).forEach(([key, value]) => {
+          if(!value.NotificationRead)
+            unreadNotificationCount++;
+            var notification = {
+            SongName: value.SongName,
+            ArtistName: value.ArtistName,
+            SpotifyImageURL: value.SpotifyImageURL,
+            Approved: value.Approved,
+            DateTime: value.DateTime,
+            NotificationRead: value.NotificationRead ? value.NotificationRead : false,
+            SkeeterResponse: value.SkeeterResponse ? value.SkeeterResponse : '',
+          }
+          userNotifications.unshift(notification);
+        });
+      }
+    }
+    if(notificationBellRef.current != null){
+      var previousUnreadNotificationCount = notificationBellRef.current.getAttribute('data-count');
+      notificationBellRef.current.setAttribute('data-count', unreadNotificationCount >= 10 ? '9+' : unreadNotificationCount);
+      if(unreadNotificationCount > 0){
+        notificationBellRef.current.classList.add('show-count');
+        if(unreadNotificationCount > previousUnreadNotificationCount)
+          notificationBellRef.current.classList.add('notify');
+      }
+    }
+  }
+
   return (
     <div>
       <nav id='navBar'>
@@ -116,11 +204,45 @@ const NavBar = props => {
           </NavLink>
             {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
         </div>
+        <div id='notificationBell' ref={notificationBellRef} className='notificationBell' onClick={(e) => ToggleNotificationMenu(e.target)}>
+          <div className='notificationPopupDiv'>
+            <div className='notificationsContainerDiv'>
+              <div className='notificationSectionDiv newNotificationDiv'>
+                <div className='notificationImageDiv'>
+                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
+                </div>
+                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
+                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
+              </div>
+              <div className='notificationSectionDiv newNotificationDiv'>
+                <div className='notificationImageDiv'>
+                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
+                </div>
+                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
+                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
+              </div>
+              <div className='notificationSectionDiv'>
+                <div className='notificationImageDiv'>
+                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
+                </div>
+                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
+                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
+              </div>
+              <div className='notificationSectionDiv'>
+                <div className='notificationImageDiv'>
+                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
+                </div>
+                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
+                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id='menuButtonContainer'>
           <div id='menuButtonDiv' ref={menuButtonDivRef} className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'} onClick={(e) => ToggleMenuPanel(e.target)}>
-            <div className="bar1"></div>
-            <div className="bar2"></div>
-            <div className="bar3"></div>
+            <div className='bar1'></div>
+            <div className='bar2'></div>
+            <div className='bar3'></div>
           </div>
         </div>
         <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>

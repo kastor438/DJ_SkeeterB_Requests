@@ -16,6 +16,9 @@
       },
       ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
     },
+    "Keys": {
+      ".write": true
+    },
     "PreapprovalRequests": {
       ".write": true
     },
@@ -42,7 +45,7 @@
     },
     "Users": {
       "$uid": {
-        ".write": "auth.uid === $uid"
+        ".write": "auth.uid === $uid || auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
       }
     }
   }
