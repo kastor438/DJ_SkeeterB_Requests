@@ -67,6 +67,8 @@
   padding: 25px 10px;
   background-color: #F4F4F4;
   transition: 0.5s;
+  border-style: none none solid none;
+  border-color: #00000080;
 }
 
 .notificationImageDiv{
@@ -97,8 +99,7 @@
   color: grey;
 }
 
-.newNotificationDiv{
-  border-style: none none solid none;
+.notificationSectionDiv.newNotificationDiv{
   border-color: red;
 }
 
