@@ -273,8 +273,9 @@ const Settings = props => {
             </div>
           </div>
           <div id='socialsSettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[3]}>
-            <div>
-              <h3>Socials</h3>
+            <h3>Socials</h3>
+            <div id='linkedSocialsDiv'>
+
             </div>
           </div>
           <div id='securitySettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[4]}>
