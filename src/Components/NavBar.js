@@ -140,6 +140,7 @@ const NavBar = props => {
       return;
     if(isNotificationMenuOpenRef.current == true){
       notificationBellRef.current.classList.remove('openMenu');
+      var previousUnreadNotificationCount = notificationBellRef.current.setAttribute('data-count', 0);
       notificationBellRef.current.classList.remove('showCount')
       if(auth.currentUser != null){
         for(var i = 0; i < userNotifications.length; i++){
