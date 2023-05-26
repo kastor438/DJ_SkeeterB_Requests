@@ -21,7 +21,61 @@
 
 .notificationBell{
   transition: 0.5s;
-  cursor: pointer
+  cursor: pointer;
+  height: inherit;
+  color: #f2f2f2;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  position: relative;
+}
+
+.notificationBell::after {
+  min-width: 14px;
+  height: 14px;
+  content: attr(data-count);
+  background-color: #ed657d;
+  font-family: monospace;
+  font-weight: bolt;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  transition: .3s;
+  opacity: 0;
+  transform: scale(.5);
+  will-change: opacity, transform;
+}
+
+.notificationBell.showCount::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.notificationBell::before {
+  content: "\f0f3";
+  font-family: "FontAwesome";
+  display: block;
+}
+
+.notificationBell.notify::before {
+  animation: bell 1s ease-out;
+  transform-origin: center top;
+}
+
+@keyframes bell {
+  0% {transform: rotate(35deg);}
+  12.5% {transform: rotate(-30deg);}
+  25% {transform: rotate(25deg);}
+  37.5% {transform: rotate(-20deg);}
+  50% {transform: rotate(15deg);}
+  62.5% {transform: rotate(-10deg)}
+  75% {transform: rotate(5deg)}
+  100% {transform: rotate(0);}  
 }
 
 .notificationPopupDiv{
@@ -84,13 +138,13 @@
 
 .notificationText{
   vertical-align: top;
-  font-size: 1.25rem;
+  font-size: 0.7em;
   padding: 5px 10px 0px 115px;
   color: black;
 }
 
 .notificationSubtext{
-  font-size: 1rem;
+  font-size: 0.5em;
   color: grey;
 }
 

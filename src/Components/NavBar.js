@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useEffect, useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { getDatabase, ref, onValue, get, child } from 'firebase/database';
+import { getDatabase, ref, onValue, get, child, set, update } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -25,9 +25,12 @@ const NavBar = props => {
   const [isMenuPanelOpen, SetIsMenuPanelOpen] = useState(false);
   const [userInfo, SetUserInfo] = useState();
   const [skeeterSpecificLinks, SkeeterSpecificLinksLink] = useState([]);
-
+  const [userNotifications, SetUserNotifications] = useState([]);
+  const [userNotificationElements, SetUserNotificationElements] = useState([]);
+  
   const isMenuPanelOpenRef = useRef(false);
   isMenuPanelOpenRef.current = isMenuPanelOpen;
+
   const isNotificationMenuOpenRef = useRef(false);
   const notificationElements = useRef([]);
 
@@ -137,23 +140,36 @@ const NavBar = props => {
       return;
     if(isNotificationMenuOpenRef.current == true){
       notificationBellRef.current.classList.remove('openMenu');
+      notificationBellRef.current.classList.remove('showCount')
+      if(auth.currentUser != null){
+        for(var i = 0; i < userNotifications.length; i++){
+          update(ref(db, `Users/${auth.currentUser.uid}/Requests/${userNotifications[i].LiveRequest ? 'LiveRequests' : 'History'}/${userNotifications[i].RequestKey}/`), {
+            NotificationRead: true
+          });
+        }
+      }
     }
     else{
       notificationBellRef.current.classList.add('openMenu');
+      // notificationBellRef.current.setAttribute('data-count', 'X');
+      // notificationBellRef.current.classList.add('showCount');
     }
     isNotificationMenuOpenRef.current = !isNotificationMenuOpenRef.current;
   }
 
   function UpdateNotifications(data){
     var unreadNotificationCount = 0;
-    var userNotifications = [];
+    var newUserNotifications = [];
     if(data != null && data.Requests != null){
       // History Check
       if(data.Requests.History != null){
         Object.entries(data.Requests.History).forEach(([key, value]) => {
-          if(!value.NotificationRead)
+          if(!value.NotificationRead){
             unreadNotificationCount++;
+          }
           var notification = {
+            RequestKey: key,
+            LiveRequest: false,
             SongName: value.SongName,
             ArtistName: value.ArtistName,
             SpotifyImageURL: value.SpotifyImageURL,
@@ -162,15 +178,18 @@ const NavBar = props => {
             NotificationRead: value.NotificationRead,
             SkeeterResponse: value.SkeeterResponse ? value.SkeeterResponse : ''
           }
-          userNotifications.unshift(notification);
+          newUserNotifications.unshift(notification);
         });
       }
       // Live Requests Check
       if(data.Requests.LiveRequests != null){
         Object.entries(data.Requests.LiveRequests).forEach(([key, value]) => {
-          if(!value.NotificationRead)
+          if(!value.NotificationRead){
             unreadNotificationCount++;
-            var notification = {
+          }
+          var notification = {
+            RequestKey: key,
+            LiveRequest: true,
             SongName: value.SongName,
             ArtistName: value.ArtistName,
             SpotifyImageURL: value.SpotifyImageURL,
@@ -179,17 +198,59 @@ const NavBar = props => {
             NotificationRead: value.NotificationRead ? value.NotificationRead : false,
             SkeeterResponse: value.SkeeterResponse ? value.SkeeterResponse : '',
           }
-          userNotifications.unshift(notification);
+          newUserNotifications.unshift(notification);
         });
       }
+    }
+    // Create Notification Elements
+    var newUserNotificationsElements = [];
+    for(var i = 0; i < newUserNotifications.length; i++){
+      var dateTime = new Date(newUserNotifications[i].DateTime)
+      var notificationElement =
+        React.createElement('div', {key : `requestNotification${newUserNotifications[i].RequestKey}`, className : 'notificationSectionDiv' + (!newUserNotifications[i].NotificationRead ? ' newNotificationDiv' : '')},
+          React.createElement('div', {className : 'notificationImageDiv'},
+            React.createElement('img', {className : 'notificationImage', src : newUserNotifications[i].SpotifyImageURL})
+          ),
+          (newUserNotifications[i].LiveRequest ? 
+            React.createElement('div', {className : 'notificationText'}, 
+              'Your request for ',
+              React.createElement('b', {}, newUserNotifications[i].SongName),
+              ' by ',
+              React.createElement('b', {}, newUserNotifications[i].ArtistName),
+              (newUserNotifications[i].Approved ?
+              ' has recently been approved!'
+              :
+              ' is waiting for approval...')
+            )
+          :
+            React.createElement('div', {className : 'notificationText'}, 
+              'Your request for ',
+              React.createElement('b', {}, newUserNotifications[i].SongName),
+              ' by ',
+              React.createElement('b', {}, newUserNotifications[i].ArtistName),
+              (newUserNotifications[i].Approved ?
+              ' was approved!'
+              :
+              ' was denied.')
+            )
+          ),
+          React.createElement('div', {className : 'notificationText notificationSubtext'}, `${dateTime.getFullYear()}/${dateTime.getMonth() + 1}/${dateTime.getDate()} - ${dateTime.toLocaleTimeString()}`)
+        );
+
+      newUserNotificationsElements.push(notificationElement);
+      SetUserNotifications(newUserNotifications);
+      SetUserNotificationElements(newUserNotificationsElements);
     }
     if(notificationBellRef.current != null){
       var previousUnreadNotificationCount = notificationBellRef.current.getAttribute('data-count');
       notificationBellRef.current.setAttribute('data-count', unreadNotificationCount >= 10 ? '9+' : unreadNotificationCount);
       if(unreadNotificationCount > 0){
-        notificationBellRef.current.classList.add('show-count');
+        notificationBellRef.current.classList.add('showCount');
         if(unreadNotificationCount > previousUnreadNotificationCount)
           notificationBellRef.current.classList.add('notify');
+      }
+      else{
+        notificationBellRef.current.classList.remove('showCount');
       }
     }
   }
@@ -207,34 +268,14 @@ const NavBar = props => {
         <div id='notificationBell' ref={notificationBellRef} className='notificationBell' onClick={(e) => ToggleNotificationMenu(e.target)}>
           <div className='notificationPopupDiv'>
             <div className='notificationsContainerDiv'>
-              <div className='notificationSectionDiv newNotificationDiv'>
+              {/* <div className='notificationSectionDiv newNotificationDiv'>
                 <div className='notificationImageDiv'>
                   <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
                 </div>
                 <div className='notificationText'>James liked your post: "Pure css notification box"</div>
                 <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
-              </div>
-              <div className='notificationSectionDiv newNotificationDiv'>
-                <div className='notificationImageDiv'>
-                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
-                </div>
-                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
-                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
-              </div>
-              <div className='notificationSectionDiv'>
-                <div className='notificationImageDiv'>
-                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
-                </div>
-                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
-                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
-              </div>
-              <div className='notificationSectionDiv'>
-                <div className='notificationImageDiv'>
-                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
-                </div>
-                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
-                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
-              </div>
+              </div> */}
+              {userNotificationElements}
             </div>
           </div>
         </div>
