@@ -78,6 +78,21 @@
   100% {transform: rotate(0);}  
 }
 
+.notificationBackgroundOverlayDiv{
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 998;
+  background-color: #00000050;
+}
+
+.notificationBackgroundOverlayDiv.openMenu{
+  display: block;
+}
+
 .notificationPopupDiv{
   width: 80vw;
   height: 0px;

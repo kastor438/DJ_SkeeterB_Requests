@@ -42,6 +42,7 @@ const NavBar = props => {
   const newEventLinkRef = useRef();
   const settingsLinkRef = useRef();
   const notificationBellRef = useRef();
+  const notificationBackgroundOverlayDivRef = useRef();
   
   const db = getDatabase();
   const dbRef = ref(getDatabase());
@@ -136,11 +137,12 @@ const NavBar = props => {
   }
 
   function ToggleNotificationMenu(element){
-    if(element.id != 'notificationBell')
+    if(element.id != 'notificationBell' && element.id != 'notificationBackgroundOverlayDiv')
       return;
     if(isNotificationMenuOpenRef.current == true){
       notificationBellRef.current.classList.remove('openMenu');
-      var previousUnreadNotificationCount = notificationBellRef.current.setAttribute('data-count', 0);
+      notificationBackgroundOverlayDivRef.current.classList.remove('openMenu');
+      notificationBellRef.current.setAttribute('data-count', 0);
       notificationBellRef.current.classList.remove('showCount')
       if(auth.currentUser != null){
         for(var i = 0; i < userNotifications.length; i++){
@@ -152,8 +154,7 @@ const NavBar = props => {
     }
     else{
       notificationBellRef.current.classList.add('openMenu');
-      // notificationBellRef.current.setAttribute('data-count', 'X');
-      // notificationBellRef.current.classList.add('showCount');
+      notificationBackgroundOverlayDivRef.current.classList.add('openMenu');
     }
     isNotificationMenuOpenRef.current = !isNotificationMenuOpenRef.current;
   }
@@ -267,15 +268,9 @@ const NavBar = props => {
             {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
         </div>
         <div id='notificationBell' ref={notificationBellRef} className='notificationBell' onClick={(e) => ToggleNotificationMenu(e.target)}>
+          <div id='notificationBackgroundOverlayDiv' className='notificationBackgroundOverlayDiv' ref={notificationBackgroundOverlayDivRef}/>
           <div className='notificationPopupDiv'>
             <div className='notificationsContainerDiv'>
-              {/* <div className='notificationSectionDiv newNotificationDiv'>
-                <div className='notificationImageDiv'>
-                  <img className='notificationImage' src = 'https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg'/>
-                </div>
-                <div className='notificationText'>James liked your post: "Pure css notification box"</div>
-                <div className='notificationText notificationSubtext'>11/7 - 2:30 pm</div>
-              </div> */}
               {userNotificationElements}
             </div>
           </div>
