@@ -19,13 +19,17 @@
   border-radius: 5px
 }
 
+.notificationDiv.noAuthentication .notificationBell{
+  display: none;
+}
+
 .notificationBell{
   transition: 0.5s;
   cursor: pointer;
-  height: inherit;
+  height: 100%;
   color: #f2f2f2;
   display: flex;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
   position: relative;
 }
@@ -58,16 +62,17 @@
 
 .notificationBell::before {
   content: "\f0f3";
+  font-size: 36px;
   font-family: "FontAwesome";
   display: block;
 }
 
 .notificationBell.notify::before {
-  animation: bell 1s ease-out;
+  animation: ringBell 1s ease-out;
   transform-origin: center top;
 }
 
-@keyframes bell {
+@keyframes ringBell {
   0% {transform: rotate(35deg);}
   12.5% {transform: rotate(-30deg);}
   25% {transform: rotate(25deg);}
@@ -175,4 +180,16 @@
 
 .notificationSectionDiv:hover{
   background-color: #BFBFBF;
+}
+
+@media only screen and (max-width: 800px){
+  .notificationBell::before {
+    font-size: 30px;
+  }
+}
+
+@media only screen and (max-width: 480px){
+  .notificationBell::before {
+    font-size: 24px;
+  }
 }

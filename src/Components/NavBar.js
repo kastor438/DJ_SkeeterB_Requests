@@ -166,6 +166,7 @@ const NavBar = props => {
       // History Check
       if(data.Requests.History != null){
         Object.entries(data.Requests.History).forEach(([key, value]) => {
+          console.log(value);
           if(!value.NotificationRead){
             unreadNotificationCount++;
           }
@@ -275,11 +276,13 @@ const NavBar = props => {
           </NavLink>
             {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
         </div>
-        <div id='notificationBell' ref={notificationBellRef} className='notificationBell' onClick={(e) => ToggleNotificationMenu(e.target)}>
-          <div id='notificationBackgroundOverlayDiv' className='notificationBackgroundOverlayDiv' ref={notificationBackgroundOverlayDivRef}/>
-          <div className='notificationPopupDiv'>
-            <div className='notificationsContainerDiv'>
-              {userNotificationElements}
+        <div className={auth.currentUser != null ? 'notificationDiv' : 'notificationDiv noAuthentication'}>
+          <div id='notificationBell' ref={notificationBellRef} className={auth.currentUser !== null ? 'notificationBell' : 'notificationBell noAuthentication'} onClick={(e) => ToggleNotificationMenu(e.target)}>
+            <div id='notificationBackgroundOverlayDiv' className='notificationBackgroundOverlayDiv' ref={notificationBackgroundOverlayDivRef}/>
+            <div className='notificationPopupDiv'>
+              <div className='notificationsContainerDiv'>
+                {userNotificationElements}
+              </div>
             </div>
           </div>
         </div>

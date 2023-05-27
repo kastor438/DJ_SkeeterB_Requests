@@ -15,10 +15,14 @@
   align-items: center;
 }
 
+/* #navBar, #navBar div{
+  border: 1px solid red;
+} */
+
 #logoTitleDiv{
   display: flex;
   align-items: center;
-  width: 90%;
+  width: 100%;
   height: fit-content;
   /* border: 1px solid red; */
 }
@@ -114,21 +118,18 @@
   border: 1px solid rgb(10, 173, 248);
 }
 
-/* #menuButtonContainer{
+#menuButtonContainer{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
-} */
+}
 
 #menuButtonDiv{
   z-index: 200;
   position: fixed;
-  right: 4vw;
-  top: 8vh;
   cursor: pointer;
   width: max-content;
-  /* border: 1px solid red; */
   transition: transform .4s cubic-bezier(0, .52, 0, 1);
 }
 
@@ -281,10 +282,6 @@ a.activeLink{
     font-size: 52px;
   }
 
-  #menuButtonDiv{
-    top: 7vh;
-  }
-
   .bar1, .bar2, .bar3{
     width: 45px;
     height: 7px;
@@ -345,17 +342,9 @@ a.activeLink{
   #pageHeader{
     font-size: 44px;
   }
-
-  #menuButtonDiv{
-    top: 6vh;
-  }
 }
 
 @media only screen and (max-width: 1000px){
-  #menuButtonDiv{
-    top: 5vh;
-  }
-
   #menuButtonDiv.openMenuPanel .bar1,
   #menuButtonDiv.openMenuPanel .bar2,
   #menuButtonDiv.openMenuPanel .bar3{
@@ -463,10 +452,6 @@ a.activeLink{
     margin: 5px 0;
   }
 
-  #menuButtonDiv{
-    top: 4vh;
-  }
-
   #slidingMenuPanel{
     width: 100vw;
     right: -100vw;
@@ -521,10 +506,6 @@ a.activeLink{
 }
 
 @media only screen and (max-width: 480px){
-  #menuButtonDiv{
-    top: 3vh;
-  }
-
   .bar1, .bar2, .bar3{
     width: 35px;
     height: 5px;

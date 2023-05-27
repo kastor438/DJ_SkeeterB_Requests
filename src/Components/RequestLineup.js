@@ -656,7 +656,8 @@ const RequestLineup = props => {
           Upvotes: songData.Upvotes,
           Downvotes: songData.Downvotes,
           RequestedBy: songData.RequestedBy,
-          DateTime : requestDateTime.toString()
+          DateTime : requestDateTime.toString(),
+          RequestNotes : songData.RequestNotes
         });
         if(songData.RequestedBy != ''){
           update(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${selectedPreapprovalSongIDsRef.current[i]}/`),{
@@ -686,7 +687,8 @@ const RequestLineup = props => {
           Downvotes: songData.Downvotes,
           RequestedBy: songData.RequestedBy,
           DateTime : songData.DateTime,
-          Approved : false
+          Approved : false,
+          RequestNotes : songData.RequestNotes
         });
         if(songData.RequestedBy != ''){
           set(ref(db, `Users/${songData.RequestedBy}/Requests/History/${selectedPreapprovalSongIDsRef.current[i]}/`), {
@@ -695,7 +697,8 @@ const RequestLineup = props => {
             SpotifyImageURL: songData.SpotifyImageURL,
             DateTime : (new Date()).toString(),
             Approved : false,
-            NotificationRead : false
+            NotificationRead : false,
+            RequestNotes : songData.RequestNotes
           });
           remove(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${selectedPreapprovalSongIDsRef.current[i]}/`));
         }
