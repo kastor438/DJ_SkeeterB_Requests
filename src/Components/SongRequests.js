@@ -335,7 +335,8 @@ const SongRequests = props => {
       SetTrackSpotifyURL('');
       SetTrackImageLink('')
       SetRenderedTracks([]);
-      ToggleNotesSection();
+      if(notesInputSectionDivOpenRef.current)
+        ToggleNotesSection();
     }
   }
 

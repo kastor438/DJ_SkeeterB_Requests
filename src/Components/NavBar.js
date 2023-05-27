@@ -59,13 +59,13 @@ const NavBar = props => {
     SetNavBar();
     
     if(auth.currentUser != null){
-      const dbCurrUserRef = ref(db, `Users/${auth.currentUser.uid}/`);
+      const dbCurrUserRef = ref(db, `Users/${props.authUser.uid}/`);
       onValue(dbCurrUserRef, (snapshot) => {
-        // console.log(snapshot.val());
+        // console.log(props.authUser.uid)
         UpdateNotifications(snapshot.val());
       });
 
-      get(child(dbRef, `Users/${auth.currentUser.uid}/`)).then((snapshot) => {
+      get(child(dbRef, `Users/${props.authUser.uid}/`)).then((snapshot) => {
         UpdateNotifications(snapshot.val());
       });
       if((auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
@@ -146,9 +146,11 @@ const NavBar = props => {
       notificationBellRef.current.classList.remove('showCount')
       if(auth.currentUser != null){
         for(var i = 0; i < userNotifications.length; i++){
-          update(ref(db, `Users/${auth.currentUser.uid}/Requests/${userNotifications[i].LiveRequest ? 'LiveRequests' : 'History'}/${userNotifications[i].RequestKey}/`), {
-            NotificationRead: true
-          });
+          if(!userNotifications[i].NotificationRead){
+            update(ref(db, `Users/${auth.currentUser.uid}/Requests/${userNotifications[i].LiveRequest ? 'LiveRequests' : 'History'}/${userNotifications[i].RequestKey}/`), {
+              NotificationRead: true
+            });
+          }
         }
       }
     }
@@ -160,13 +162,14 @@ const NavBar = props => {
   }
 
   function UpdateNotifications(data){
+    // console.log(data)
     var unreadNotificationCount = 0;
     var newUserNotifications = [];
     if(data != null && data.Requests != null){
       // History Check
       if(data.Requests.History != null){
         Object.entries(data.Requests.History).forEach(([key, value]) => {
-          console.log(value);
+          // console.log(value);
           if(!value.NotificationRead){
             unreadNotificationCount++;
           }
