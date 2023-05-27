@@ -204,45 +204,53 @@ const NavBar = props => {
         });
       }
     }
+    SetUserNotifications(newUserNotifications);
+
     // Create Notification Elements
     var newUserNotificationsElements = [];
-    for(var i = 0; i < newUserNotifications.length; i++){
-      var dateTime = new Date(newUserNotifications[i].DateTime)
-      var notificationElement =
-        React.createElement('div', {key : `requestNotification${newUserNotifications[i].RequestKey}`, className : 'notificationSectionDiv' + (!newUserNotifications[i].NotificationRead ? ' newNotificationDiv' : '')},
-          React.createElement('div', {className : 'notificationImageDiv'},
-            React.createElement('img', {className : 'notificationImage', src : newUserNotifications[i].SpotifyImageURL})
-          ),
-          (newUserNotifications[i].LiveRequest ? 
-            React.createElement('div', {className : 'notificationText'}, 
-              'Your request for ',
-              React.createElement('b', {}, newUserNotifications[i].SongName),
-              ' by ',
-              React.createElement('b', {}, newUserNotifications[i].ArtistName),
-              (newUserNotifications[i].Approved ?
-              ' has recently been approved!'
-              :
-              ' is waiting for approval...')
-            )
-          :
-            React.createElement('div', {className : 'notificationText'}, 
-              'Your request for ',
-              React.createElement('b', {}, newUserNotifications[i].SongName),
-              ' by ',
-              React.createElement('b', {}, newUserNotifications[i].ArtistName),
-              (newUserNotifications[i].Approved ?
-              ' was approved!'
-              :
-              ' was denied.')
-            )
-          ),
-          React.createElement('div', {className : 'notificationText notificationSubtext'}, `${dateTime.getFullYear()}/${dateTime.getMonth() + 1}/${dateTime.getDate()} - ${dateTime.toLocaleTimeString()}`)
-        );
-
-      newUserNotificationsElements.push(notificationElement);
-      SetUserNotifications(newUserNotifications);
-      SetUserNotificationElements(newUserNotificationsElements);
+    if(newUserNotifications.length > 0){
+      for(var i = 0; i < newUserNotifications.length; i++){
+        var dateTime = new Date(newUserNotifications[i].DateTime)
+        var notificationElement =
+          React.createElement('div', {key : `requestNotification${newUserNotifications[i].RequestKey}`, className : 'notificationSectionDiv' + (!newUserNotifications[i].NotificationRead ? ' newNotificationDiv' : '')},
+            React.createElement('div', {className : 'notificationImageDiv'},
+              React.createElement('img', {className : 'notificationImage', src : newUserNotifications[i].SpotifyImageURL})
+            ),
+            (newUserNotifications[i].LiveRequest ? 
+              React.createElement('div', {className : 'notificationText'}, 
+                'Your request for ',
+                React.createElement('b', {}, newUserNotifications[i].SongName),
+                ' by ',
+                React.createElement('b', {}, newUserNotifications[i].ArtistName),
+                (newUserNotifications[i].Approved ?
+                ' has recently been approved!'
+                :
+                ' is waiting for approval...')
+              )
+            :
+              React.createElement('div', {className : 'notificationText'}, 
+                'Your request for ',
+                React.createElement('b', {}, newUserNotifications[i].SongName),
+                ' by ',
+                React.createElement('b', {}, newUserNotifications[i].ArtistName),
+                (newUserNotifications[i].Approved ?
+                ' was approved!'
+                :
+                ' was denied.')
+              )
+            ),
+            React.createElement('div', {className : 'notificationText notificationSubtext'}, `${dateTime.getFullYear()}/${dateTime.getMonth() + 1}/${dateTime.getDate()} - ${dateTime.toLocaleTimeString()}`)
+          );
+        newUserNotificationsElements.push(notificationElement);
+      }
     }
+    else{
+      newUserNotificationsElements.push(
+        React.createElement('h3', {key : 'caughtUpNotificationsHeader', className : 'caughtUpNotificationsHeader'}, `Looks like you're all caught up!`)
+      );
+    }
+    SetUserNotificationElements(newUserNotificationsElements);
+
     if(notificationBellRef.current != null){
       var previousUnreadNotificationCount = notificationBellRef.current.getAttribute('data-count');
       notificationBellRef.current.setAttribute('data-count', unreadNotificationCount >= 10 ? '9+' : unreadNotificationCount);

@@ -85,8 +85,8 @@
   height: 100vh;
   left: 0;
   top: 0;
-  z-index: 998;
-  background-color: #00000050;
+  z-index: 9998;
+  background-color: #00000070;
 }
 
 .notificationBackgroundOverlayDiv.openMenu{
@@ -108,15 +108,16 @@
   -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
   box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
   cursor: context-menu;
-  z-index: 999;
+  z-index: 9999;
 }
 
 .notificationBell.openMenu .notificationPopupDiv{
   height: 50vh
 }
 
-.display{
-  position: relative;
+.caughtUpNotificationsHeader{
+  color: #000000;
+  font-weight: 300;
 }
 
 .notificationsContainerDiv{
