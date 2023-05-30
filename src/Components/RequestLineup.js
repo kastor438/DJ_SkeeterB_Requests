@@ -733,7 +733,7 @@ const RequestLineup = props => {
         SpotifyImageURL: songData.SpotifyImageURL,
         DateTime : requestDateTime.toString(),
         Approved : true,
-        NotificationRead : false
+        NotificationRead : recentSnapshotRef.current.Users[songData.RequestedBy].Requests.LiveRequests[requestkey].NotificationRead
       });
       remove(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${requestkey}/`));
     }

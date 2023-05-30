@@ -55,19 +55,10 @@ const NavBar = props => {
     });
   }, []);
 
-  useEffect(() => {
+  const unsubNotifications = useEffect(() => {
     SetNavBar();
     
     if(auth.currentUser != null){
-      const dbCurrUserRef = ref(db, `Users/${props.authUser.uid}/`);
-      onValue(dbCurrUserRef, (snapshot) => {
-        // console.log(props.authUser.uid)
-        UpdateNotifications(snapshot.val());
-      });
-
-      get(child(dbRef, `Users/${props.authUser.uid}/`)).then((snapshot) => {
-        UpdateNotifications(snapshot.val());
-      });
       if((auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
         var skeeterLinks = 
           [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
@@ -78,6 +69,11 @@ const NavBar = props => {
           )];
           SkeeterSpecificLinksLink(skeeterLinks);
       }
+      const dbCurrUserRef = ref(db, `Users/${props.authUser.uid}/`);
+      return onValue(dbCurrUserRef, (snapshot) => {
+        // console.log(props.authUser.uid)
+        UpdateNotifications(snapshot.val());
+      });
     }
     else{
       SkeeterSpecificLinksLink(null);
