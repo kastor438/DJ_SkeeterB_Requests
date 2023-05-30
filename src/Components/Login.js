@@ -26,12 +26,31 @@ const Login = props => {
   const userEmailRef = useRef();
   const userPasswordRef = useRef();
 
+  // DOM Refs
+  const loginDisplayInfoLine1Ref = useRef();
+  const loginDisplayInfoLine2Ref = useRef();
+
   const LoginToFirebase = async () => {
     try {
       await signInWithEmailAndPassword(auth, userEmailRef.current.value, userPasswordRef.current.value);
       SetNavigateToHome(true);
     } catch (err) {
-      console.error(err);
+      if(err.code == 'auth/too-many-requests'){
+        loginDisplayInfoLine1Ref.current.innerHTML = `Exceeded Login Attempts`;
+        loginDisplayInfoLine2Ref.current.innerHTML = ``;
+      }
+      else if(err.code == 'auth/wrong-password'){
+        loginDisplayInfoLine1Ref.current.innerHTML = `Incorrect Password`;
+        loginDisplayInfoLine2Ref.current.innerHTML = ``;
+      }
+      else if(err.code == 'auth/user-not-found'){
+        loginDisplayInfoLine1Ref.current.innerHTML = `No Account Found`
+        loginDisplayInfoLine2Ref.current.innerHTML = ``;
+      }
+      else if(err.code == 'auth/invalid-email'){
+        loginDisplayInfoLine1Ref.current.innerHTML = `Invalid Email Address`;
+        loginDisplayInfoLine2Ref.current.innerHTML = ``;
+      }
     }
   };
 
@@ -63,6 +82,10 @@ const Login = props => {
         <span id='notSignedUpSpan'>
           <Link to={`/Login/ForgotPassword`} state={{ userEmail: userEmail }}>Forgot password?</Link>
         </span>
+      </div>
+      <div id='loginDisplayDiv'>
+        <h4 id='loginDisplayInfoLine1' ref={loginDisplayInfoLine1Ref}></h4>
+        <h4 id='loginDisplayInfoLine2' ref={loginDisplayInfoLine2Ref}></h4>
       </div>
     </div>
   );

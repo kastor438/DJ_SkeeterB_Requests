@@ -15,10 +15,14 @@
   align-items: center;
 }
 
+/* #navBar, #navBar div{
+  border: 1px solid red;
+} */
+
 #logoTitleDiv{
   display: flex;
   align-items: center;
-  width: 90%;
+  width: 100%;
   height: fit-content;
   /* border: 1px solid red; */
 }
@@ -42,63 +46,6 @@
   font-family: 'Merienda';
   font-size: 68px;
   /* border: 1px solid red; */
-}
-
-.notificationBell {
-  height: inherit;
-  color: #f2f2f2;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  position: relative;
-}
-
-.notificationBell::after {
-  min-width: 14px;
-  height: 14px;
-  content: attr(data-count);
-  background-color: #ed657d;
-  font-family: monospace;
-  font-weight: bolt;
-  font-size: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  transition: .3s;
-  opacity: 0;
-  transform: scale(.5);
-  will-change: opacity, transform;
-}
-
-.notificationBell.show-count::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.notificationBell::before {
-  content: "\f0f3";
-  font-family: "FontAwesome";
-  display: block;
-}
-
-.notificationBell.notify::before {
-  animation: bell 1s ease-out;
-  transform-origin: center top;
-}
-
-@keyframes bell {
-  0% {transform: rotate(35deg);}
-  12.5% {transform: rotate(-30deg);}
-  25% {transform: rotate(25deg);}
-  37.5% {transform: rotate(-20deg);}
-  50% {transform: rotate(15deg);}
-  62.5% {transform: rotate(-10deg)}
-  75% {transform: rotate(5deg)}
-  100% {transform: rotate(0);}  
 }
 
 #loginSignupDiv{
@@ -171,21 +118,18 @@
   border: 1px solid rgb(10, 173, 248);
 }
 
-/* #menuButtonContainer{
+#menuButtonContainer{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
-} */
+}
 
 #menuButtonDiv{
   z-index: 200;
   position: fixed;
-  right: 4vw;
-  top: 8vh;
   cursor: pointer;
   width: max-content;
-  /* border: 1px solid red; */
   transition: transform .4s cubic-bezier(0, .52, 0, 1);
 }
 
@@ -338,10 +282,6 @@ a.activeLink{
     font-size: 52px;
   }
 
-  #menuButtonDiv{
-    top: 7vh;
-  }
-
   .bar1, .bar2, .bar3{
     width: 45px;
     height: 7px;
@@ -402,17 +342,9 @@ a.activeLink{
   #pageHeader{
     font-size: 44px;
   }
-
-  #menuButtonDiv{
-    top: 6vh;
-  }
 }
 
 @media only screen and (max-width: 1000px){
-  #menuButtonDiv{
-    top: 5vh;
-  }
-
   #menuButtonDiv.openMenuPanel .bar1,
   #menuButtonDiv.openMenuPanel .bar2,
   #menuButtonDiv.openMenuPanel .bar3{
@@ -520,10 +452,6 @@ a.activeLink{
     margin: 5px 0;
   }
 
-  #menuButtonDiv{
-    top: 4vh;
-  }
-
   #slidingMenuPanel{
     width: 100vw;
     right: -100vw;
@@ -578,10 +506,6 @@ a.activeLink{
 }
 
 @media only screen and (max-width: 480px){
-  #menuButtonDiv{
-    top: 3vh;
-  }
-
   .bar1, .bar2, .bar3{
     width: 35px;
     height: 5px;

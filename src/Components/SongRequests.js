@@ -9,10 +9,16 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
 import axios from 'axios';
+import fontawesome from '@fortawesome/fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMessage, faClipboard, faNoteSticky, faComments, faClose} from '@fortawesome/free-solid-svg-icons'
 
 // Component Imports
 import RequestLineup from './RequestLineup';
 import SkeeterPanel from './SkeeterPanel';
+
+fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments, faClose);
+
 
 require('upvote/lib/jquery.upvote.js');
 // require('upvote/lib/jquery.upvote.css');
@@ -90,6 +96,8 @@ const SongRequests = props => {
   const trackStatsRef = useRef(false);
   trackStatsRef.current = trackStats;
 
+  const notesInputSectionDivOpenRef = useRef(false);
+
   const db = getDatabase();
   const dbRef = ref(getDatabase());
   const invalidChars = '\'"\\/';
@@ -103,12 +111,14 @@ const SongRequests = props => {
   const customTabRef = useRef();
   const songNameInputRef = useRef();
   const artistNameInputRef = useRef();
+  const requestNotesInputRef = useRef();
   const tracksDivRef = useRef();
   const renderedTracksDivRef = useRef();
   const submitSongRequestButtonRef = useRef();
   const submissionTextRef = useRef();
   const popupDivRef = useRef();
   const popupSpanRef = useRef();
+  const notesInputSectionDivRef = useRef();
 
   useEffect(() => {
     var currentUrl = window.location.href;
@@ -296,30 +306,42 @@ const SongRequests = props => {
     }
   }
 
+  function ToggleNotesSection(){
+    if(notesInputSectionDivRef.current != null){
+      if(notesInputSectionDivOpenRef.current){
+        notesInputSectionDivRef.current.classList.remove('openNotes');
+      }
+      else{
+        notesInputSectionDivRef.current.classList.add('openNotes');
+      }
+      notesInputSectionDivOpenRef.current = !notesInputSectionDivOpenRef.current;
+    }
+  }
+
   async function SubmitRequest(){
     if(canSubmitRef.current){
       if(spotifyActiveRef.current){ 
-        AddRequest(trackNameRef.current, artistNameRef.current, trackSpotifyURLRef.current, trackImageLinkRef.current);
+        AddRequest(trackNameRef.current, artistNameRef.current, trackSpotifyURLRef.current, trackImageLinkRef.current, requestNotesInputRef.current.value);
       }
       else if(customActiveRef.current){
-        AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '');
+        AddRequest(inputSongNameRef.current, inputArtistNameRef.current, '', '', requestNotesInputRef.current.value);
       }
       
       songNameInputRef.current.value = '';
       artistNameInputRef.current.value = '';
-
+      requestNotesInputRef.current.value = '';
       SetInputSongName('');
       SetInputArtistName('');
       SetTrackSpotifyURL('');
       SetTrackImageLink('')
       SetRenderedTracks([]);
+      if(notesInputSectionDivOpenRef.current)
+        ToggleNotesSection();
     }
   }
 
-  function AddRequest(songName, artistName, spotifyURL, spotifyImageLink){
+  function AddRequest(songName, artistName, spotifyURL, spotifyImageLink, requestNotes){
     var nextSongKey = 1;
-    var preapprovalSongIDs = [];
-    var songRequests = [];
     var prevRequestCount = 0;
     var requestedByUID = (auth.currentUser != null ? auth.currentUser.uid : '');
     var newDateTime = (new Date()).toString();
@@ -353,8 +375,6 @@ const SongRequests = props => {
           var songInPreapprovalKey = -1;
           if(snapshot.val().PreapprovalRequests){
             Object.entries(snapshot.val().PreapprovalRequests).forEach(([key, value]) => {
-              preapprovalSongIDs.push(key);
-              songRequests.push(value);
               if(!songInPreapproval && value.SongName === songName && value.ArtistName === artistName){
                 songInPreapproval = true;
                 songInPreapprovalKey = key;
@@ -381,7 +401,8 @@ const SongRequests = props => {
               Downvotes: 0,
               RequestedBy: requestedByUID,
               DateTime : newDateTime,
-              Approved : false
+              Approved : false,
+              RequestNotes : requestNotes
             });
             set(ref(db, `Keys/LatestRequestKey/`), nextSongKey)
             if(requestedByUID != ''){
@@ -391,7 +412,8 @@ const SongRequests = props => {
                 SpotifyImageURL: spotifyImageLink,
                 DateTime : newDateTime,
                 NotificationRead: true,
-                Approved : false
+                Approved : false,
+                RequestNotes : requestNotes
               });
             }
             submissionTextRef.current.innerHTML = "Request Sent!";
@@ -409,7 +431,8 @@ const SongRequests = props => {
           Downvotes: 0,
           RequestedBy: requestedByUID,
           DateTime : newDateTime,
-          Approved : false
+          Approved : false,
+          RequestNotes : requestNotes
         });
         set(ref(db, `Keys/LatestRequestKey/`), nextSongKey)
         if(requestedByUID != ''){
@@ -419,7 +442,8 @@ const SongRequests = props => {
             SpotifyImageURL: spotifyImageLink,
             DateTime : newDateTime,
             NotificationRead: true,
-            Approved : false
+            Approved : false,
+            RequestNotes : requestNotes
           });
         }
         submissionTextRef.current.innerHTML = "Request Sent!";
@@ -617,6 +641,15 @@ const SongRequests = props => {
                   <span className='label'>Artist</span>
                   <span className='focus-bg'></span>
                 </label>
+              </div>
+              <div id='requestNotesDiv'>
+                <div id='requestNotesButtonDiv'>
+                  <button className='requestNotesButton' onClick={() => ToggleNotesSection()}><FontAwesomeIcon icon={faComments} /> Notes</button>
+                </div>
+                <div id='notesInputSectionDiv' ref={notesInputSectionDivRef}>
+                  <textarea id='requestNotesInput' ref={requestNotesInputRef} className='requestNotesInput' name='requestNotesInput' maxLength={100} rows={5} placeholder="&nbsp;" autoComplete="off"/>
+                  <span className='focus-bg'></span>
+                </div>
               </div>
               <div id='tracksDiv' ref={tracksDivRef}>
                 <div id='renderedTracksDiv' ref={renderedTracksDivRef}>

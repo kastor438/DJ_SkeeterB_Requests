@@ -19,9 +19,83 @@
   border-radius: 5px
 }
 
+.notificationDiv.noAuthentication .notificationBell{
+  display: none;
+}
+
 .notificationBell{
   transition: 0.5s;
-  cursor: pointer
+  cursor: pointer;
+  height: 100%;
+  color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.notificationBell::after {
+  min-width: 14px;
+  height: 14px;
+  content: attr(data-count);
+  background-color: #ed657d;
+  font-family: monospace;
+  font-weight: bolt;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  transition: .3s;
+  opacity: 0;
+  transform: scale(.5);
+  will-change: opacity, transform;
+}
+
+.notificationBell.showCount::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.notificationBell::before {
+  content: "\f0f3";
+  font-size: 36px;
+  font-family: "FontAwesome";
+  display: block;
+}
+
+.notificationBell.notify::before {
+  animation: ringBell 1s ease-out;
+  transform-origin: center top;
+}
+
+@keyframes ringBell {
+  0% {transform: rotate(35deg);}
+  12.5% {transform: rotate(-30deg);}
+  25% {transform: rotate(25deg);}
+  37.5% {transform: rotate(-20deg);}
+  50% {transform: rotate(15deg);}
+  62.5% {transform: rotate(-10deg)}
+  75% {transform: rotate(5deg)}
+  100% {transform: rotate(0);}  
+}
+
+.notificationBackgroundOverlayDiv{
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 9998;
+  background-color: #00000070;
+}
+
+.notificationBackgroundOverlayDiv.openMenu{
+  display: block;
 }
 
 .notificationPopupDiv{
@@ -39,15 +113,16 @@
   -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
   box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
   cursor: context-menu;
-  z-index: 999;
+  z-index: 9999;
 }
 
 .notificationBell.openMenu .notificationPopupDiv{
   height: 50vh
 }
 
-.display{
-  position: relative;
+.caughtUpNotificationsHeader{
+  color: #000000;
+  font-weight: 300;
 }
 
 .notificationsContainerDiv{
@@ -84,13 +159,13 @@
 
 .notificationText{
   vertical-align: top;
-  font-size: 1.25rem;
+  font-size: 0.7em;
   padding: 5px 10px 0px 115px;
   color: black;
 }
 
 .notificationSubtext{
-  font-size: 1rem;
+  font-size: 0.5em;
   color: grey;
 }
 
@@ -105,4 +180,16 @@
 
 .notificationSectionDiv:hover{
   background-color: #BFBFBF;
+}
+
+@media only screen and (max-width: 800px){
+  .notificationBell::before {
+    font-size: 30px;
+  }
+}
+
+@media only screen and (max-width: 480px){
+  .notificationBell::before {
+    font-size: 24px;
+  }
 }
