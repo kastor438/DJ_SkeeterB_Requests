@@ -11,13 +11,13 @@ import Fade from '@mui/material/Zoom';
 import axios from 'axios';
 import fontawesome from '@fortawesome/fontawesome'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage, faClipboard, faNoteSticky, faComments } from '@fortawesome/free-solid-svg-icons'
+import { faMessage, faClipboard, faNoteSticky, faComments, faClose} from '@fortawesome/free-solid-svg-icons'
 
 // Component Imports
 import RequestLineup from './RequestLineup';
 import SkeeterPanel from './SkeeterPanel';
 
-fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments);
+fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments, faClose);
 
 
 require('upvote/lib/jquery.upvote.js');

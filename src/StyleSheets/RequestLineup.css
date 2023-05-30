@@ -138,6 +138,10 @@
   font-size: 16px;
 }
 
+.lineupSong.attachedRequestNotes{
+  /* grid-template-rows: 2fr 1fr; */
+}
+
 .lineupSongImageDiv{
   z-index: 10;
   margin: 3% 0 0 3%;
@@ -310,6 +314,21 @@ div.upvote a.star.star-on {
   border-radius: 30px;
   opacity: 50%;
     /* border: 1px solid blue; */
+}
+
+.requestNotesDiv{
+  grid-column-start: 1;
+  grid-column-end: 5;
+  margin: 0 5% 1% 5%;
+  background-color: #36393f;
+  border-radius: 10px;
+}
+
+.requestNotes{
+  font-size: 0.7em;
+  text-align: left;
+  margin: 2%;
+  overflow-wrap: break-word;
 }
 
 #popupDiv{

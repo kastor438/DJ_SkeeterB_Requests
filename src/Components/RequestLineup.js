@@ -180,7 +180,7 @@ const RequestLineup = props => {
             }
           }
           var track = 
-            React.createElement('div', {key : 'lineup' + sortedKeys[i], id : 'lineup' + sortedKeys[i], className : 'lineupSong'},
+            React.createElement('div', {key : 'lineup' + sortedKeys[i], id : 'lineup' + sortedKeys[i], className : 'lineupSong' + ((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ? ' attachedRequestNotes' : '')},
               data[sortedKeys[i]].SpotifyImageURL != '' ?
               React.createElement('div', {className : 'lineupSongImageDiv'}, 
                 React.createElement('img', {className : 'lineupSongImage', src : data[sortedKeys[i]].SpotifyImageURL, alt : 'Song Image'})
@@ -205,7 +205,13 @@ const RequestLineup = props => {
                   React.createElement('span', {}, '')
                 ),
                 React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
-                React.createElement('span', {}, ''))
+                React.createElement('span', {}, '')),
+              (((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
+                React.createElement('div', {className : 'requestNotesDiv'},
+                  React.createElement('p', {className : 'requestNotes'}, data[sortedKeys[i]].RequestNotes)
+                )
+                :
+                null)
             );
           lineup.push(track);
         }
@@ -247,7 +253,7 @@ const RequestLineup = props => {
             }
           }
           var track = 
-          React.createElement('div', {key : 'preapprovalLineup' + sortedKeys[i], id : 'preapprovalLineup' + sortedKeys[i], 'data-requestkey' : sortedKeys[i], className : (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 'lineupSong lineupSongAdmin' : 'lineupSong'), onClick : (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? (e) => SelectPreapprovalSong(e.target) : null)},
+          React.createElement('div', {key : 'preapprovalLineup' + sortedKeys[i], id : 'preapprovalLineup' + sortedKeys[i], 'data-requestkey' : sortedKeys[i], className : (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 'lineupSong lineupSongAdmin' : 'lineupSong') + ((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ? ' attachedRequestNotes' : ''), onClick : (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? (e) => SelectPreapprovalSong(e.target) : null)},
             data[sortedKeys[i]].SpotifyImageURL != '' ?
             React.createElement('div', {className : 'lineupSongImageDiv'}, 
               React.createElement('img', {className : 'lineupSongImage', src : data[sortedKeys[i]].SpotifyImageURL, alt : 'Song Image'})
@@ -268,7 +274,14 @@ const RequestLineup = props => {
             React.createElement('div', {id : 'preapprovalSpotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
               React.createElement('span', {}, ''),
               React.createElement('a', {id : 'preapprovalLineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
-              React.createElement('span', {}, ''))
+              React.createElement('span', {}, '')
+            ),
+            (((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
+              React.createElement('div', {className : 'requestNotesDiv'},
+                React.createElement('p', {className : 'requestNotes'}, data[sortedKeys[i]].RequestNotes)
+              )
+              :
+              null)
           );
           preapprovalLineup.push(track);
         }
