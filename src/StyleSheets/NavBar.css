@@ -175,7 +175,7 @@
   position: fixed;
   width: 30vw;
   top: 0;
-  right: -25vw;
+  right: -30vw;
   height: 100vh;
   transition: transform .3s cubic-bezier(0, .52, 0, 1);
   overflow: hidden;
@@ -188,7 +188,7 @@
 }
 
 #slidingMenuPanel.openMenuPanel{
-  transform: translate3d(-25vw, 0, 0);
+  transform: translate3d(-30vw, 0, 0);
 }
 
 #menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
