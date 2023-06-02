@@ -28,22 +28,173 @@
   border: 1px solid black;
 }
 
+/* 
+  Navbar Settings Section
+*/
 #navbarSettingsDiv{
 
 }
 
+/* 
+  Theme Settings Section
+*/
 #themeSettingsDiv{
 
 }
 
+/* 
+  Venue Settings Section
+*/
 #venueSettingsDiv{
+  
+}
+
+#venuesContainers{
+  display: grid;
+  width: 90%;
+  margin-left: 5%;
+  background-color: #36393f;
+  border-radius: 10px;
+  border: 1px solid red;
+}
+
+.venueInfoDiv{
+  border: 1px solid blue !important;
+}
+
+#newVenueButton{
+  background: none;
+  border: none;
+  color: white;
+  border: 1px solid red;
+}
+
+#newVenueDiv{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+#newVenueDiv.activeFields{
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 6fr;
+}
+
+#newVenueButton{
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  margin-left: 5%;
+}
+
+#newVenueButton:active{
+  color: rgb(202, 202, 202);
+}
+
+#newVenueButtonImageDiv{
+  pointer-events: none;
+}
+
+#newVenueButtonImage{
+  width: 36px;
+  pointer-events: none;
+}
+
+#newVenueButton:active #newVenueButtonImage{
+  opacity: 70%;
+}
+
+#newVenueFieldsDiv{
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row: 2;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 5fr 1fr;
+}
+
+#newVenueFieldsDiv.closedFields{
+  display: none;
+}
+
+#newVenueFieldsDiv.openFields{
+  display: grid;
+}
+
+#newVenueTextFieldsDiv{
+  grid-column: 1;
+}
+
+.newVenueFieldDiv{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.newVenueLabelField{
+  display: block;
+  text-align: left;
+  margin-left: 2%;
+  white-space: nowrap;
+}
+
+.newVenueInputTextField{
+  width: 80%;
+  margin-left: 2%;
+}
+
+#newVenueImageFieldDiv{
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: 3fr 1fr;
+}
+
+#newVenueImageDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-color: aqua !important;
+}
+
+#newVenueImage{
+  width: 60%;
+}
+
+#newVenueImageInputDiv{
 
 }
 
+#newVenueImageInput{
+  width: 100%;
+}
+
+#newVenueSubmitButtonDiv{
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row: 3;
+}
+
+#newVenueSubmitButton{
+
+}
+
+/* Socials Settings Section */
 #socialsSettingsDiv{
 
 }
 
-#adminSettingsDiv{
+/* Security Settings Section */
+#securitySettingsDiv{
 
+}
+
+/* Section Classes */
+.inactiveSection{
+  display: block;
+}
+
+.inactiveSection{
+  display: none;
 }

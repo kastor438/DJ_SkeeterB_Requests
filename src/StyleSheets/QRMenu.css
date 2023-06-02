@@ -1,0 +1,121 @@
+#QRCodeButtonDiv{
+  grid-column: 3;
+  padding: 0.6vmax;
+}
+
+#QRCodeButton{
+  width: 100%;
+  transition: 0.5s;
+  cursor: pointer;
+  position: relative;
+}
+
+#QRCodeButton:active{
+  animation: ShrinkQRCode 20ms ease-in-out 1 forwards;
+  opacity: 60%;
+}
+
+@keyframes ShrinkQRCode {
+  to {
+    transform: scale(0.8);
+  }
+}
+
+.QRMenuBackgroundOverlayDiv{
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 9998;
+  background-color: #00000070;
+}
+
+.QRMenuBackgroundOverlayDiv.openMenu{
+  display: block;
+}
+
+.QRMenuPopupDiv{
+  width: 80vw;
+  height: 0px;
+  border-radius: 10px;
+  transition: 0.5s;
+  position: absolute;
+  overflow-y: scroll;
+  padding: 0px;
+  left: -56.25vw;
+  margin-top: 60vh;
+  background-color: #F4F4F4;
+  -webkit-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+  box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+  cursor: context-menu;
+  z-index: 9999;
+}
+
+.QRCodeButton.openMenu .QRMenuPopupDiv{
+  height: 50vh
+}
+
+.caughtUpNotificationsHeader{
+  color: #000000;
+  font-weight: 300;
+}
+
+.notificationsContainerDiv{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #F4F4F4;
+}
+
+.notificationsContainerDiv:empty{
+  display: none;
+}
+
+.notificationSectionDiv{
+  padding: 25px 10px;
+  background-color: #F4F4F4;
+  transition: 0.5s;
+  border-style: none none solid none;
+  border-color: #00000080;
+}
+
+.notificationImageDiv{
+  padding-left: 15px;
+}
+
+.notificationImage{
+  -webkit-clip-path: circle(50% at 50% 50%);
+  clip-path: circle(50% at 50% 50%);
+  width: 75px;
+  float: left;
+}
+
+.notificationText{
+  vertical-align: top;
+  font-size: 0.7em;
+  padding: 5px 10px 0px 115px;
+  color: black;
+}
+
+.notificationSubtext{
+  font-size: 0.5em;
+  color: grey;
+}
+
+.notificationSkeeterResponse{
+  font-size: 1rem;
+  color: grey;
+}
+
+.notificationSectionDiv.newNotificationDiv{
+  border-color: red;
+}
+
+.notificationSectionDiv:hover{
+  background-color: #BFBFBF;
+}

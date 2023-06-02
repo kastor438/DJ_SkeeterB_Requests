@@ -14,7 +14,7 @@
 #requestAndLineupList{
   width: 100vw;
   z-index: 100;
-  margin-top: -4%;
+  margin-top: -2%;
   margin-left: -3%;
   list-style: none;
   display: grid;
@@ -220,6 +220,48 @@
   margin-top: 2.5vmax;
 }
 
+#requestNotesDiv{
+  margin-top: 1vmax;
+  width: 75%;
+  margin-left: 12.5%;
+  display: grid;
+  grid-template-columns: 1fr;
+  /* border: 1px solid #0051ff; */
+}
+
+#requestNotesButtonDiv{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.requestNotesButton{
+  background-color: transparent;
+  border: none;
+  color: aliceblue;
+  font-size: 14px;
+}
+
+#notesInputSectionDiv{
+  display: none;
+}
+
+#notesInputSectionDiv.openNotes{
+  display: block;
+}
+
+.requestNotesInput{
+  margin-top: 1vmax;
+  background-color: #2d323b;
+  border: none;
+  border-radius: 10px;
+  height: 100px;
+  width: 94%;
+  resize: none;
+  color: aliceblue;
+  padding: 3%;
+  font-size: 14px;
+}
+
 .requestLabel {
   position: relative;
   margin: auto;
@@ -342,26 +384,6 @@ input:-webkit-autofill:focus{
   box-shadow: inset 0 -3px 0 #540681;
 }
 
-#QRCodeButtonDiv{
-  grid-column: 3;
-  padding: 0.6vmax;
-}
-
-#QRCodeButton{
-  width: 100%;
-}
-
-#QRCodeButton:active{
-  animation: ShrinkQRCode 20ms ease-in-out 1 forwards;
-  opacity: 60%;
-}
-
-@keyframes ShrinkQRCode {
-  to {
-    transform: scale(0.8);
-  }
-}
-
 @media only screen and (max-width: 1465px){
   #requestGridContainer{
     min-height: 70vh;
@@ -401,7 +423,6 @@ input:-webkit-autofill:focus{
   }
 
   #requestAndLineupList{
-    margin-top: -3%;
     /* margin-left: -3%; */
     grid-template-columns: 1fr 1fr;
   }

@@ -1,11 +1,11 @@
-import '../StyleSheets/SkeeterSpecificsSongRequests.css'
 import '../StyleSheets/RequestLineup.css';
+import '../StyleSheets/SkeeterSpecificsRequestLineup.css'
 
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set, remove, child, get, onValue, update } from "firebase/database";
+import { getDatabase, ref, set, remove, child, get, onValue, update, enableLogging } from "firebase/database";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Zoom';
@@ -34,9 +34,6 @@ const auth = getAuth(app);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
 
-const clientID = '822b607fa31944ca91f198b9f5e31613';
-const clientSecret = '4aae0065891841c197af65473ac00b49';
-
 const RequestLineup = props => {
   const [sortChoice, SetSortChoice] = useState('Chronological');
   const [lineupTracks, SetLineupTracks] = useState([]);
@@ -54,6 +51,8 @@ const RequestLineup = props => {
   
   const preapprovalLineupTracksRef = useRef([]);
   preapprovalLineupTracksRef.current = preapprovalLineupTracks;
+  
+  const selectedPreapprovalSongIDsRef = useRef([]);
 
   const db = getDatabase();
   const dbRef = ref(getDatabase());
@@ -63,13 +62,14 @@ const RequestLineup = props => {
   const popupDivRef = useRef();
   const popupSpanRef = useRef();
   const skeeterLineupSelectDivRef = useRef();
-  const skeeterLineupSelectButtonsDivRef = useRef();
+  const lineupSelectButtonsDivRef = useRef();
   const preapprovalLineupOptionDivRef = useRef();
-  const skeeterPreapprovalButtonRef = useRef();
+  const preapprovalButtonRef = useRef();
   const approvedLineupOptionDivRef = useRef();
-  const skeeterLineupButtonRef = useRef();
+  const lineupButtonRef = useRef();
   const preapprovalLineupDivRef = useRef();
   const lineupDivRef = useRef();
+  const skeeterPreapprovalOptionsDivRef = useRef();
 
   useEffect(() => {
     const dbRootRef = ref(db, '/');
@@ -100,13 +100,13 @@ const RequestLineup = props => {
     if(recentSnapshotRef.current && recentSnapshotRef.current.Requests){
       UpdateLineup(recentSnapshotRef.current.Requests);
     }
+    if(recentSnapshotRef.current && recentSnapshotRef.current.PreapprovalRequests){
+      UpdatePreapprovalLineup(recentSnapshotRef.current.PreapprovalRequests);
+    }
   }, [sortChoice]);
 
   useEffect(() => {
-    // console.log(props.authUser)
-    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
-      SwitchToPreapproval();
-    }
+    SwitchToPreapproval();
     get(child(dbRef, '/')).then((snapshot) => {
       if(snapshot != null){
         SetRecentSnapshot(snapshot.val());
@@ -118,37 +118,41 @@ const RequestLineup = props => {
   function SwitchToPreapproval(){
     preapprovalLineupDivRef.current.style.display = 'block';
     preapprovalLineupOptionDivRef.current.style.backgroundColor = '#36393f';
-    skeeterPreapprovalButtonRef.current.style.color = '#f0f8ff'
-    skeeterPreapprovalButtonRef.current.style.borderBottom = '0px';
-    skeeterPreapprovalButtonRef.current.style.borderRight = '0px';
+    preapprovalButtonRef.current.style.color = '#f0f8ff'
+    preapprovalButtonRef.current.style.borderBottom = '0px';
+    preapprovalButtonRef.current.style.borderRight = '0px';
     preapprovalLineupOptionDivRef.current.style.borderRadius = '0 0 0 0';
-    skeeterPreapprovalButtonRef.current.style.borderRadius = '0 0 0 0';
+    preapprovalButtonRef.current.style.borderRadius = '0 0 0 0';
 
     lineupDivRef.current.style.display = 'none';
     approvedLineupOptionDivRef.current.style.backgroundColor = '#292c33';
-    skeeterLineupButtonRef.current.style.color = '#b4b7bb'
-    skeeterLineupButtonRef.current.style.borderBottom = '1px solid black';
-    skeeterLineupButtonRef.current.style.borderLeft = '1px solid black';
+    lineupButtonRef.current.style.color = '#b4b7bb'
+    lineupButtonRef.current.style.borderBottom = '1px solid black';
+    lineupButtonRef.current.style.borderLeft = '1px solid black';
     approvedLineupOptionDivRef.current.style.borderRadius = '0 0 0 20px';
-    skeeterLineupButtonRef.current.style.borderRadius = '0 0 0 20px';
+    lineupButtonRef.current.style.borderRadius = '0 0 0 20px';
+    if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') && selectedPreapprovalSongIDsRef.current.length > 0){
+      skeeterPreapprovalOptionsDivRef.current.style.display = 'grid';
+    }
   }
 
   function SwitchToLineup(){
     preapprovalLineupDivRef.current.style.display = 'none';
     preapprovalLineupOptionDivRef.current.style.backgroundColor = '#292c33';
-    skeeterPreapprovalButtonRef.current.style.color = '#b4b7bb'
-    skeeterPreapprovalButtonRef.current.style.borderBottom = '1px solid black';
-    skeeterPreapprovalButtonRef.current.style.borderRight = '1px solid black';
+    preapprovalButtonRef.current.style.color = '#b4b7bb'
+    preapprovalButtonRef.current.style.borderBottom = '1px solid black';
+    preapprovalButtonRef.current.style.borderRight = '1px solid black';
     preapprovalLineupOptionDivRef.current.style.borderRadius = '0 0 20px 0';
-    skeeterPreapprovalButtonRef.current.style.borderRadius = '0 0 20px 0';
+    preapprovalButtonRef.current.style.borderRadius = '0 0 20px 0';
 
     lineupDivRef.current.style.display = 'block';
     approvedLineupOptionDivRef.current.style.backgroundColor = '#36393f';
-    skeeterLineupButtonRef.current.style.color = '#f0f8ff'
-    skeeterLineupButtonRef.current.style.borderBottom = '0px';
-    skeeterLineupButtonRef.current.style.borderLeft = '0px';
+    lineupButtonRef.current.style.color = '#f0f8ff'
+    lineupButtonRef.current.style.borderBottom = '0px';
+    lineupButtonRef.current.style.borderLeft = '0px';
     approvedLineupOptionDivRef.current.style.borderRadius = '0 0 0 0';
-    skeeterLineupButtonRef.current.style.borderRadius = '0 0 0 0';
+    lineupButtonRef.current.style.borderRadius = '0 0 0 0';
+    skeeterPreapprovalOptionsDivRef.current.style.display = 'none';
   }
 
   function UpdateLineup(data){
@@ -176,61 +180,80 @@ const RequestLineup = props => {
             }
           }
           var track = 
-          React.createElement('div', {key : 'lineup' + sortedKeys[i], id : 'lineup' + sortedKeys[i], className : 'lineupSong'},
-            data[sortedKeys[i]].SpotifyImageURL != '' ?
-            React.createElement('div', {className : 'lineupSongImageDiv'}, 
-              React.createElement('img', {className : 'lineupSongImage', src : data[sortedKeys[i]].SpotifyImageURL, alt : 'Song Image'})
-            ) : 
-            React.createElement('div', {className : 'lineupSongImage'}, 
-              React.createElement('h4', {className : 'customRequestHeader'}, 'Custom Request')
-            ),
-            React.createElement('div', {className : 'lineupSongInfo'},
-              React.createElement('p', {id : 'lineupSongName' + sortedKeys[i], className : 'lineupSongName'}, data[sortedKeys[i]].SongName),
-              React.createElement('p', {id : 'lineupArtistName' + sortedKeys[i]}, data[sortedKeys[i]].ArtistName),
-              React.createElement('p', {id : 'lineupRequestCount' + sortedKeys[i]}, "Requests: " + data[sortedKeys[i]].RequestCount)
-            ),
-            React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : sortedKeys[i], 'data-currvote' : userVote},
-              React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => UpvoteSong(e.target)}, ),
-              React.createElement('span', {className : 'count lineupVoteCount'}, data[sortedKeys[i]].Upvotes - data[sortedKeys[i]].Downvotes), 
-              React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => DownvoteSong(e.target)}, )
-            ), 
-            React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
-              (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 
-                React.createElement('button', {id : 'removeRequestButton', 'data-requestkey' : sortedKeys[i], onClick : (e) => SkeeterRemoveSong(e.target)}, 'X')
-                :
-                React.createElement('span', {}, '')
+            React.createElement('div', {key : 'lineup' + sortedKeys[i], id : 'lineup' + sortedKeys[i], className : 'lineupSong' + ((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ? ' attachedRequestNotes' : '')},
+              data[sortedKeys[i]].SpotifyImageURL != '' ?
+              React.createElement('div', {className : 'lineupSongImageDiv'}, 
+                React.createElement('img', {className : 'lineupSongImage', src : data[sortedKeys[i]].SpotifyImageURL, alt : 'Song Image'})
+              ) : 
+              React.createElement('div', {className : 'lineupSongImage'}, 
+                React.createElement('h4', {className : 'customRequestHeader'}, 'Custom Request')
               ),
-              React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
-              React.createElement('span', {}, ''))
-          );
+              React.createElement('div', {className : 'lineupSongInfo'},
+                React.createElement('p', {id : 'lineupSongName' + sortedKeys[i], className : 'lineupSongName'}, data[sortedKeys[i]].SongName),
+                React.createElement('p', {id : 'lineupArtistName' + sortedKeys[i]}, data[sortedKeys[i]].ArtistName),
+                React.createElement('p', {id : 'lineupRequestCount' + sortedKeys[i]}, "Requests: " + data[sortedKeys[i]].RequestCount)
+              ),
+              React.createElement('div', {className : 'lineupVoteDiv upvote', 'data-requestkey' : sortedKeys[i], 'data-currvote' : userVote},
+                React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => UpvoteSong(e.target)}, ),
+                React.createElement('span', {className : 'count lineupVoteCount'}, data[sortedKeys[i]].Upvotes - data[sortedKeys[i]].Downvotes), 
+                React.createElement('a', {id : 'lineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => DownvoteSong(e.target)}, )
+              ), 
+              React.createElement('div', {id : 'spotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
+                (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 
+                  React.createElement('button', {id : 'removeRequestButton', 'data-requestkey' : sortedKeys[i], onClick : (e) => SkeeterRemoveSong(e.target)}, 'X')
+                  :
+                  React.createElement('span', {}, '')
+                ),
+                React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
+                React.createElement('span', {}, '')),
+              (((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
+                React.createElement('div', {className : 'requestNotesDiv'},
+                  React.createElement('p', {className : 'requestNotes'}, data[sortedKeys[i]].RequestNotes)
+                )
+                :
+                null)
+            );
           lineup.push(track);
         }
+        if(lineupButtonRef.current != null)
+          lineupButtonRef.current.innerHTML = `Lineup (${lineup.length})`;
       }
     }
     else{
       var noLineup = 
         React.createElement('p', {id : 'noLineup', key : 'noLineup'}, 'No requests yet!');
         lineup.push(noLineup);
+        lineupButtonRef.current.innerHTML = 'Lineup';
     }
     SetLineupTracks(lineup);
     // console.log(lineupTracksRef.current);
   }
 
   function UpdatePreapprovalLineup(data){
-    var lineup = [];
+    var preapprovalLineup = [];
     var sortedKeys = [];
     SetPreapprovalLineupTracks([]);
 
     if(data != null){
-      // console.log("Data Before: " + data['1'].SongName);
-      Object.keys(data).forEach((key) => {
-        sortedKeys.push(key);
-      });
+      sortedKeys = SortLineup(data);
       for(var i = 0; i < sortedKeys.length; i++){
         if(data[sortedKeys[i]] != null){
+          var userVote = 'none';
+          var upvoteOn = false;
+          var downvoteOn = false;
+
           // userID check
+          if(auth.currentUser && data[sortedKeys[i]].Voters != null && data[sortedKeys[i]].Voters[auth.currentUser.uid]){
+            userVote = data[sortedKeys[i]].Voters[auth.currentUser.uid];
+            if(userVote == 'up'){
+              upvoteOn = true;
+            }
+            else if(userVote == 'down'){
+              downvoteOn = true;
+            }
+          }
           var track = 
-          React.createElement('div', {key : 'lineup' + sortedKeys[i], id : 'lineup' + sortedKeys[i], className : 'lineupSong'},
+          React.createElement('div', {key : 'preapprovalLineup' + sortedKeys[i], id : 'preapprovalLineup' + sortedKeys[i], 'data-requestkey' : sortedKeys[i], className : (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? 'lineupSong lineupSongAdmin' : 'lineupSong') + ((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')) ? ' attachedRequestNotes' : ''), onClick : (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ? (e) => SelectPreapprovalSong(e.target) : null)},
             data[sortedKeys[i]].SpotifyImageURL != '' ?
             React.createElement('div', {className : 'lineupSongImageDiv'}, 
               React.createElement('img', {className : 'lineupSongImage', src : data[sortedKeys[i]].SpotifyImageURL, alt : 'Song Image'})
@@ -239,22 +262,32 @@ const RequestLineup = props => {
               React.createElement('h4', {className : 'customRequestHeader'}, 'Custom Request')
             ),
             React.createElement('div', {className : 'lineupSongInfo'},
-              React.createElement('p', {id : 'preApprovalLineupSongName' + sortedKeys[i], className : 'lineupSongName'}, data[sortedKeys[i]].SongName),
-              React.createElement('p', {id : 'preApprovalLineupArtistName' + sortedKeys[i]}, data[sortedKeys[i]].ArtistName),
-              React.createElement('p', {id : 'preApprovalLineupRequestCount' + sortedKeys[i]}, "Requests: " + data[sortedKeys[i]].RequestCount)
+              React.createElement('p', {id : 'preapprovalLineupSongName' + sortedKeys[i], className : 'lineupSongName'}, data[sortedKeys[i]].SongName),
+              React.createElement('p', {id : 'preapprovalLineupArtistName' + sortedKeys[i]}, data[sortedKeys[i]].ArtistName),
+              React.createElement('p', {id : 'preapprovalLineupRequestCount' + sortedKeys[i]}, "Requests: " + data[sortedKeys[i]].RequestCount)
             ),
-            React.createElement('div', {className : 'preapprovalLineupOptionsDiv', 'data-requestkey' : sortedKeys[i]},
-              React.createElement('button', {id : 'preapprovalLineupOption' + sortedKeys[i] + 'AcceptButton', className : 'preapprovalLineupAcceptButton', onClick : (e) => AcceptSong(e.target)}, 'Accept Song'),
-              React.createElement('button', {id : 'preapprovalLineupOption' + sortedKeys[i] + 'DeclineButton', className : 'preapprovalLineupDeclineButton', onClick : (e) => DeclineSong(e.target)}, 'Decline Song')
+            React.createElement('div', {className : 'preapprovalLineupVoteDiv upvote', 'data-requestkey' : sortedKeys[i], 'data-currvote' : userVote},
+              React.createElement('a', {id : 'preapprovalLineup' + sortedKeys[i] + 'upvoteButton', className : 'lineupUpvoteButton upvote' + (upvoteOn ? ' upvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => PreapprovalUpvoteSong(e.target)}, ),
+              React.createElement('span', {className : 'count lineupVoteCount'}, data[sortedKeys[i]].Upvotes - data[sortedKeys[i]].Downvotes), 
+              React.createElement('a', {id : 'preapprovalLineup' + sortedKeys[i] + 'downvoteButton', className : 'lineupDownVoteButton downvote' + (downvoteOn ? ' downvote-on' : '') + (auth.currentUser ? '' : ' disabledVoteButton'), onClick : (e) => PreapprovalDownvoteSong(e.target)}, )
             ), 
-            React.createElement('div', {id : 'preApprovalSpotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
+            React.createElement('div', {id : 'preapprovalSpotifyLinkDiv' + sortedKeys[i], className : 'spotifyLinkDiv'},
               React.createElement('span', {}, ''),
-              React.createElement('a', {id : 'preApprovalLineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
-              React.createElement('span', {}, ''))
+              React.createElement('a', {id : 'preapprovalLineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
+              React.createElement('span', {}, '')
+            ),
+            (((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
+              React.createElement('div', {className : 'requestNotesDiv'},
+                React.createElement('p', {className : 'requestNotes'}, data[sortedKeys[i]].RequestNotes)
+              )
+              :
+              null)
           );
-          lineup.push(track);
+          preapprovalLineup.push(track);
         }
       }
+      if(preapprovalButtonRef.current != null)
+        preapprovalButtonRef.current.innerHTML = `Preapproval (${preapprovalLineup.length})`
     }
     else{
       var noLineup = 
@@ -262,9 +295,10 @@ const RequestLineup = props => {
           React.createElement('p', {className : 'noUnapprovedLineupText'}, 'No preapproval requests!'),
           React.createElement('p', {className : 'noUnapprovedLineupText'}, 'Get the word out bro...')
         );
-        lineup.push(noLineup);
+        preapprovalLineup.push(noLineup);
+        preapprovalButtonRef.current.innerHTML = 'Preapproval'
     }
-    SetPreapprovalLineupTracks(lineup);
+    SetPreapprovalLineupTracks(preapprovalLineup);
     // console.log(lineupTracksRef.current);
   }
 
@@ -372,6 +406,137 @@ const RequestLineup = props => {
     }
   }
 
+  function PreapprovalUpvoteSong(element){
+    if(auth.currentUser){
+      var currUpvotes = 0;
+      var parent = element.parentNode;
+      var voteChange = 0;
+      var downvoteChange = false;
+
+      if(parent.dataset.currvote === 'up'){
+        element.classList.remove('upvote-on');
+        parent.dataset.currvote = 'none';
+        voteChange = -1;
+      }
+      else if(parent.dataset.currvote === 'down'){
+        element.classList.add('upvote-on');
+        parent.children[2].classList.remove('downvote-on');
+        parent.dataset.currvote = 'up';
+        voteChange = 1;
+        downvoteChange = true;
+      }
+      else if(parent.dataset.currvote === 'none'){
+        element.classList.add('upvote-on');
+        parent.dataset.currvote = 'up';
+        voteChange = 1;
+      }
+
+      get(child(dbRef, 'PreapprovalRequests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
+        var voters = {};
+        if(snapshot.val() != null && snapshot.val().Voters != null){
+          Object.entries(snapshot.val().Voters).forEach(([key, value]) => {
+            voters[key] = value;
+          });
+        }
+        voters[auth.currentUser.uid] = parent.dataset.currvote !== 'none' ? parent.dataset.currvote : null;
+        currUpvotes = snapshot.val().Upvotes;
+        update(ref(db, 'PreapprovalRequests/' + parent.dataset.requestkey + '/'), {
+          Upvotes : currUpvotes + voteChange,
+          Downvotes : downvoteChange ? snapshot.val().Downvotes -1 : snapshot.val().Downvotes,
+          Voters : voters
+        });
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+    else{
+      popupSpanRef.current.innerHTML = 'You must be signed in to vote on requests!';
+      popupDivRef.current.classList.add('popupOn');
+      setTimeout(function(){
+        popupDivRef.current.classList.remove('popupOn');
+      }, 4000);
+    }
+  }
+
+  function PreapprovalDownvoteSong(element){
+    if(auth.currentUser){
+      var currDownvotes = 0;
+      var parent = element.parentNode;
+      var voteChange = 0;
+      var upvoteChange = false;
+
+      if(parent.dataset.currvote === 'down'){
+        element.classList.remove('downvote-on');
+        parent.dataset.currvote = 'none';
+        voteChange = -1;
+      }
+      else if(parent.dataset.currvote === 'up'){
+        element.classList.add('downvote-on');
+        parent.children[0].classList.remove('upvote-on');
+        parent.dataset.currvote = 'down';
+        voteChange = 1;
+        upvoteChange = true;
+      }
+      else if(parent.dataset.currvote === 'none'){
+        element.classList.add('downvote-on');
+        parent.dataset.currvote = 'down';
+        voteChange = 1;
+      }
+
+      get(child(dbRef, 'PreapprovalRequests/' + parent.dataset.requestkey + '/')).then((snapshot) => {
+        var voters = {};
+        if(snapshot.val() != null && snapshot.val().Voters != null){
+          Object.entries(snapshot.val().Voters).forEach(([key, value]) => {
+            voters[key] = value;
+          });
+        }
+        voters[auth.currentUser.uid] = parent.dataset.currvote !== 'none' ? parent.dataset.currvote : null;
+        currDownvotes = snapshot.val().Downvotes;
+        update(ref(db, 'PreapprovalRequests/' + parent.dataset.requestkey + '/'), {
+          Upvotes : upvoteChange ? snapshot.val().Upvotes -1 : snapshot.val().Upvotes,
+          Downvotes : currDownvotes + voteChange,
+          Voters : voters
+        });
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+    else{
+      popupSpanRef.current.innerHTML = 'You must be signed in to vote on requests!';
+      popupDivRef.current.classList.add('popupOn');
+      setTimeout(function(){
+        popupDivRef.current.classList.remove('popupOn');
+      }, 4000);
+    }
+  }
+
+  function SelectPreapprovalSong(element){
+    if(element.tagName == 'DIV'){
+      var currSelectedSongIDs = selectedPreapprovalSongIDsRef.current;
+      while(element.classList.contains('lineupSong') == false){
+        element = element.parentNode;
+      }
+      if(element.classList.contains('selectedPreapprovalSongOption')){
+        var preapprovalSongIDIndex = currSelectedSongIDs.indexOf(element.dataset.requestkey);
+        currSelectedSongIDs.splice(preapprovalSongIDIndex, 1);
+        element.classList.remove('selectedPreapprovalSongOption');
+      }
+      else{
+        currSelectedSongIDs.push(element.dataset.requestkey);
+        element.classList.add('selectedPreapprovalSongOption');
+      }
+      selectedPreapprovalSongIDsRef.current = currSelectedSongIDs;
+  
+      // console.log(selectedPreapprovalSongIDsRef.current);
+      if(auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') && selectedPreapprovalSongIDsRef.current.length > 0){
+        skeeterPreapprovalOptionsDivRef.current.style.display = 'grid';
+      }
+      else{
+        skeeterPreapprovalOptionsDivRef.current.style.display = 'none';
+      }
+    }
+  }
+
   function SortMethodOnChange(e){
     SetSortChoice(e.target.value);
   }
@@ -386,16 +551,18 @@ const RequestLineup = props => {
     }
     else if(sortChoiceRef.current == 'MostRecent'){
       Object.entries(data).forEach(([key, value]) => {
-        sortedDataType.push(value.DateTime);
+        var requestDateTime = new Date(value.DateTime);
+        sortedDataType.push(requestDateTime);
       });
-      sortedDataType.sort();
+      sortedDataType.sort((a,b) =>  b - a);
       for(var i = 0; i < sortedDataType.length; i++){
         Object.entries(data).forEach(([key, value]) => {
-          if(value.DateTime === sortedDataType[i] && !sortedKeys.includes(key)){
-            sortedKeys.unshift(key);
+          if(new Date(value.DateTime) - sortedDataType[i] == 0 && !sortedKeys.includes(key)){
+            sortedKeys.push(key);
           }
         });
       }
+      // console.log(sortedKeys);
     }
     else if(sortChoiceRef.current == 'SongName'){
       Object.entries(data).forEach(([key, value]) => {
@@ -487,45 +654,107 @@ const RequestLineup = props => {
     return sortedKeys;
   }
 
-  function AcceptSong(element){
-    var parent = element.parentNode;
-    get(child(dbRef, `/`)).then((snapshot) => {
-      var nextKey = 1;
-      if(snapshot.val().Requests){
-        Object.entries(snapshot.val().Requests).forEach(([key, value]) => {
-          if(parseInt(key) >= nextKey){
-            nextKey = parseInt(key) + 1;
-          }
+  function ApproveSongs(){
+    skeeterPreapprovalOptionsDivRef.current.style.display = 'none';
+    for(var i = 0; i < selectedPreapprovalSongIDsRef.current.length; i++){
+      if(recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]] != null){
+        const songData = recentSnapshotRef.current.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]];
+        const requestDateTime = new Date(songData.DateTime);
+        set(ref(db, `Requests/${selectedPreapprovalSongIDsRef.current[i]}`), {
+          SongName : songData.SongName,
+          ArtistName : songData.ArtistName,
+          RequestCount: songData.RequestCount,
+          SpotifyURL: songData.SpotifyURL,
+          SpotifyImageURL: songData.SpotifyImageURL,
+          Upvotes: songData.Upvotes,
+          Downvotes: songData.Downvotes,
+          RequestedBy: songData.RequestedBy,
+          DateTime : requestDateTime.toString(),
+          RequestNotes : songData.RequestNotes
         });
+        if(songData.RequestedBy != ''){
+          update(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${selectedPreapprovalSongIDsRef.current[i]}/`),{
+            Approved: true,
+            NotificationRead: false
+          });
+        }
+        remove(ref(db, `PreapprovalRequests/${selectedPreapprovalSongIDsRef.current[i]}`));
       }
-      const songData = snapshot.val().PreapprovalRequests[parent.dataset.requestkey];
-      set(ref(db, `Requests/${nextKey}`), {
-        SongName : songData.SongName,
-        ArtistName : songData.ArtistName,
-        RequestCount: songData.RequestCount,
-        SpotifyURL: songData.SpotifyURL,
-        SpotifyImageURL: songData.SpotifyImageURL,
-        Upvotes: songData.Upvotes,
-        Downvotes: songData.Downvotes,
-        RequestedBy: songData.RequestedBy,
-        DateTime : (new Date()).toUTCString(),
-        Approved : true
-      });
-      remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
-    });
+    }
+    selectedPreapprovalSongIDsRef.current = [];
   }
 
-  function DeclineSong(element){
-    var parent = element.parentNode;
-    remove(ref(db, `PreapprovalRequests/${parent.dataset.requestkey}`));
+  function DenySongs(){
+    skeeterPreapprovalOptionsDivRef.current.style.display = 'none';
+    for(var i = 0; i < selectedPreapprovalSongIDsRef.current.length; i++){
+      if(recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]] != null){
+        const songData = recentSnapshot.PreapprovalRequests[selectedPreapprovalSongIDsRef.current[i]];
+        const requestDateTime = new Date(songData.DateTime);
+        set(ref(db, `History/${requestDateTime.getDate()}-${requestDateTime.getMonth()+1}-${requestDateTime.getFullYear()}/${selectedPreapprovalSongIDsRef.current[i]}`), {
+          SongName : songData.SongName,
+          ArtistName : songData.ArtistName,
+          RequestCount: songData.RequestCount,
+          SpotifyURL: songData.SpotifyURL,
+          SpotifyImageURL: songData.SpotifyImageURL,
+          Upvotes: songData.Upvotes,
+          Downvotes: songData.Downvotes,
+          RequestedBy: songData.RequestedBy,
+          DateTime : songData.DateTime,
+          Approved : false,
+          RequestNotes : songData.RequestNotes
+        });
+        if(songData.RequestedBy != ''){
+          set(ref(db, `Users/${songData.RequestedBy}/Requests/History/${selectedPreapprovalSongIDsRef.current[i]}/`), {
+            SongName: songData.SongName,
+            ArtistName: songData.ArtistName,
+            SpotifyImageURL: songData.SpotifyImageURL,
+            DateTime : (new Date()).toString(),
+            Approved : false,
+            NotificationRead : false,
+            RequestNotes : songData.RequestNotes
+          });
+          remove(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${selectedPreapprovalSongIDsRef.current[i]}/`));
+        }
+        remove(ref(db, `PreapprovalRequests/${selectedPreapprovalSongIDsRef.current[i]}`));
+      }
+    }
+    selectedPreapprovalSongIDsRef.current = [];
   }
 
   function SkeeterRemoveSong(element){
-    set(ref(db, 'Requests/' + element.dataset.requestkey), null);
+    var requestkey = element.dataset.requestkey;
+    const songData = recentSnapshotRef.current.Requests[requestkey];
+    const requestDateTime = new Date(songData.DateTime);
+    // If song was requested by a signed up user, Add to users requested History.
+    if(songData.RequestedBy != ''){
+      set(ref(db, `Users/${songData.RequestedBy}/Requests/History/${requestkey}/`), {
+        SongName: songData.SongName,
+        ArtistName: songData.ArtistName,
+        SpotifyImageURL: songData.SpotifyImageURL,
+        DateTime : requestDateTime.toString(),
+        Approved : true,
+        NotificationRead : recentSnapshotRef.current.Users[songData.RequestedBy].Requests.LiveRequests[requestkey].NotificationRead
+      });
+      remove(ref(db, `Users/${songData.RequestedBy}/Requests/LiveRequests/${requestkey}/`));
+    }
+    // Add song to history list.
+    set(ref(db, `History/${requestDateTime.getDate()}-${requestDateTime.getMonth()+1}-${requestDateTime.getFullYear()}/${requestkey}`), {
+      SongName : songData.SongName,
+      ArtistName : songData.ArtistName,
+      RequestCount: songData.RequestCount,
+      SpotifyURL: songData.SpotifyURL,
+      SpotifyImageURL: songData.SpotifyImageURL,
+      Upvotes: songData.Upvotes,
+      Downvotes: songData.Downvotes,
+      RequestedBy: songData.RequestedBy,
+      DateTime : songData.DateTime,
+      Approved : true
+    });
+    // Remove request from lineup.
+    remove(ref(db, `Requests/${requestkey}`));    
   }
 
   return (
-    auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83') ?
     <div id='lineupGridContainer' className='skeeterLineupGridContainer' ref={lineupGridContainerRef}>
       <select id='sortSelect' defaultValue={'Chronological'} onChange={SortMethodOnChange}>
         <option value='Chronological'>Chronological</option>
@@ -537,17 +766,17 @@ const RequestLineup = props => {
         <option value='TopRated'>Top Rated</option>
         <option value='MostHated'>Most Hated</option>
       </select>
-      <div id='skeeterLineupSelectDiv' ref={skeeterLineupSelectDivRef}>
-        <div id='skeeterLineupSelectButtonsDiv' ref={skeeterLineupSelectButtonsDivRef}>
-          <div id='preapprovalLineupOptionDiv' ref={preapprovalLineupOptionDivRef} className='skeeterLineupSelectButtonDiv'>
-            <button ref={skeeterPreapprovalButtonRef} className='skeeterLineupSelectButton' onClick={() => SwitchToPreapproval()}>Preapproval</button>
+      <div id='preapprovalAndLineupSelectDiv' ref={skeeterLineupSelectDivRef}>
+        <div id='lineupSelectButtonsDiv' ref={lineupSelectButtonsDivRef}>
+          <div id='preapprovalLineupOptionDiv' ref={preapprovalLineupOptionDivRef} className='lineupSelectButtonDiv'>
+            <button ref={preapprovalButtonRef} className='lineupSelectButton' onClick={() => SwitchToPreapproval()}>Preapproval</button>
           </div>
-          <div id='approvedLineupOptionDiv' ref={approvedLineupOptionDivRef} className='skeeterLineupSelectButtonDiv'>
-            <button ref={skeeterLineupButtonRef} className='skeeterLineupSelectButton' onClick={() => SwitchToLineup()}>Lineup</button>
+          <div id='approvedLineupOptionDiv' ref={approvedLineupOptionDivRef} className='lineupSelectButtonDiv'>
+            <button ref={lineupButtonRef} className='lineupSelectButton' onClick={() => SwitchToLineup()}>Lineup</button>
           </div>
         </div>
-        <div id='pre-approvalLineupDiv' ref={preapprovalLineupDivRef}>
-          <div id='pre-approvalLineupTracksDiv'>
+        <div id='preapprovalLineupDiv' ref={preapprovalLineupDivRef}>
+          <div id='preapprovalLineupTracksDiv'>
             {preapprovalLineupTracksRef.current}
           </div>
         </div>
@@ -557,25 +786,12 @@ const RequestLineup = props => {
           </div>
         </div>
       </div>
-      <div id='popupDiv' ref={popupDivRef}>
-        <span id='popupSpan' ref={popupSpanRef}></span>
-      </div>
-    </div>
-    :
-    <div id='lineupGridContainer' ref={lineupGridContainerRef}>
-      <select id='sortSelect' defaultValue={'Chronological'} onChange={SortMethodOnChange}>
-        <option value='Chronological'>Chronological</option>
-        <option value='MostRecent'>Most Recent</option>
-        <option value='SongName'>Song A&#8594;Z</option>
-        <option value='RevSongName'>Song Z&#8594;A</option>
-        <option value='ArtistName'>Artist A&#8594;Z</option>
-        <option value='RevArtistName'>Artist Z&#8594;A</option>
-        <option value='TopRated'>Top Rated</option>
-        <option value='MostHated'>Most Hated</option>
-      </select>
-      <div id='lineupDiv'>
-        <div id='lineupTracksDiv'>
-          {lineupTracksRef.current}
+      <div id='skeeterPreapprovalOptionsDiv' ref={skeeterPreapprovalOptionsDivRef}>
+        <div id='skeeterPreapprovalApproveOptionDiv' className='skeeterPreapprovalOptionDiv'>
+          <button id='skeeterPreapprovalApproveButton' className='skeeterPreapprovalOptionButton' onClick={() => ApproveSongs()}>Accept</button>
+        </div>
+        <div id='skeeterPreapprovalDenyOptionDiv' className='skeeterPreapprovalOptionDiv'>
+          <button id='skeeterPreapprovalDenyButton' className='skeeterPreapprovalOptionButton' onClick={() => DenySongs()}>Deny</button>
         </div>
       </div>
       <div id='popupDiv' ref={popupDivRef}>
