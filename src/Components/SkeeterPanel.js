@@ -2,7 +2,7 @@ import '../StyleSheets/SkeeterSpecificsSongRequests.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, remove, onValue } from "firebase/database";
 import axios from 'axios';
 
 const firebaseConfig = {
@@ -25,11 +25,11 @@ const SkeeterPanel = props => {
   const [requestsData, SetRequestsData] = useState(null);
 
   // DOM Refs
-  const SkeeterRemoveAllButtonRef = useRef();
+  const SkeeterRemoveAllPreapprovalButtonRef = useRef();
+  const SkeeterRemoveAllLineupButtonRef = useRef();
   const SkeeterExportRequestsButtonRef = useRef();
 
   const db = getDatabase();
-  const dbRef = ref(getDatabase());
 
   useEffect(() => {
     const rootRef = ref(db, '/');
@@ -37,14 +37,21 @@ const SkeeterPanel = props => {
       onValue(rootRef, (snapshot) => {
         const data = snapshot.val();
         SetRequestsData(data.Requests);
-        if(data && SkeeterRemoveAllButtonRef.current != null){
+        if(data && SkeeterRemoveAllLineupButtonRef.current != null){
           if(!data.Requests){
-            SkeeterRemoveAllButtonRef.current.disabled = true;
+            SkeeterRemoveAllLineupButtonRef.current.disabled = true;
             SkeeterExportRequestsButtonRef.current.disabled = true;
           }
           else{
-            SkeeterRemoveAllButtonRef.current.disabled = false;
+            SkeeterRemoveAllLineupButtonRef.current.disabled = false;
             SkeeterExportRequestsButtonRef.current.disabled = false;
+          }
+
+          if(!data.PreapprovalRequests){
+            SkeeterRemoveAllPreapprovalButtonRef.current.disabled = true;
+          }
+          else{
+            SkeeterRemoveAllPreapprovalButtonRef.current.disabled = false;
           }
         } 
       });
@@ -65,10 +72,12 @@ const SkeeterPanel = props => {
     SetIsPanelOpen(!isPanelOpen);
   }
 
-  function SkeeterRemoveAllSongs(){
-    get(child(dbRef, 'Requests/')).then((snapshot) => {
-      set(ref(db, 'Requests/'), null);
-    });
+  function SkeeterRemoveAllPreapprovalSongs(){
+    remove(ref(db, 'PreapprovalRequests/'));
+  }
+
+  function SkeeterRemoveAllLineupSongs(){
+    remove(ref(db, 'Requests/'));
   }
 
   function SkeeterExportSongs(){
@@ -108,7 +117,10 @@ const SkeeterPanel = props => {
         </div>
         <div id='skeeterButtonsDiv'>
           <div className='skeeterButtonDiv'>
-            <button id='skeeterRemoveAllButton' ref ={SkeeterRemoveAllButtonRef} className='skeeterPanelButton' onClick={() => SkeeterRemoveAllSongs()}>Remove All Requests</button>
+            <button id='skeeterRemoveAllPreapprovalButton' ref ={SkeeterRemoveAllPreapprovalButtonRef} className='skeeterPanelButton' onClick={() => SkeeterRemoveAllPreapprovalSongs()}>Remove Preapproval</button>
+          </div>
+          <div className='skeeterButtonDiv'>
+            <button id='skeeterRemoveAllLineupButton' ref ={SkeeterRemoveAllLineupButtonRef} className='skeeterPanelButton' onClick={() => SkeeterRemoveAllLineupSongs()}>Remove Lineup</button>
           </div>
           <div className='skeeterButtonDiv'>
             <button id='skeeterExportRequestsButton' ref ={SkeeterExportRequestsButtonRef} className='skeeterPanelButton' onClick={() => SkeeterExportSongs()}>Export Songs</button>

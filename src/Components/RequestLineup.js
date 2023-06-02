@@ -223,7 +223,8 @@ const RequestLineup = props => {
       var noLineup = 
         React.createElement('p', {id : 'noLineup', key : 'noLineup'}, 'No requests yet!');
         lineup.push(noLineup);
-        lineupButtonRef.current.innerHTML = 'Lineup';
+        if(lineupButtonRef.current != null)
+          lineupButtonRef.current.innerHTML = 'Lineup';
     }
     SetLineupTracks(lineup);
     // console.log(lineupTracksRef.current);
@@ -296,7 +297,8 @@ const RequestLineup = props => {
           React.createElement('p', {className : 'noUnapprovedLineupText'}, 'Get the word out bro...')
         );
         preapprovalLineup.push(noLineup);
-        preapprovalButtonRef.current.innerHTML = 'Preapproval'
+        if(preapprovalButtonRef.current != null)
+          preapprovalButtonRef.current.innerHTML = 'Preapproval'
     }
     SetPreapprovalLineupTracks(preapprovalLineup);
     // console.log(lineupTracksRef.current);

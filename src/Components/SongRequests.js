@@ -12,13 +12,13 @@ import Fade from '@mui/material/Zoom';
 import axios from 'axios';
 import fontawesome from '@fortawesome/fontawesome'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage, faClipboard, faNoteSticky, faComments, faClose} from '@fortawesome/free-solid-svg-icons'
+import { faMessage, faClipboard, faNoteSticky, faComments, faClose, faLink, faLinkSlash} from '@fortawesome/free-solid-svg-icons'
 
 // Component Imports
 import RequestLineup from './RequestLineup';
 import SkeeterPanel from './SkeeterPanel';
 
-fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments, faClose);
+fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments, faClose, faLink, faLinkSlash);
 
 
 require('upvote/lib/jquery.upvote.js');
@@ -121,6 +121,7 @@ const SongRequests = props => {
   const popupDivRef = useRef();
   const popupSpanRef = useRef();
   const notesInputSectionDivRef = useRef();
+  const QRCodeDivRef = useRef();
   const QRCodeButtonRef = useRef();
   const QRMenuBackgroundOverlayDivRef = useRef();
 
@@ -250,11 +251,11 @@ const SongRequests = props => {
 
   function ToggleQRMenu(){
     if(isQRMenuOpenRef.current == true){
-      QRCodeButtonRef.current.classList.remove('openMenu');
+      QRCodeDivRef.current.classList.remove('openMenu');
       QRMenuBackgroundOverlayDivRef.current.classList.remove('openMenu');      
     }
     else{
-      QRCodeButtonRef.current.classList.add('openMenu');
+      QRCodeDivRef.current.classList.add('openMenu');
       QRMenuBackgroundOverlayDivRef.current.classList.add('openMenu');
     }
     isQRMenuOpenRef.current = !isQRMenuOpenRef.current;
@@ -681,13 +682,20 @@ const SongRequests = props => {
                     </span>
                 {/* </Tooltip> */}
               </div>
-              <div id='QRCodeDiv'>
+              <div id='QRCodeDiv' ref={QRCodeDivRef}>
                 {/* <button>test</button> */}
                 <img id='QRCodeButton' ref={QRCodeButtonRef} src='./qr-code-12-256.png' className='QRCodeButton' onClick={() => ToggleQRMenu()}/>
                 <div id='QRMenuBackgroundOverlayDiv' className='QRMenuBackgroundOverlayDiv' ref={QRMenuBackgroundOverlayDivRef} onClick={() => ToggleQRMenu()}/>
                 <div className='QRMenuPopupDiv'>
-                {/* <div className='notificationsContainerDiv'></div> */}
-
+                  <div className='QRCodeImageDiv'>
+                    <img id='QRCodeImage' src='./Skeeter-B_Request_Web_App_QR_Code_-_Gen_2.png'/>
+                  </div>
+                  <div id='QRMenuLowerSection'>
+                    <div id='copyLinkDiv'>
+                      <h4 id='websiteLinkText'>https://dj-skeeterb.web.app/</h4>
+                      <FontAwesomeIcon id='skeeterBLinkIcon' icon={faLink} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
