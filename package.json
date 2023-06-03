@@ -28,6 +28,7 @@
     "react-fontawesome": "^1.7.1",
     "react-router-dom": "^6.6.1",
     "react-scripts": "5.0.1",
+    "react-tooltip": "^5.13.1",
     "upvote": "^1.1.1",
     "web-vitals": "^2.1.4"
   },

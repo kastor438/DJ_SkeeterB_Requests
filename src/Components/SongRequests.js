@@ -6,10 +6,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, remove, child, get, onValue, update } from "firebase/database";
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Fade from '@mui/material/Zoom';
 import axios from 'axios';
+import { Tooltip } from 'react-tooltip';
 import fontawesome from '@fortawesome/fontawesome'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage, faClipboard, faNoteSticky, faComments, faClose, faLink, faLinkSlash} from '@fortawesome/free-solid-svg-icons'
@@ -676,11 +674,9 @@ const SongRequests = props => {
             </div>
             <div id='submitAndShareDiv'>
               <div id='submissionDiv'>
-                {/* <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 300 }} title="Must provide a song and artist name." placement="top-start"> */}
-                    <span>
-                      <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
-                    </span>
-                {/* </Tooltip> */}
+                <span>
+                  <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
+                </span>
               </div>
               <div id='QRCodeDiv' ref={QRCodeDivRef}>
                 {/* <button>test</button> */}
@@ -691,7 +687,10 @@ const SongRequests = props => {
                     <img id='QRCodeImage' src='./Skeeter-B_Request_Web_App_QR_Code_-_Gen_2.png'/>
                   </div>
                   <div id='QRMenuLowerSection'>
-                    <div id='copyLinkDiv'>
+                    <Tooltip id='copiedWebsiteURLTooltip' openOnClick={true} clickable={true} anchorSelect='#copyLinkDiv' place={'bottom'} position='' delayHide={3000}>
+                      <b><p className='copiedWebsiteURLTooltip'>Copied To Clipboard</p></b>
+                    </Tooltip>
+                    <div id='copyLinkDiv' data-tooltip-id='copiedWebsiteURLTooltip' onClick={() => {navigator.clipboard.writeText('https://dj-skeeterb.web.app/')}}>
                       <h4 id='websiteLinkText'>https://dj-skeeterb.web.app/</h4>
                       <FontAwesomeIcon id='skeeterBLinkIcon' icon={faLink} />
                     </div>

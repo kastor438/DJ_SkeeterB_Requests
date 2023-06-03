@@ -83,6 +83,7 @@
 }
 
 #copyLinkDiv{
+  /* position: relative; */
   width: max-content;
   height: 30px;
   display: flex;
@@ -117,10 +118,20 @@
     color: rgb(154, 160, 167);
 }
 
+.copiedWebsiteURLTooltip{
+  padding: 0px;
+  font-size: 0.6em;
+}
+
 @media only screen and (max-width: 1080px){
   .QRMenuPopupDiv{
     width: 50vw;
     left: 25vw;
+  }
+
+  .copiedWebsiteURLTooltip{
+    padding: 0px;
+    font-size: 0.7em;
   }
 }
 
@@ -133,6 +144,11 @@
   #copyLinkDiv{
     font-size: 0.8em;
   }
+
+  .copiedWebsiteURLTooltip{
+    padding: 0px;
+    font-size: 0.8em;
+  }
 }
 
 @media only screen and (max-width: 450px){
@@ -143,5 +159,10 @@
 
   #copyLinkDiv{
     font-size: 0.85em;
+  }
+
+  .copiedWebsiteURLTooltip{
+    padding: 0px;
+    font-size: 1em;
   }
 }
