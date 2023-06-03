@@ -68,7 +68,7 @@ class App extends Component {
               const requestData = snapshot.val();
               this.SystemNotification(requestData)
               update(ref(db, `PreapprovalRequests/${snapshot.key}/`), {
-                AdminNotified: true
+                AdminNotified: true,
               });
             }
           });
