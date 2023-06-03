@@ -402,7 +402,8 @@ const SongRequests = props => {
               RequestedBy: requestedByUID,
               DateTime : newDateTime,
               Approved : false,
-              RequestNotes : requestNotes
+              RequestNotes : requestNotes,
+              AdminNotified: false
             });
             set(ref(db, `Keys/LatestRequestKey/`), nextSongKey)
             if(requestedByUID != ''){
@@ -432,7 +433,8 @@ const SongRequests = props => {
           RequestedBy: requestedByUID,
           DateTime : newDateTime,
           Approved : false,
-          RequestNotes : requestNotes
+          RequestNotes : requestNotes,
+          AdminNotified: false
         });
         set(ref(db, `Keys/LatestRequestKey/`), nextSongKey)
         if(requestedByUID != ''){
