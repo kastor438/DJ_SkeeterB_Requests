@@ -206,7 +206,7 @@ const RequestLineup = props => {
                 ),
                 React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
                 React.createElement('span', {}, '')),
-              (((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
+              (((data[sortedKeys[i]].RequestNotes != null && data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
                 React.createElement('div', {className : 'requestNotesDiv'},
                   React.createElement('p', {className : 'requestNotes'}, data[sortedKeys[i]].RequestNotes)
                 )
@@ -223,7 +223,8 @@ const RequestLineup = props => {
       var noLineup = 
         React.createElement('p', {id : 'noLineup', key : 'noLineup'}, 'No requests yet!');
         lineup.push(noLineup);
-        lineupButtonRef.current.innerHTML = 'Lineup';
+        if(lineupButtonRef.current != null)
+          lineupButtonRef.current.innerHTML = 'Lineup';
     }
     SetLineupTracks(lineup);
     // console.log(lineupTracksRef.current);
@@ -296,7 +297,8 @@ const RequestLineup = props => {
           React.createElement('p', {className : 'noUnapprovedLineupText'}, 'Get the word out bro...')
         );
         preapprovalLineup.push(noLineup);
-        preapprovalButtonRef.current.innerHTML = 'Preapproval'
+        if(preapprovalButtonRef.current != null)
+          preapprovalButtonRef.current.innerHTML = 'Preapproval'
     }
     SetPreapprovalLineupTracks(preapprovalLineup);
     // console.log(lineupTracksRef.current);

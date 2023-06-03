@@ -1,7 +1,10 @@
 import './App.css';
+import skeeterLogo from './skeeterB-Logo.png'
 import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, onValue, onChildAdded, set, update } from "firebase/database";
+import addNotification from 'react-push-notification';
 
 import NavBar from "./Components/NavBar";
 import Main from "./Main";
@@ -23,6 +26,8 @@ const publicRecaptchaKey = '6LdqIxskAAAAADVCIjtf00Sj76bY2vB3KA-J-6-D';
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
   
+const db = getDatabase();
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -40,12 +45,34 @@ class App extends Component {
     this.Setup();
   }
 
+  SystemNotification = (requestData) =>{
+    addNotification({
+      title: 'DJ-SkeeterB - New Request',
+      message: `${requestData.SongName} by ${requestData.ArtistName}`,
+      duration: 6000,
+      icon: skeeterLogo,
+      native: true
+    })
+  }
+
   async Setup(){
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // console.log(user);
         this.SignInHandler(user);
+        if((user.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || user.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
+          const dbPreapprovalRequestsRef = ref(db, `PreapprovalRequests/`);
+          return onChildAdded(dbPreapprovalRequestsRef, (snapshot) => {
+            if(snapshot.val().AdminNotified != null && !snapshot.val().AdminNotified){
+              const requestData = snapshot.val();
+              this.SystemNotification(requestData)
+              update(ref(db, `PreapprovalRequests/${snapshot.key}/`), {
+                AdminNotified: true
+              });
+            }
+          });
+        }
       } 
       else {
         this.SignOutHandler();
