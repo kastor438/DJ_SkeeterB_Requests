@@ -687,7 +687,7 @@ const SongRequests = props => {
                     <img id='QRCodeImage' src='./Skeeter-B_Request_Web_App_QR_Code_-_Gen_2.png'/>
                   </div>
                   <div id='QRMenuLowerSection'>
-                    <Tooltip id='copiedWebsiteURLTooltip' openOnClick={true} clickable={true} anchorSelect='#copyLinkDiv' place={'bottom'} position='' delayHide={3000}>
+                    <Tooltip id='copiedWebsiteURLTooltip' openOnClick={true} anchorSelect='#copyLinkDiv' place={'bottom'} position='' delayHide={3000}>
                       <b><p className='copiedWebsiteURLTooltip'>Copied To Clipboard</p></b>
                     </Tooltip>
                     <div id='copyLinkDiv' data-tooltip-id='copiedWebsiteURLTooltip' onClick={() => {navigator.clipboard.writeText('https://dj-skeeterb.web.app/')}}>
