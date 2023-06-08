@@ -122,6 +122,7 @@ const SongRequests = props => {
   const QRCodeDivRef = useRef();
   const QRCodeButtonRef = useRef();
   const QRMenuBackgroundOverlayDivRef = useRef();
+  const skeeterPanelRef = useRef();
 
   useEffect(() => {
     var currentUrl = window.location.href;
@@ -706,7 +707,7 @@ const SongRequests = props => {
           </div>
         </div>
         <RequestLineup showLineup={lineupActive} authUser={props.authUser}/>
-        <SkeeterPanel authUser={props.authUser}/>
+        <SkeeterPanel authUser={props.authUser} ref={skeeterPanelRef}/>
       </div>
     </div>
   );
