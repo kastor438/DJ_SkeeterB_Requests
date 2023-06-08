@@ -58,7 +58,7 @@ const NavBar = props => {
   const unsubNotifications = useEffect(() => {
     SetNavBar();
     
-    if(auth.currentUser != null){
+    if(props.authUser != null){
       if((auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83')){
         var skeeterLinks = 
           [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 

@@ -206,7 +206,7 @@ const RequestLineup = props => {
                 ),
                 React.createElement('a', {id : 'lineupSpotifyLink' + sortedKeys[i], className : ((data[sortedKeys[i]].SpotifyURL != '' ? ' lineupSpotifyLink' : 'noSpotifyLink')), href : data[sortedKeys[i]].SpotifyURL, target : 'blank'}, '\uD83D\uDD17'),
                 React.createElement('span', {}, '')),
-              (((data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
+              (((data[sortedKeys[i]].RequestNotes != null && data[sortedKeys[i]].RequestNotes != '' && data[sortedKeys[i]].RequestNotes != null) && (auth.currentUser && (auth.currentUser.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.currentUser.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'))) ?
                 React.createElement('div', {className : 'requestNotesDiv'},
                   React.createElement('p', {className : 'requestNotes'}, data[sortedKeys[i]].RequestNotes)
                 )
