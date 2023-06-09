@@ -40,6 +40,7 @@ const NavBar = props => {
   const songRequestsLinkRef = useRef();
   const upcomingLinkRef = useRef();
   const newEventLinkRef = useRef();
+  const historyLinkRef = useRef();
   const settingsLinkRef = useRef();
   const notificationBellRef = useRef();
   const notificationBackgroundOverlayDivRef = useRef();
@@ -63,6 +64,9 @@ const NavBar = props => {
         var skeeterLinks = 
           [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
             React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
+          ),
+          React.createElement('li', {key : 'historyLink', className : 'navBarLink'}, 
+            React.createElement(NavLink, {ref : historyLinkRef, to : '/History', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'History')
           ),
           React.createElement('li', {key : 'settingsLink', className : 'navBarLink'}, 
             React.createElement(NavLink, {ref : settingsLinkRef, to : '/Settings', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Settings')
