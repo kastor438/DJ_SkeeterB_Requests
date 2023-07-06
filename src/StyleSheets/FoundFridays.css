@@ -21,6 +21,7 @@ div, h1{
 .featureHeaderDiv{
   grid-column-start: 1;
   grid-column-end: 3;
+  height: fit-content;
 }
 
 .featureInfoDiv{
@@ -74,8 +75,9 @@ div, h1{
 
 @media only screen and (max-width: 1028px){
   #foundFridaysDiv{
+    height: 100%;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 2fr 4fr 1fr;
+    grid-template-rows: repeat(2, auto);
     overflow-y: scroll;
   }
 
@@ -98,6 +100,7 @@ div, h1{
   
   .featureImageDiv{
     width: 100%;
+    grid-column: 1;
     grid-row:  2;
   }
   
@@ -106,6 +109,7 @@ div, h1{
   }
   
   .featureToHomeLinkDiv{
+    grid-column: 1;
     grid-row:  4;
   }
 }
