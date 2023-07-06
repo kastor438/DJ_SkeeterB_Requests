@@ -37,7 +37,7 @@ const FoundFridays = props => {
         if(snapshot.exists()){
           visits = parseInt(snapshot.val().Visits) + 1;
         }
-        set((db, 'Features/FoundFridays/Visits'), visits);
+        set(ref(db, 'Features/FoundFridays/Visits'), visits);
       });
   }, )
 
