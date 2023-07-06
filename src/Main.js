@@ -6,6 +6,7 @@ import Settings from './Components/Settings';
 import Upcoming from './Components/Upcoming';
 import Signup from './Components/Signup';
 import Login from './Components/Login';
+import FoundFridays from './Components/FoundFridays';
 import ForgotPassword from './Components/ForgotPassword';
 import UpcomingEvent from './Components/UpcomingEvent';
 import NewEvent from './Components/NewEvent';
@@ -24,6 +25,7 @@ const Main = props => {
         <Route path='/Signup' element={<Signup signupHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login/ForgotPassword' element={<ForgotPassword signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
+        <Route path='/FoundFridays' element={<FoundFridays/>}/>        
         <Route path='*' element={<Navigate to="/" replace />}/>
       </Routes>
     </div>
