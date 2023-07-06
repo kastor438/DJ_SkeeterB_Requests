@@ -115,6 +115,10 @@ div, h1{
 }
 
 @media only screen and (max-width: 600px){
+  #foundFridaysDiv{
+    padding-bottom: 5vh;
+  }
+
   #foundFridaysDiv p{
     font-size: 18px;
   }
