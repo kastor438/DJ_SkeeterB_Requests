@@ -293,8 +293,8 @@ const RequestLineup = props => {
     else{
       var noLineup = 
         React.createElement('div', {key : 'noUnapprovedLineup'}, 
-          React.createElement('p', {className : 'noUnapprovedLineupText'}, 'No preapproval requests!'),
-          React.createElement('p', {className : 'noUnapprovedLineupText'}, 'Get the word out bro...')
+          React.createElement('p', {className : 'noUnapprovedLineupText'}, 'No requests yet...')
+          // React.createElement('p', {className : 'noUnapprovedLineupText'}, 'Get the word out bro...')
         );
         preapprovalLineup.push(noLineup);
         if(preapprovalButtonRef.current != null)
