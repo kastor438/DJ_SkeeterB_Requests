@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { NavLink, Navigate, Link, useLocation } from 'react-router-dom';
+import { getDatabase, ref, set, remove, child, get, onValue, update } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXh2tjWcUeOvEhUIyeZVNBRBwtn7BebgI",
@@ -16,14 +17,29 @@ const firebaseConfig = {
   measurementId: "G-E5J0711GSP",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = getDatabase(app);
 
 const FoundFridays = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
 
   const userEmailRef = useRef();
   const location = useLocation();
+
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
+
+  useEffect(() => {
+      get(child(dbRef, 'Features/FoundFridays/')).then((snapshot) => {
+        var visits = 1;
+        if(snapshot.exists()){
+          visits = parseInt(snapshot.val().Visits) + 1;
+        }
+        set((db, 'Features/FoundFridays/Visits'), visits);
+      });
+  }, )
 
   if(navigateToHome === true){
     return <Navigate to='/'/>;
