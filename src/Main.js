@@ -25,7 +25,7 @@ const Main = props => {
         <Route path='/Signup' element={<Signup signupHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login/ForgotPassword' element={<ForgotPassword signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
-        <Route path='/FoundFridays' element={<FoundFridays/>}/>        
+        <Route path='/Feature/FoundFridays' element={<FoundFridays/>}/>        
         <Route path='*' element={<Navigate to="/" replace />}/>
       </Routes>
     </div>
