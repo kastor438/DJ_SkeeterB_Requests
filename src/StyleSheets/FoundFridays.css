@@ -1,0 +1,140 @@
+div, h1{
+  /* border: 1px solid black; */
+}
+
+#foundFridaysDiv{
+  background-color: rgba(201, 0, 40, 0.911);
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: 
+  linear-gradient(45deg,  transparent 0%, transparent 57%, #6d010f 100%),
+  linear-gradient(-45deg, #bd1010 0%,  #af4838 0.3%, #6b0202 112%,  transparent 11% ),
+  linear-gradient(-90deg, #740303 100%, #521010 65%, transparent 20% );
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 3fr 2fr;
+  overflow: hidden;
+}
+
+.featureHeaderDiv{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  height: fit-content;
+}
+
+.featureInfoDiv{
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  width: 80%;
+  margin-left: 10%;
+  grid-column: 1;
+}
+
+#foundFridaysDiv p{
+  color: rgb(205, 216, 226);
+  font-weight: 500;
+  text-align: left;
+  font-size: 20px;
+}
+
+#foundFridaysDiv p b{
+  color: aliceblue;
+}
+
+#foundFridaysDiv span{
+  font-weight: 700;
+}
+
+.featureImageDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.featureImage{
+  width: 65%;
+}
+
+.featureToHomeLink{
+  color: rgb(0, 0, 0);
+  text-decoration: underline;
+}
+
+.featureToHomeLink:hover{
+  color: #c59898;
+}
+
+.featureToHomeLink h4{
+  font-weight: 900;
+  font-size: xx-large;
+}
+
+@media only screen and (max-width: 1028px){
+  #foundFridaysDiv{
+    height: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+    overflow-y: scroll;
+  }
+
+  .featureHeaderDiv{
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .featureInfoDiv{
+    align-items: center;
+    justify-content: center;
+    grid-column: 1;
+    grid-row:  3;
+  }
+  
+  #foundFridaysDiv p{
+    text-align: center;
+    font-size: 20px;
+  }
+  
+  .featureImageDiv{
+    width: 100%;
+    grid-column: 1;
+    grid-row:  2;
+  }
+  
+  .featureImage{
+    width: 65%;
+  }
+  
+  .featureToHomeLinkDiv{
+    grid-column: 1;
+    grid-row:  4;
+  }
+}
+
+@media only screen and (max-width: 600px){
+  #foundFridaysDiv{
+    padding-bottom: 5vh;
+  }
+
+  #foundFridaysDiv p{
+    font-size: 18px;
+  }
+  
+  .featureImage{
+    width: 55%;
+  }
+}
+
+@media only screen and (max-width: 480px){
+  .featureInfoDiv{
+    width: 90%;
+    margin-left: 5%;
+  }
+
+  .featureImage{
+    width: 65%;
+  }
+}

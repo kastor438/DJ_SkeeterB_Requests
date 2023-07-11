@@ -14,7 +14,6 @@
 #requestAndLineupList{
   width: 100vw;
   z-index: 100;
-  margin-top: -2%;
   margin-left: -3%;
   list-style: none;
   display: grid;
@@ -423,7 +422,6 @@ input:-webkit-autofill:focus{
   }
 
   #requestAndLineupList{
-    /* margin-left: -3%; */
     grid-template-columns: 1fr 1fr;
   }
   
