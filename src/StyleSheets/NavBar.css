@@ -270,6 +270,79 @@ a.activeLink{
   /* font-size: 32px; */
 }
 
+#skeeterSocialsDiv{
+  height: fit-content;
+  position: absolute;
+  bottom: 0;
+  display: grid;
+  width: 50%;
+  margin-left: 25%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  line-height: 100%;
+  padding-bottom: 5%;
+}
+
+.skeeterSocialDivContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skeeterSocialsLink{
+  text-decoration: none;
+}
+
+.skeeterSocialsLink:visited *{
+  color: aliceblue;
+}
+
+.skeeterSocialsLink:hover *{
+  text-decoration: none;
+  color: rgb(64, 92, 117);
+}
+
+.skeeterSocialsLink:active *{
+  text-decoration: none;
+  color: rgb(41, 41, 43);
+}
+
+.skeeterSocialLinkDiv{
+  height: fit-content;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+  border-radius: 100px;
+  overflow: hidden;
+  background-color: cadetblue;
+  border: 3px solid rgb(77, 77, 77);
+}
+
+.skeeterSocialImageDiv{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.skeeterSocialImage{
+  width: 100%;
+  border: 2px solid rgb(77, 77, 77);
+  border-radius: 1000px;
+  scale: 1.2;
+}
+
+.socialLinkTextDiv{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.socialLinkText{
+  font-size: 1em;
+}
+
 @media only screen and (max-width: 1465px){
   #navBarLogo{
     /* width: 20%; */
@@ -289,6 +362,10 @@ a.activeLink{
 
   #navBarLinks{
     margin-top: 40%;
+  }
+
+  .socialLinkText{
+    font-size: 0.9em;
   }
 }
 
@@ -355,6 +432,10 @@ a.activeLink{
     padding: 1px 3px;
     font-size: 14px;
   }
+
+  .socialLinkText{
+    font-size: 0.8em;
+  }
 }
 
 @media only screen and (max-width: 1100px){
@@ -370,6 +451,10 @@ a.activeLink{
     transform: translate3d(2vw, 0, 0);
     right: 30vw;
     transition: all 2s ease ease-in-out;
+  }
+
+  .socialLinkText{
+    font-size: 0.7em;
   }
 }
 
@@ -539,6 +624,10 @@ a.activeLink{
 
   .navBarLink a{
     font-size: 200%;
+  }
+
+  .socialLinkText{
+    font-size: 1em;
   }
 }
 

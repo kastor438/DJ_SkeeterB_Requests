@@ -346,6 +346,14 @@ input:-webkit-autofill:focus{
   transition: background-color 5000s ease-in-out 0s;
 }
 
+#submitAndShareDiv{
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+}
+
+#submissionDiv{
+  grid-column: 2;
+}
 
 #submitBtn{
   margin-top: 3vmax;

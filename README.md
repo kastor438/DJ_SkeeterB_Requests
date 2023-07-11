@@ -8,7 +8,7 @@
 - npm i upvote
 - npm i react-calendar
 - npm i axios
-- npm i react-push-notification
+- npm i react-push-notification -f
 - npm i --save @fortawesome/fontawesome
 - npm i --save @fortawesome/react-fontawesome
 - npm i --save @fortawesome/free-solid-svg-icons

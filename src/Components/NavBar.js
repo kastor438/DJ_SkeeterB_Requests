@@ -303,12 +303,59 @@ const NavBar = props => {
             </div>
           </div>
         </div>
-      </div>
-      <div id='menuButtonContainer'>
-        <div id='menuButtonDiv' ref={menuButtonDivRef} className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'} onClick={(e) => ToggleMenuPanel(e.target)}>
-          <div className='bar1'></div>
-          <div className='bar2'></div>
-          <div className='bar3'></div>
+        <div id='menuButtonContainer'>
+          <div id='menuButtonDiv' ref={menuButtonDivRef} className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'} onClick={(e) => ToggleMenuPanel(e.target)}>
+            <div className='bar1'></div>
+            <div className='bar2'></div>
+            <div className='bar3'></div>
+          </div>
+        </div>
+        <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
+        <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
+          {userInfo}
+          <ul id='navBarLinks'>
+            <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
+            <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
+            {skeeterSpecificLinks}
+          </ul>
+          <div id='skeeterSocialsDiv'>
+            <div id='skeeterTwitterDivContainer' className='skeeterSocialDivContainer'>
+              <a className='skeeterSocialsLink' target='blank' href='https://twitter.com/SkeeterB1'>
+                <div id='skeeterTwitterLinkDiv' className='skeeterSocialLinkDiv'>
+                  <div id='twitterLinkImageDiv' className='skeeterSocialImageDiv'>
+                    <img id='twitterLinkImage' className='skeeterSocialImage' src='./TwitterLogo.png'/>
+                  </div>
+                  <div id='twitterLinkTextDiv' className='socialLinkTextDiv'>
+                    <h4 id='twitterLinkText' className='socialLinkText'>Twitter</h4>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div id='skeeterInstagramDivContainer' className='skeeterSocialDivContainer'>
+              <a className='skeeterSocialsLink' target='blank' href='https://www.instagram.com/djskeeterb/'>
+              <div id='skeeterInstagramLinkDiv' className='skeeterSocialLinkDiv'>
+                <div id='instagramLinkImageDiv' className='skeeterSocialImageDiv'>
+                  <img id='instagramLinkImage' className='skeeterSocialImage' src='./InstagramLogo.png'/>
+                </div>
+                <div id='instagramLinkTextDiv' className='socialLinkTextDiv'>
+                  <h4 id='instagramLinkText' className='socialLinkText'>Instagram</h4>
+                </div>
+              </div>
+              </a>
+            </div>
+            <div id='skeeterMixCloudDivContainer' className='skeeterSocialDivContainer'>
+              <a className='skeeterSocialsLink' target='blank' href='https://www.mixcloud.com/djskeeterb/'>
+              <div id='skeeterMixCloudLinkDiv' className='skeeterSocialLinkDiv'>
+                <div id='mixCloudLinkImageDiv' className='skeeterSocialImageDiv'>
+                  <img id='mixCloudLinkImage' className='skeeterSocialImage' src='./MixCloudLogo.png'/>
+                </div>
+                <div id='mixCloudLinkTextDiv' className='socialLinkTextDiv'>
+                  <h4 id='mixCloudLinkText' className='socialLinkText'>MixCloud</h4>
+                </div>
+              </div>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
