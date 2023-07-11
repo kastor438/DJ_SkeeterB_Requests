@@ -273,8 +273,10 @@ const NavBar = props => {
     <div>
       <nav id='navBar'>
         <div id='logoTitleDiv'>
-          <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
-          <NavLink to='/' onClick={e => SetNavBar(e.target)}>
+          <div id='navBarLogoDiv'>
+            <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
+          </div>
+          <NavLink id='navLinkPageHeader' to='/' onClick={e => SetNavBar(e.target)}>
             <h2 id='pageHeader'>DJSkeeterB</h2>
           </NavLink>
             {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
