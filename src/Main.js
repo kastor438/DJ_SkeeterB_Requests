@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import SongRequests from './Components/SongRequests';
+import History from './Components/History';
 import Settings from './Components/Settings';
 import Upcoming from './Components/Upcoming';
 import Signup from './Components/Signup';
@@ -17,6 +18,7 @@ const Main = props => {
     <div id='mainDiv'>
       <Routes>
         <Route index element={<SongRequests authUser={props.authUser}/>}/>
+        <Route path='/History' element={<History authUser={props.authUser}/>}/>
         <Route path='/Settings' element={<Settings authUser={props.authUser}/>}/>
         <Route path='/Upcoming' element={<Upcoming authUser={props.authUser} upcomingEventHandler={(eventID) => props.upcomingEventHandler(eventID)}/>}/>
         <Route path='/NewEvent' element={<NewEvent authUser={props.authUser}/>}/>

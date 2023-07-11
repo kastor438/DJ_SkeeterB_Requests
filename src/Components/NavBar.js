@@ -40,6 +40,7 @@ const NavBar = props => {
   const songRequestsLinkRef = useRef();
   const upcomingLinkRef = useRef();
   const newEventLinkRef = useRef();
+  const historyLinkRef = useRef();
   const settingsLinkRef = useRef();
   const notificationBellRef = useRef();
   const notificationBackgroundOverlayDivRef = useRef();
@@ -75,6 +76,9 @@ const NavBar = props => {
         var skeeterLinks = 
           [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
             React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
+          ),
+          React.createElement('li', {key : 'historyLink', className : 'navBarLink'}, 
+            React.createElement(NavLink, {ref : historyLinkRef, to : '/History', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'History')
           ),
           React.createElement('li', {key : 'settingsLink', className : 'navBarLink'}, 
             React.createElement(NavLink, {ref : settingsLinkRef, to : '/Settings', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Settings')
@@ -278,20 +282,24 @@ const NavBar = props => {
   }
 
   return (
-    <nav id='navBar' ref={navBarRef}>
-      <div id='logoTitleDiv'>
-        <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
-        <NavLink to='/' onClick={e => SetNavBar(e.target)}>
-          <h2 id='pageHeader'>DJSkeeterB</h2>
-        </NavLink>
-          {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
-      </div>
-      <div className={auth.currentUser != null ? 'notificationDiv' : 'notificationDiv noAuthentication'}>
-        <div id='notificationBell' ref={notificationBellRef} className={auth.currentUser !== null ? 'notificationBell' : 'notificationBell noAuthentication'} onClick={(e) => ToggleNotificationMenu(e.target)}>
-          <div id='notificationBackgroundOverlayDiv' className='notificationBackgroundOverlayDiv' ref={notificationBackgroundOverlayDivRef}/>
-          <div className='notificationPopupDiv'>
-            <div className='notificationsContainerDiv'>
-              {userNotificationElements}
+    <div>
+      <nav id='navBar' ref={navBarRef}>
+        <div id='logoTitleDiv'>
+          <div id='navBarLogoDiv'>
+            <img id='navBarLogo' src={logo} alt='Skeeters logo.'/>
+          </div>
+          <NavLink id='navLinkPageHeader' to='/' onClick={e => SetNavBar(e.target)}>
+            <h2 id='pageHeader'>DJSkeeterB</h2>
+          </NavLink>
+            {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
+        </div>
+        <div className={auth.currentUser != null ? 'notificationDiv' : 'notificationDiv noAuthentication'}>
+          <div id='notificationBell' ref={notificationBellRef} className={auth.currentUser !== null ? 'notificationBell' : 'notificationBell noAuthentication'} onClick={(e) => ToggleNotificationMenu(e.target)}>
+            <div id='notificationBackgroundOverlayDiv' className='notificationBackgroundOverlayDiv' ref={notificationBackgroundOverlayDivRef}/>
+            <div className='notificationPopupDiv'>
+              <div className='notificationsContainerDiv'>
+                {userNotificationElements}
+              </div>
             </div>
           </div>
         </div>

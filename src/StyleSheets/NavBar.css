@@ -13,6 +13,7 @@
   display: grid;
   grid-template-columns: 4fr 1fr 1fr;
   align-items: center;
+  /* border: 1px solid black; */
 }
 
 #navBar.hideNav{
@@ -24,15 +25,27 @@
 } */
 
 #logoTitleDiv{
-  display: flex;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: fit-content;
+  /* height: fit-content; */
   /* border: 1px solid red; */
 }
 
+#navBarLogoDiv{
+  width: 100%;
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid black; */
+}
+
 #navBarLogo{
-  width: 18%;
+  width: 70%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -44,11 +57,13 @@
 #logoTitleDiv a{
   text-decoration: none;
   color: white;
+  grid-row: 1;
 }
 
 #pageHeader{
+  text-align: start;
   font-family: 'Merienda';
-  font-size: 68px;
+  font-size: 60px;
   /* border: 1px solid red; */
 }
 
@@ -257,7 +272,7 @@ a.activeLink{
 
 @media only screen and (max-width: 1465px){
   #navBarLogo{
-    width: 20%;
+    /* width: 20%; */
   }
 
   #pageHeader{
@@ -279,7 +294,7 @@ a.activeLink{
 
 @media only screen and (max-width: 1250px){
   #navBarLogo{
-    width: 22%;
+    /* width: 22%; */
   }
 
   #pageHeader{
@@ -343,6 +358,10 @@ a.activeLink{
 }
 
 @media only screen and (max-width: 1100px){
+  #navBarLogo{
+    width: 90%;
+  }
+
   #pageHeader{
     font-size: 44px;
   }
@@ -385,7 +404,7 @@ a.activeLink{
 
 @media only screen and (max-width: 800px){
   #navBarLogo{
-    width: 25%;
+    width: 80%;
   }
 
   #pageHeader{
@@ -435,7 +454,7 @@ a.activeLink{
   }
 
   #navBarLogo{
-    width: 30%;
+    width: 90%;
   }
 
   #pageHeader{
@@ -448,6 +467,14 @@ a.activeLink{
 }
 
 @media only screen and (max-width: 575px){
+  #navBarLogo{
+    width: 100%;
+  }
+
+  #pageHeader{
+    margin-left: 5px;
+  }
+
   .bar1, .bar2, .bar3{
     width: 45px;
     height: 7px;
