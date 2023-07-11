@@ -357,17 +357,17 @@ const NavBar = props => {
             </div>
           </div>
         </div>
-      </div>
-      <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
-      <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
-        {userInfo}
-        <ul id='navBarLinks'>
-          <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
-          <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
-          {skeeterSpecificLinks}
-        </ul>
-      </div>
-    </nav>
+        <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
+        <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
+          {userInfo}
+          <ul id='navBarLinks'>
+            <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
+            <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
+            {skeeterSpecificLinks}
+          </ul>
+        </div>
+      </nav>
+    </div>
   );
 }
 
