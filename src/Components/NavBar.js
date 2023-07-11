@@ -4,7 +4,7 @@ import '../StyleSheets/NotificationSystem.css'
 import { initializeApp } from 'firebase/app';
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useEffect, useState, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, Link, useLocation } from 'react-router-dom';
 import { getDatabase, ref, onValue, get, child, set, update } from 'firebase/database';
 
 const firebaseConfig = {
@@ -44,9 +44,21 @@ const NavBar = props => {
   const settingsLinkRef = useRef();
   const notificationBellRef = useRef();
   const notificationBackgroundOverlayDivRef = useRef();
-  
+  const navBarRef = useRef();
+
   const db = getDatabase();
   const dbRef = ref(getDatabase());
+  const location = useLocation();
+
+  useEffect(() => {
+    // console.log(location.pathname);
+    if(location.pathname.includes("Feature", 1)){
+      navBarRef.current.classList.add('hideNav');
+    }
+    else{
+      navBarRef.current.classList.remove('hideNav');
+    }
+  })
 
   useEffect(() => {
     SetNavBar();
@@ -119,7 +131,7 @@ const NavBar = props => {
     }
   }
 
-  async function SignOutUser(element){
+  async function SignOutUser(){
     try{
       await signOut(auth);
     }
@@ -271,10 +283,10 @@ const NavBar = props => {
 
   return (
     <div>
-      <nav id='navBar'>
+      <nav id='navBar' ref={navBarRef}>
         <div id='logoTitleDiv'>
           <div id='navBarLogoDiv'>
-            <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
+            <img id='navBarLogo' src={logo} alt='Skeeters logo.'/>
           </div>
           <NavLink id='navLinkPageHeader' to='/' onClick={e => SetNavBar(e.target)}>
             <h2 id='pageHeader'>DJSkeeterB</h2>
@@ -291,24 +303,24 @@ const NavBar = props => {
             </div>
           </div>
         </div>
-        <div id='menuButtonContainer'>
-          <div id='menuButtonDiv' ref={menuButtonDivRef} className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'} onClick={(e) => ToggleMenuPanel(e.target)}>
-            <div className='bar1'></div>
-            <div className='bar2'></div>
-            <div className='bar3'></div>
-          </div>
+      </div>
+      <div id='menuButtonContainer'>
+        <div id='menuButtonDiv' ref={menuButtonDivRef} className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'} onClick={(e) => ToggleMenuPanel(e.target)}>
+          <div className='bar1'></div>
+          <div className='bar2'></div>
+          <div className='bar3'></div>
         </div>
-        <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
-        <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
-          {userInfo}
-          <ul id='navBarLinks'>
-            <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
-            <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
-            {skeeterSpecificLinks}
-          </ul>
-        </div>
-      </nav>
-    </div>
+      </div>
+      <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
+      <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
+        {userInfo}
+        <ul id='navBarLinks'>
+          <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
+          <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
+          {skeeterSpecificLinks}
+        </ul>
+      </div>
+    </nav>
   );
 }
 

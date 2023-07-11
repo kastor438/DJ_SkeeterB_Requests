@@ -16,9 +16,13 @@
   /* border: 1px solid black; */
 }
 
-#navBar, #navBar div{
-  /* border: 1px solid red; */
+#navBar.hideNav{
+  display: none;
 }
+
+/* #navBar, #navBar div{
+  border: 1px solid red;
+} */
 
 #logoTitleDiv{
   display: grid;

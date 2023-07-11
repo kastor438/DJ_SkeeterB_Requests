@@ -34,6 +34,9 @@
     "Visitors": {
       ".write": true
     },
+    "Features": {
+      ".write": true
+    },
     "Events": {
       ".write": "auth.uid === 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' || auth.uid === 'bExKDb4uJTbis2GZOL8fm6clrw83'"
     },
