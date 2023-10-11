@@ -29,6 +29,8 @@ const History = props => {
   const filteredVotersCountValueRef = useRef(0);
   const filteredMinVoteRatingValueRef = useRef(0);
   const filteredMaxVoteRatingValueRef = useRef(0);
+  const historyData = useRef([]);
+  const historyDataElements = useRef([]);
 
   // DOM Refs
   const filteredSongNameInputRef = useRef();
@@ -42,15 +44,52 @@ const History = props => {
   // DB Refs
   const db = getDatabase();
   const dbRef = ref(getDatabase());
-
+  
   useEffect(() => {
     if(!auth.currentUser || (auth.currentUser.uid !== 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' && auth.currentUser.uid !== 'bExKDb4uJTbis2GZOL8fm6clrw83')){
       SetNavigateToHome(true);
+    }
+    else{
+      GetHistory();
     }
   }, [props.authUser])
 
   function AdjustVoteCount(adjustmentValue){
     filteredVotersCountElementRef.current += adjustmentValue;
+  }
+
+  function GetHistory(){
+    get(ref(db, '/History/')).then((snapshot) => {
+      if(snapshot.exists()){
+        console.log(snapshot.val());
+        const historyDateData = [];
+        Object.entries(snapshot.val()).forEach(([key, value]) => {
+          var splitDate = key.split('-');
+          var historyDate = {
+            day: parseInt(splitDate[0]),
+            month: parseInt(splitDate[1]),
+            year: parseInt(splitDate[2]),
+            historyRequests: value
+          }
+          historyDateData.push(historyDate);
+        });
+        
+        var historyDateSectionElements = [];
+        for(var i = 0; i < historyDateData.length; i++){
+          var historyRequestsElements = [];
+          for(var j = 0; j < historyDateData[i].historyRequests.length; j++){
+            var historyRequestElement = React.createElement('div', {}, 
+              React.createElement('p', {}, historyDateData[i].historyRequests[j].SongName)
+            )
+            historyRequestsElements.push(historyRequestElement);
+          }
+          var dateSectionElement = React.createElement('div', {}, historyRequestsElements.map())
+          historyDateSectionElements.push(dateSectionElement);
+        }
+        historyDataElements.current = historyDateSectionElements;
+        console.log(historyDateData);
+      }
+    });
   }
 
   if(navigateToHome === true){
@@ -99,7 +138,7 @@ const History = props => {
         </div>
       </div>
       <div id='requestHistorySectionDiv'>
-
+        {historyDataElements}
       </div>
     </div>
   );
