@@ -42,6 +42,11 @@
 .QRMenuPopupDiv{
   width: 30vw;
   height: 0px;
+  /* box-sizing: content-box; */
+  /* border-width: 20px; */
+  /* border-style: solid; */
+  /* border-image: linear-gradient(to bottom, #8646bb, #43126b); */
+  /* border-image-slice: 1; */
   border-radius: 10px;
   transition: 0.5s;
   position: absolute;
