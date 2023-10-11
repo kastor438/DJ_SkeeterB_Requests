@@ -357,7 +357,7 @@ const NavBar = props => {
             </div>
           </div>
         </div>
-        <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
+        {/* <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
         <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
           {userInfo}
           <ul id='navBarLinks'>
@@ -365,7 +365,7 @@ const NavBar = props => {
             <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
             {skeeterSpecificLinks}
           </ul>
-        </div>
+        </div> */}
       </nav>
     </div>
   );

@@ -138,7 +138,7 @@ const History = props => {
         </div>
       </div>
       <div id='requestHistorySectionDiv'>
-        {historyDataElements}
+        {/* {historyDataElements} */}
       </div>
     </div>
   );
