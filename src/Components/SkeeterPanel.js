@@ -94,9 +94,9 @@ const SkeeterPanel = props => {
             'Request Count' : value.RequestCount,
             'Spotify URL' : value.SpotifyURL,
             'Spotify Image URL' : value.SpotifyImageURL,
-            Requestor : value.RequestedBy,
-            Upvotes : value.Upvotes,
-            Downvotes : value.Downvotes,
+            'Requestor' : value.RequestedBy,
+            'Upvotes' : value.Upvotes,
+            'Downvotes' : value.Downvotes,
             'Vote Count' : value.Upvotes - value.Downvotes
           });
         });

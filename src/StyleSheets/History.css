@@ -3,7 +3,10 @@
 }
 
 #searchAndFilterSectionDiv{
-
+  background-color: rgb(84, 114, 148);
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 90vw;
 }
 
 #requestFilterDiv{
