@@ -26,19 +26,14 @@ const History = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
   const [historyDataElements, SetHistoryDataElements] = useState([]);
 
-  // Value Refs
-  const filteredVotersCountValueRef = useRef(0);
-  const filteredMinVoteRatingValueRef = useRef(0);
-  const filteredMaxVoteRatingValueRef = useRef(0);
-  const historyData = useRef([]);
-
   const historyDataElementsRef = useRef([]);
   historyDataElementsRef.current = historyDataElements;
 
   // DOM Refs
   const filteredSongNameInputRef = useRef();
   const filteredArtistNameInputRef = useRef();
-  const filteredVotersCountElementRef = useRef();
+  const filteredRequestedByInputRef = useRef();
+  const filteredVotersCountInputRef = useRef();
   const filteredMinVoteRatingInputRef = useRef();
   const filteredMaxVoteRatingInputRef = useRef();
   const filteredStartDateInputRef = useRef();
@@ -48,6 +43,13 @@ const History = props => {
   const db = getDatabase();
   const dbRef = ref(getDatabase());
   
+  var initialEndDate = new Date();
+  var intialEndDateString = initialEndDate.toISOString().substring(0, 10);
+
+  var intialStartDate = new Date();
+  intialStartDate.setMonth(initialEndDate.getMonth() - 1);
+  var intialStartDateString = intialStartDate.toISOString().substring(0,10);
+
   useEffect(() => {
     if(!auth.currentUser || (auth.currentUser.uid !== 'GXoCbNpX6lPq3hYxRvIrfvUXMsx1' && auth.currentUser.uid !== 'bExKDb4uJTbis2GZOL8fm6clrw83')){
       SetNavigateToHome(true);
@@ -57,47 +59,61 @@ const History = props => {
     }
   }, [props.authUser])
 
-  function AdjustVoteCount(adjustmentValue){
-    filteredVotersCountElementRef.current += adjustmentValue;
-  }
-
   function GetHistory(){
-    get(ref(db, '/History/')).then((snapshot) => {
+    get(ref(db, '/')).then((snapshot) => {
       if(snapshot.exists()){
         // console.log(snapshot.val());
         const historyDateData = [];
-        Object.entries(snapshot.val()).forEach(([key, value]) => {
+        Object.entries(snapshot.val().History).forEach(([key, value]) => {
+          var historySplitDate = key.split('-');
+          var splitFilteredStartDate = filteredStartDateInputRef.current.value.split('-');
+          var splitFilteredEndDate = filteredEndDateInputRef.current.value.split('-');
           var filterMatch = false;
           const filteredHistoryRequestKeys = [];
-          Object.entries(value).forEach(([historyRequestKey, historyRequestValue]) => {
-            if(filteredSongNameInputRef.current.value != '' || filteredArtistNameInputRef.current.value != ''){
-              if(historyRequestValue.SongName.toLowerCase().includes(filteredSongNameInputRef.current.value.toLowerCase()) &&
-                historyRequestValue.ArtistName.toLowerCase().includes(filteredArtistNameInputRef.current.value.toLowerCase())){
+          if((parseInt(historySplitDate[2]) > parseInt(splitFilteredStartDate[0]) ||
+          (parseInt(historySplitDate[2]) == parseInt(splitFilteredStartDate[0]) && (parseInt(historySplitDate[1]) > parseInt(splitFilteredStartDate[1]) ||
+          (parseInt(historySplitDate[1]) == parseInt(splitFilteredStartDate[1]) && parseInt(historySplitDate[0]) >= parseInt(splitFilteredStartDate[2])))))
+          &&
+          (parseInt(historySplitDate[2]) < parseInt(splitFilteredEndDate[0]) ||
+          (parseInt(historySplitDate[2]) == parseInt(splitFilteredEndDate[0]) && (parseInt(historySplitDate[1]) < parseInt(splitFilteredEndDate[1]) ||
+          (parseInt(historySplitDate[1]) == parseInt(splitFilteredEndDate[1]) && parseInt(historySplitDate[0]) <= parseInt(splitFilteredEndDate[2])))))){
+            Object.entries(value).forEach(([historyRequestKey, historyRequestValue]) => {
+              if(filteredSongNameInputRef.current.value != '' || filteredArtistNameInputRef.current.value != '' ||
+              filteredRequestedByInputRef.current.value != '' || filteredVotersCountInputRef.current.value != '' ||
+              filteredMinVoteRatingInputRef.current.value != '' || filteredMaxVoteRatingInputRef.current.value != ''){
+                var requestedByDisplayName = historyRequestValue.RequestedBy == '' ? 'Non-User' : snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName ? snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName : historyRequestValue.RequestedBy;
+
+                console.log(filteredEndDateInputRef.current.value);
+                if(historyRequestValue.SongName.toLowerCase().includes(filteredSongNameInputRef.current.value.toLowerCase()) &&
+                historyRequestValue.ArtistName.toLowerCase().includes(filteredArtistNameInputRef.current.value.toLowerCase()) &&
+                requestedByDisplayName.toLowerCase().includes(filteredRequestedByInputRef.current.value.toLowerCase()) &&
+                (filteredVotersCountInputRef.current.value == '' || parseInt(historyRequestValue.Upvotes) + parseInt(historyRequestValue.Downvotes) >= parseInt(filteredVotersCountInputRef.current.value)) &&
+                (filteredMinVoteRatingInputRef.current.value == '' || parseInt(historyRequestValue.Upvotes) - parseInt(historyRequestValue.Downvotes) >= filteredMinVoteRatingInputRef.current.value) &&
+                (filteredMaxVoteRatingInputRef.current.value == '' || parseInt(historyRequestValue.Upvotes) - parseInt(historyRequestValue.Downvotes) <= filteredMaxVoteRatingInputRef.current.value)){
                   filterMatch = true;
-                  console.log("Test")
-                  filteredHistoryRequestKeys.push(historyRequestKey)
+                  filteredHistoryRequestKeys.push(historyRequestKey)  
+                }
               }
-            }
-            else{
-              filterMatch = true;
-              filteredHistoryRequestKeys.push(historyRequestKey)
-            }
-          });
+              else{
+                filterMatch = true;
+                filteredHistoryRequestKeys.push(historyRequestKey)
+              }
+            });
+          }
           
           // console.log(filteredHistoryRequestKeys);
           if(filterMatch == true){
-            var splitDate = key.split('-');
             var filteredHistoryRequests = [];
             Object.entries(value).forEach(([historyRequestkey, historyRequestValue]) => {
               if(filteredHistoryRequestKeys.includes(historyRequestkey)){
                 filteredHistoryRequests.push(([historyRequestkey, historyRequestValue]));
               }
             });
-            console.log(filteredHistoryRequests);
+            // console.log(filteredHistoryRequests);
             var historyDate = {
-              day: parseInt(splitDate[0]),
-              month: parseInt(splitDate[1]),
-              year: parseInt(splitDate[2]),
+              day: parseInt(historySplitDate[0]),
+              month: parseInt(historySplitDate[1]),
+              year: parseInt(historySplitDate[2]),
               historyRequests: filteredHistoryRequests
             }
             historyDateData.push(historyDate);
@@ -123,7 +139,10 @@ const History = props => {
                 React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRatingHeader'}, 'Rating'),
                 React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRating'}, parseInt(historyRequestValue.Upvotes) - parseInt(historyRequestValue.Downvotes))
               ),
-              React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByName'}, historyRequestValue.RequestedBy != '' ? historyRequestValue.RequestedBy : 'Non-User')
+              React.createElement('div', {className : 'historyRequestRequestedByNameDiv'}, 
+                React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByNameHeader'}, 'Requested By'),
+                React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByName'}, historyRequestValue.RequestedBy == '' ? 'Non-User' : snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName ? snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName : historyRequestValue.RequestedBy)
+              )
             );
             historyRequestsElements.push(historyRequestElement);
           });
@@ -156,30 +175,28 @@ const History = props => {
             <label htmlFor='artistNameFilterInput' className='songRequestInfoFilterLabel'>Artist Name</label>
             <input type='text' id='artistNameFilterInput' className='songRequestInfoFilterInput' ref={filteredArtistNameInputRef} onChange={GetHistory}/>
           </div>
-          <div className='requestInfoFilterDiv'>
-            <label htmlFor='votersCountFilterInput' className='songRequestInfoFilterLabel'>Voters Count</label>
-            <div>
-              <button onClick={() => AdjustVoteCount(-10)}>down 10</button>
-              <button onClick={() => AdjustVoteCount(-1)}>down 1</button>
-              <p id='voteCountFilterValue' ref={filteredVotersCountElementRef} value={filteredVotersCountValueRef.current}/>
-              <button onClick={() => AdjustVoteCount(1)}>up 1</button>
-              <button onClick={() => AdjustVoteCount(10)}>up 10</button>
-            </div>
+          <div className='requestedByInfoFilterDiv'>
+            <label htmlFor='requestedByFilterInput' className='songRequestInfoFilterLabel'>Requested By</label>
+            <input type='text' id='requestedByFilterInput' className='songRequestInfoFilterInput' ref={filteredRequestedByInputRef} onChange={GetHistory}/>
           </div>
           <div className='requestInfoFilterDiv'>
-            <label htmlFor='FilterInput' className='songRequestInfoFilterLabel'>VoteRating</label>
-            <input type='text' id='minimumVoteRatingFilterInput' className='songRequestInfoFilterInput' ref={filteredMinVoteRatingInputRef}/>
-            <input type='text' id='maximumVoteRatingFilterInput' className='songRequestInfoFilterInput' ref={filteredMaxVoteRatingInputRef}/>
+            <label htmlFor='minimumVotersCountFilterInput' className='songRequestInfoFilterLabel'>Voters Count</label>
+            <input type='number' id='minimumVotersCountFilterInput' className='songRequestInfoFilterInput' ref={filteredVotersCountInputRef} onChange={GetHistory}/>
+          </div>
+          <div className='requestInfoFilterDiv'>
+            <label htmlFor='minimumVoteRatingFilterInput' className='songRequestInfoFilterLabel'>VoteRating</label>
+            <input type='number' id='minimumVoteRatingFilterInput' className='songRequestInfoFilterInput' ref={filteredMinVoteRatingInputRef} onChange={GetHistory}/>
+            <input type='number' id='maximumVoteRatingFilterInput' className='songRequestInfoFilterInput' ref={filteredMaxVoteRatingInputRef} onChange={GetHistory}/>
           </div>
         </div>
         <div id='dateFilterDiv'>
           <div className='dateInfoFilterDiv'>
             <label htmlFor='startDateFilterInput' className='dateInfoFilterLabel'>Start Date</label>
-            <input type='date' id='startDateFilterInput' className='dateFilterInput' ref={filteredStartDateInputRef}/>
+            <input type='date' id='startDateFilterInput' className='dateFilterInput' ref={filteredStartDateInputRef} defaultValue={intialStartDateString} onChange={GetHistory}/>
           </div>
           <div className='dateInfoFilterDiv'>
             <label htmlFor='endDateFilterInput' className='dateInfoFilterLabel'>End Date</label>
-            <input type='date' id='endDateFilterInput' className='dateInfoFilterInput' ref={filteredEndDateInputRef}/>
+            <input type='date' id='endDateFilterInput' className='dateInfoFilterInput' ref={filteredEndDateInputRef} defaultValue={intialEndDateString} onChange={GetHistory}/>
           </div>
         </div>
         <div id='sortDiv'>

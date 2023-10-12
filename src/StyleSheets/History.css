@@ -76,8 +76,16 @@
 
 }
 
-.historyRequestRequestedByName{
+.historyRequestRequestedByNameDiv{
   grid-column-start: 2;
   grid-column-end: 4;
   grid-row: 2;
+}
+
+.historyRequestRequestedByNameHeader{
+
+}
+
+.historyRequestRequestedByName{
+  
 }
