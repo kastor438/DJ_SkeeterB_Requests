@@ -18,7 +18,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.1",
     "browser-router": "^0.2.0",
-    "firebase": "^9.15.0",
+    "firebase": "^9.23.0",
     "i": "^0.3.7",
     "jquery": "^3.6.1",
     "npm": "^9.2.0",
