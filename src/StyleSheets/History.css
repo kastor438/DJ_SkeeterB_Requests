@@ -1,5 +1,5 @@
 #historyDiv{
-
+  border: 1px solid black;
 }
 
 #searchAndFilterSectionDiv{
@@ -7,6 +7,7 @@
   border: 1px solid black;
   border-radius: 10px;
   width: 90vw;
+  /* margin-left: 5vw; */
 }
 
 #requestFilterDiv{
@@ -15,4 +16,68 @@
 
 .requestInfoFilterDiv{
   
+}
+
+#requestHistorySectionDiv{
+  width: 90vw;
+  margin-left: 0;
+  border: 1px solid black;
+}
+
+.historyRequestDiv{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+  border: 1px solid black;
+}
+
+.historyRequestDiv div{
+  border: 1px solid red;
+}
+
+.historyRequestDataText{
+  font-size: 12px;
+  border: 1px solid black;
+  margin: auto;
+}
+
+.historyRequestSongName{
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.historyRequestArtistName{
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.historyRequestVoterCountDiv{
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.historyRequestVotersHeader{
+
+}
+
+.historyRequestVoterCount{
+
+}
+
+.historyRequestVoterRatingDiv{
+  grid-column: 3;
+  grid-row: 1;
+}
+.historyRequestVoterRatingHeader{
+
+}
+
+.historyRequestVoterRating{
+
+}
+
+.historyRequestRequestedByName{
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row: 2;
 }

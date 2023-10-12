@@ -77,15 +77,35 @@ const History = props => {
         var historyDateSectionElements = [];
         for(var i = 0; i < historyDateData.length; i++){
           var historyRequestsElements = [];
-          for(var j = 0; j < historyDateData[i].historyRequests.length; j++){
-            var historyRequestElement = React.createElement('div', {}, 
-              React.createElement('p', {}, historyDateData[i].historyRequests[j].SongName)
-            )
+          console.log(`i=${i}`)
+          Object.entries(historyDateData[i].historyRequests).forEach(historyRequest => {
+            console.log(historyRequest);
+            var historyRequestKey = historyRequest[0];
+            var historyRequestValue = historyRequest[1];
+            var historyRequestElement = React.createElement('div', {className : 'historyRequestDiv', key : `historyRequest_${historyRequestKey}`}, 
+              React.createElement('p', {className : 'historyRequestDataText historyRequestSongName'}, historyRequestValue.SongName),
+              React.createElement('p', {className : 'historyRequestDataText historyRequestArtistName'}, historyRequestValue.ArtistName),
+              React.createElement('div', {className : 'historyRequestVoterCountDiv'}, 
+                React.createElement('p', {className : 'historyRequestDataText historyRequestVotersHeader'}, 'Voters'),
+                React.createElement('p', {className : 'historyRequestDataText historyRequestVoterCount'}, parseInt(historyRequestValue.Upvotes) + parseInt(historyRequestValue.Downvotes))
+              ),
+              React.createElement('div', {className : 'historyRequestVoterRatingDiv'}, 
+                React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRatingHeader'}, 'Rating'),
+                React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRating'}, parseInt(historyRequestValue.Upvotes) - parseInt(historyRequestValue.Downvotes))
+              ),
+              React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByName'}, historyRequestValue.RequestedBy != '' ? historyRequestValue.RequestedBy : 'Non-User')
+            );
             historyRequestsElements.push(historyRequestElement);
-          }
-          var dateSectionElement = React.createElement('div', {}, historyRequestsElements.map())
+          });
+          var dateSectionElement = React.createElement('div', {},
+            React.createElement('div', {key : `HistoryRequestSection_${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`},
+              React.createElement('h3', {}, `Date: ${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`)
+            ),
+            historyRequestsElements
+          );
           historyDateSectionElements.push(dateSectionElement);
         }
+        console.log(historyDateSectionElements);
         historyDataElements.current = historyDateSectionElements;
         console.log(historyDateData);
       }
@@ -138,7 +158,7 @@ const History = props => {
         </div>
       </div>
       <div id='requestHistorySectionDiv'>
-        {/* {historyDataElements} */}
+        {historyDataElements.current}
       </div>
     </div>
   );
