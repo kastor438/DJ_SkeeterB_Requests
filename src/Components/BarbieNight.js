@@ -32,12 +32,12 @@ const BarbieNight = props => {
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
-      get(child(dbRef, 'Features/FoundFridays/')).then((snapshot) => {
+      get(child(dbRef, 'Features/BarbieNight/')).then((snapshot) => {
         var visits = 1;
         if(snapshot.exists()){
           visits = parseInt(snapshot.val().Visits) + 1;
         }
-        set(ref(db, 'Features/FoundFridays/Visits'), visits);
+        set(ref(db, 'Features/BarbieNight/Visits'), visits);
       });
   }, )
 
@@ -45,18 +45,19 @@ const BarbieNight = props => {
     return <Navigate to='/'/>;
   }
   return (
-    <div id='foundFridaysDiv'>
+    <div id='barbieNightDiv'>
       <div className='featureHeaderDiv'>
-        <h1>FOUND ME!!!</h1>
+        <h1 className='featureHeader'>Hey Barbie!!!</h1>
       </div>
       <div className='featureInfoDiv'>
-        <p>Congratulations on discovering your secret ticket to Found Fridays at Hide&Seek! Immerse yourself in our red-themed haven and prepare for an unforgettable experience.</p>
+        {/* <p>Congratulations on discovering your secret ticket to Found Fridays at Hide&Seek! Immerse yourself in our red-themed haven and prepare for an unforgettable experience.</p>
         <p><b>If you've found a physical QR Code, bring it to the DJ Booth for a free Drink Ticket and guarantee your first song request.</b></p>
         <p>Didn't find a QR Code? No worries! Click the link below to make song requests and get your friends to vote so you have enough votes for an approved request! Ask your DJ about how many you need! OR mention it to another seeker at the bar!  Let's create an unforgettable night of music, drinks, and new friendships.</p>
-        <span>You Found Music, You Found Drinks, You Found Friends, You Found Fridays.</span>
+        <span>You Found Music, You Found Drinks, You Found Friends, You Found Fridays.</span> */}
+      
       </div>
       <div className='featureImageDiv'>
-        <img className='featureImage' src='/FoundFridaysPromoImage_2.jpg' alt='Feature promotional image.'></img>
+        <img className='featureImage' src='/BarbieNightPromoImage_2.jpg' alt='Feature promotional image.'></img>
       </div>
       <div className='featureToHomeLinkDiv'>
         <NavLink className='featureToHomeLink' to='/'><h4>Request Songs</h4></NavLink>
