@@ -76,6 +76,7 @@ const History = props => {
             historyRequests: value
           }
           historyDateData.push(historyDate);
+          historyDateData.sort((a, b) => b.year != a.year ? parseInt(b.year) - parseInt(a.year) : b.month != a.month ? parseInt(b.month) - parseInt(a.month) : parseInt(b.day) - parseInt(a.day));
         });
         
         var historyDateSectionElements = [];
@@ -86,7 +87,7 @@ const History = props => {
             // console.log(historyRequest);
             var historyRequestKey = historyRequest[0];
             var historyRequestValue = historyRequest[1];
-            var historyRequestElement = React.createElement('div', {className : 'historyRequestDiv', key : `historyRequest_${historyRequestKey}`}, 
+            var historyRequestElement = React.createElement('div', {className : 'historyRequestDiv', key : `historyRequest${historyRequestKey}`}, 
               React.createElement('p', {className : 'historyRequestDataText historyRequestSongName'}, historyRequestValue.SongName),
               React.createElement('p', {className : 'historyRequestDataText historyRequestArtistName'}, historyRequestValue.ArtistName),
               React.createElement('div', {className : 'historyRequestVoterCountDiv'}, 
@@ -101,8 +102,8 @@ const History = props => {
             );
             historyRequestsElements.push(historyRequestElement);
           });
-          var dateSectionElement = React.createElement('div', {},
-            React.createElement('div', {key : `HistoryRequestSection_${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`},
+          var dateSectionElement = React.createElement('div', {key : `historyRequestSection${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`},
+            React.createElement('div', {className : 'historyRequestSection', },
               React.createElement('h3', {}, `Date: ${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`)
             ),
             historyRequestsElements
