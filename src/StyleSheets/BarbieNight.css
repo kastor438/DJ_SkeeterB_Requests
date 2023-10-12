@@ -2,16 +2,16 @@ div, h1{
   /* border: 1px solid black; */
 }
 
-#foundFridaysDiv{
+#barbieNightDiv{
   background-color: rgba(201, 0, 40, 0.911);
   width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
   background: 
-  linear-gradient(45deg,  transparent 0%, transparent 57%, #6d010f 100%),
-  linear-gradient(-45deg, #bd1010 0%,  #af4838 0.3%, #6b0202 112%,  transparent 11% ),
-  linear-gradient(-90deg, #740303 100%, #521010 65%, transparent 20% );
+  linear-gradient(45deg,  transparent 0%, transparent 57%, #9c5fc5 100%),
+  linear-gradient(-45deg, #cd53d8 0%,  #ae35b9 0.3%, #7f0d8a 112%,  transparent 11% ),
+  linear-gradient(-90deg, #b323a7 100%, #79188d 65%, transparent 20% );
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 3fr 2fr;
@@ -24,6 +24,28 @@ div, h1{
   height: fit-content;
 }
 
+.featureHeader{
+  font-family: 'Brush Script MT', cursive;
+  font-size: 4em;
+  font-weight: bold;
+  background: linear-gradient(to right, #c75ac7, #9938d1, #c75ac7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  -webkit-text-stroke: 0.001px rgb(250, 248, 248);
+   /* color: white; */
+   /* text-shadow:
+       3px 3px 0 #ffffff,
+     -1px -1px 0 #ffffff,  
+      1px -1px 0 #ffffff,
+      -1px 1px 0 #ffffff,
+       1px 1px 0 #ffffff; */
+  /* -webkit-text-stroke-width: 0.005px;
+  -webkit-text-stroke-color: rgb(255, 255, 255); */
+
+}
+
 .featureInfoDiv{
   display: flex;
   align-items: start;
@@ -33,18 +55,18 @@ div, h1{
   grid-column: 1;
 }
 
-#foundFridaysDiv p{
+#barbieNightDiv p{
   color: rgb(205, 216, 226);
   font-weight: 500;
   text-align: left;
   font-size: 20px;
 }
 
-#foundFridaysDiv p b{
+#barbieNightDiv p b{
   color: aliceblue;
 }
 
-#foundFridaysDiv span{
+#barbieNightDiv span{
   font-weight: 700;
 }
 
@@ -74,7 +96,7 @@ div, h1{
 }
 
 @media only screen and (max-width: 1028px){
-  #foundFridaysDiv{
+  #barbieNightDiv{
     height: 100%;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(2, auto);
@@ -93,7 +115,7 @@ div, h1{
     grid-row:  3;
   }
   
-  #foundFridaysDiv p{
+  #barbieNightDiv p{
     text-align: center;
     font-size: 20px;
   }
@@ -115,11 +137,11 @@ div, h1{
 }
 
 @media only screen and (max-width: 600px){
-  #foundFridaysDiv{
+  #barbieNightDiv{
     padding-bottom: 5vh;
   }
 
-  #foundFridaysDiv p{
+  #barbieNightDiv p{
     font-size: 18px;
   }
   
