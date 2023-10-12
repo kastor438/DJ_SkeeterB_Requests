@@ -24,13 +24,16 @@ const storage = getStorage(app);
 
 const History = props => {
   const [navigateToHome, SetNavigateToHome] = useState(false);
+  const [historyDataElements, SetHistoryDataElements] = useState([]);
 
   // Value Refs
   const filteredVotersCountValueRef = useRef(0);
   const filteredMinVoteRatingValueRef = useRef(0);
   const filteredMaxVoteRatingValueRef = useRef(0);
   const historyData = useRef([]);
-  const historyDataElements = useRef([]);
+
+  const historyDataElementsRef = useRef([]);
+  historyDataElementsRef.current = historyDataElements;
 
   // DOM Refs
   const filteredSongNameInputRef = useRef();
@@ -50,6 +53,7 @@ const History = props => {
       SetNavigateToHome(true);
     }
     else{
+      console.log("test")
       GetHistory();
     }
   }, [props.authUser])
@@ -77,9 +81,9 @@ const History = props => {
         var historyDateSectionElements = [];
         for(var i = 0; i < historyDateData.length; i++){
           var historyRequestsElements = [];
-          console.log(`i=${i}`)
+          // console.log(`i=${i}`)
           Object.entries(historyDateData[i].historyRequests).forEach(historyRequest => {
-            console.log(historyRequest);
+            // console.log(historyRequest);
             var historyRequestKey = historyRequest[0];
             var historyRequestValue = historyRequest[1];
             var historyRequestElement = React.createElement('div', {className : 'historyRequestDiv', key : `historyRequest_${historyRequestKey}`}, 
@@ -106,7 +110,7 @@ const History = props => {
           historyDateSectionElements.push(dateSectionElement);
         }
         console.log(historyDateSectionElements);
-        historyDataElements.current = historyDateSectionElements;
+        SetHistoryDataElements(historyDateSectionElements);
         console.log(historyDateData);
       }
     });
@@ -158,7 +162,7 @@ const History = props => {
         </div>
       </div>
       <div id='requestHistorySectionDiv'>
-        {historyDataElements.current}
+        {historyDataElementsRef.current}
       </div>
     </div>
   );
