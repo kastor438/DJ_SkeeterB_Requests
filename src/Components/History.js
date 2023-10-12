@@ -53,7 +53,6 @@ const History = props => {
       SetNavigateToHome(true);
     }
     else{
-      console.log("test")
       GetHistory();
     }
   }, [props.authUser])
@@ -65,25 +64,51 @@ const History = props => {
   function GetHistory(){
     get(ref(db, '/History/')).then((snapshot) => {
       if(snapshot.exists()){
-        console.log(snapshot.val());
+        // console.log(snapshot.val());
         const historyDateData = [];
         Object.entries(snapshot.val()).forEach(([key, value]) => {
-          var splitDate = key.split('-');
-          var historyDate = {
-            day: parseInt(splitDate[0]),
-            month: parseInt(splitDate[1]),
-            year: parseInt(splitDate[2]),
-            historyRequests: value
+          var filterMatch = false;
+          const filteredHistoryRequestKeys = [];
+          Object.entries(value).forEach(([historyRequestKey, historyRequestValue]) => {
+            if(filteredSongNameInputRef.current.value != '' || filteredArtistNameInputRef.current.value != ''){
+              if(historyRequestValue.SongName.toLowerCase().includes(filteredSongNameInputRef.current.value.toLowerCase()) &&
+                historyRequestValue.ArtistName.toLowerCase().includes(filteredArtistNameInputRef.current.value.toLowerCase())){
+                  filterMatch = true;
+                  console.log("Test")
+                  filteredHistoryRequestKeys.push(historyRequestKey)
+              }
+            }
+            else{
+              filterMatch = true;
+              filteredHistoryRequestKeys.push(historyRequestKey)
+            }
+          });
+          
+          // console.log(filteredHistoryRequestKeys);
+          if(filterMatch == true){
+            var splitDate = key.split('-');
+            var filteredHistoryRequests = [];
+            Object.entries(value).forEach(([historyRequestkey, historyRequestValue]) => {
+              if(filteredHistoryRequestKeys.includes(historyRequestkey)){
+                filteredHistoryRequests.push(([historyRequestkey, historyRequestValue]));
+              }
+            });
+            console.log(filteredHistoryRequests);
+            var historyDate = {
+              day: parseInt(splitDate[0]),
+              month: parseInt(splitDate[1]),
+              year: parseInt(splitDate[2]),
+              historyRequests: filteredHistoryRequests
+            }
+            historyDateData.push(historyDate);
+            historyDateData.sort((a, b) => b.year != a.year ? parseInt(b.year) - parseInt(a.year) : b.month != a.month ? parseInt(b.month) - parseInt(a.month) : parseInt(b.day) - parseInt(a.day));
           }
-          historyDateData.push(historyDate);
-          historyDateData.sort((a, b) => b.year != a.year ? parseInt(b.year) - parseInt(a.year) : b.month != a.month ? parseInt(b.month) - parseInt(a.month) : parseInt(b.day) - parseInt(a.day));
         });
         
         var historyDateSectionElements = [];
         for(var i = 0; i < historyDateData.length; i++){
           var historyRequestsElements = [];
-          // console.log(`i=${i}`)
-          Object.entries(historyDateData[i].historyRequests).forEach(historyRequest => {
+          Object.values(historyDateData[i].historyRequests).forEach(historyRequest => {
             // console.log(historyRequest);
             var historyRequestKey = historyRequest[0];
             var historyRequestValue = historyRequest[1];
@@ -110,9 +135,8 @@ const History = props => {
           );
           historyDateSectionElements.push(dateSectionElement);
         }
-        console.log(historyDateSectionElements);
         SetHistoryDataElements(historyDateSectionElements);
-        console.log(historyDateData);
+        // console.log(historyDateData);
       }
     });
   }
@@ -126,11 +150,11 @@ const History = props => {
         <div id='requestFilterDiv'>
           <div className='requestInfoFilterDiv'>
             <label htmlFor='songNameFilterInput' className='songRequestInfoFilterLabel'>Song Name</label>
-            <input type='text' id='songNameFilterInput' className='songRequestInfoFilterInput' ref={filteredSongNameInputRef}/>
+            <input type='text' id='songNameFilterInput' className='songRequestInfoFilterInput' ref={filteredSongNameInputRef} onChange={GetHistory}/>
           </div>
           <div className='requestInfoFilterDiv'>
             <label htmlFor='artistNameFilterInput' className='songRequestInfoFilterLabel'>Artist Name</label>
-            <input type='text' id='artistNameFilterInput' className='songRequestInfoFilterInput' ref={filteredArtistNameInputRef}/>
+            <input type='text' id='artistNameFilterInput' className='songRequestInfoFilterInput' ref={filteredArtistNameInputRef} onChange={GetHistory}/>
           </div>
           <div className='requestInfoFilterDiv'>
             <label htmlFor='votersCountFilterInput' className='songRequestInfoFilterLabel'>Voters Count</label>
