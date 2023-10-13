@@ -1,5 +1,5 @@
 #settingsDiv div{
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 #settingsDiv{
@@ -39,7 +39,36 @@
   Theme Settings Section
 */
 #themeSettingsDiv{
+  /* height: max-content; */
+}
 
+#themesContainer{
+  display: grid;
+  /* row-gap: 2%; */
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 10px solid black;
+  padding-bottom: 5vh;
+}
+
+.themePreviewDiv{
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  /* width: 100%; */
+  padding: 2.5% 0;
+  border: 1px solid black;
+}
+
+.themePreviewDivColourSquare{
+  position: relative;
+  /* background-color: #ac1fb1; */
+  border-width: 3em ;
+  border-radius: 10px;
+  /* border-color: #ac1fb1 #ac1fb1 #251925 #ac1fb1; */
+  border-style: solid;
+  /* width: 50%; */
+  /* padding-bottom: 90%; */
+  z-index: 5;
 }
 
 /* 

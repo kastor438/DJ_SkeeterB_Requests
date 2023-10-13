@@ -83,7 +83,6 @@ const History = props => {
               filteredMinVoteRatingInputRef.current.value != '' || filteredMaxVoteRatingInputRef.current.value != ''){
                 var requestedByDisplayName = historyRequestValue.RequestedBy == '' ? 'Non-User' : snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName ? snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName : historyRequestValue.RequestedBy;
 
-                console.log(filteredEndDateInputRef.current.value);
                 if(historyRequestValue.SongName.toLowerCase().includes(filteredSongNameInputRef.current.value.toLowerCase()) &&
                 historyRequestValue.ArtistName.toLowerCase().includes(filteredArtistNameInputRef.current.value.toLowerCase()) &&
                 requestedByDisplayName.toLowerCase().includes(filteredRequestedByInputRef.current.value.toLowerCase()) &&

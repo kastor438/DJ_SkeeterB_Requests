@@ -23,11 +23,13 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 
 const Settings = props => {
+  const [themeElements, SetThemeElements] = useState([]);
   const [venuesElements, SetVenuesElements] = useState([]);
   const [newVenueSubmitHasListener, SetNewVenueSubmitHasListener] = useState(false);
   const settingsSectionHeaders = ['NavBar', 'Theme', 'Venues', 'Socials', 'Security'];
   const [navigateToHome, SetNavigateToHome] = useState(false);
   const [previewObjectURL, SetPreviewObjectURL] = useState(null);
+
   // DOM Refs
   const logoPreviewImageRef = useRef();
   const newVenueNameRef = useRef();
@@ -35,6 +37,8 @@ const Settings = props => {
   const newVenueImageRef = useRef();
   const newVenueImageInputRef = useRef();
   const newVenueSubmiButtonRef = useRef();
+  const themeElementsRef = useRef();
+  themeElementsRef.current = themeElements;
 
   // DB Refs
   const db = getDatabase();
@@ -42,6 +46,7 @@ const Settings = props => {
 
   useEffect(() => {
     LoadVenues();
+    LoadThemes();
   }, [])
 
   useEffect(() => {
@@ -50,6 +55,26 @@ const Settings = props => {
     }
   }, [props.authUser])
   
+  function LoadThemes(){
+    get(child(dbRef, '/Settings/Themes/')).then((snapshot) => {
+      if(snapshot.exists()){
+        var newThemeElements = [];
+        Object.entries(snapshot.val()).forEach(([themeKey, themeData]) => {
+          console.log(themeData);
+          var themeElement =
+            React.createElement('div', {key : 'theme' + themeKey, id : 'theme' + themeKey, className : 'themePreviewDiv'},
+              React.createElement('div', {className : 'themePreviewDivColourSquare', style : {borderColor : `#${themeData.FocusedUI} #${themeData.AccentColour} #${themeData.UnfocusedUI} #${themeData.BackgroundColour}`}})
+            );
+          newThemeElements.push(themeElement);
+        });
+        SetThemeElements(newThemeElements);
+      }
+      else{
+        SetThemeElements([React.createElement('h4', {id : 'noThemesFoundSpan', key : 'noThemesFound'}, 'No Themes Found')])
+      }
+    });
+  }
+
   function LoadVenues(){
     get(child(dbRef, '/Venues/')).then((snapshot) => {
       if(snapshot.exists()){
@@ -231,9 +256,10 @@ const Settings = props => {
             </div>
           </div>
           <div id='themeSettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[1]}>
-            <div>
-              <h3>Themes</h3>
-            </div>
+            <h3>Themes</h3>
+            <div id='themesContainer'>
+              {themeElementsRef.current}
+            </div>    
           </div>
           <div id='venueSettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[2]}>
             <h3>Venues</h3>
