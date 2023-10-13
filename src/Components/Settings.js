@@ -32,6 +32,7 @@ const Settings = props => {
 
   // DOM Refs
   const logoPreviewImageRef = useRef();
+  const selectedThemeRef = useRef(null);
   const newVenueNameRef = useRef();
   const newVenueAddressRef = useRef();
   const newVenueImageRef = useRef();
@@ -55,17 +56,28 @@ const Settings = props => {
     }
   }, [props.authUser])
   
+  useEffect(() => {
+    // console.log(selectedThemeRef.current);
+  }, [selectedThemeRef.current])
+
   function LoadThemes(){
     get(child(dbRef, '/Settings/Themes/')).then((snapshot) => {
       if(snapshot.exists()){
         var newThemeElements = [];
         Object.entries(snapshot.val()).forEach(([themeKey, themeData]) => {
-          console.log(themeData);
+          // console.log(themeData);
           var themeElement =
-            React.createElement('div', {key : 'theme' + themeKey, id : 'theme' + themeKey, className : 'themePreviewDiv'},
-              React.createElement('div', {className : 'themePreviewDivColourSquare', style : {borderColor : `#${themeData.FocusedUI} #${themeData.AccentColour} #${themeData.UnfocusedUI} #${themeData.BackgroundColour}`}})
+            React.createElement('div', {key : 'theme' + themeKey, id : 'theme' + themeKey, className : 'themePreviewDiv' + (themeData.ActiveTheme ? ' activeTheme' : ''), 'data-themedata' : themeData, onClick : (e) => SelectTheme(e.target)},
+              React.createElement('div', {className : 'themePreviewDivColourSquare', style : {borderColor : `#${themeData.FocusedUI} #${themeData.AccentColour} #${themeData.UnfocusedUI} #${themeData.BackgroundColour}`}}),
+              themeData.ActiveTheme ?
+              React.createElement('p', {className : 'activeThemeTag'}, 'ACTIVE')
+              :
+              null
             );
           newThemeElements.push(themeElement);
+          // if(themeData.ActiveTheme){
+          //   selectedThemeRef.current = themeElement;
+          // }
         });
         SetThemeElements(newThemeElements);
       }
@@ -73,6 +85,17 @@ const Settings = props => {
         SetThemeElements([React.createElement('h4', {id : 'noThemesFoundSpan', key : 'noThemesFound'}, 'No Themes Found')])
       }
     });
+  }
+
+  function SelectTheme(element){
+    if(selectedThemeRef.current != null)
+      selectedThemeRef.current.classList.remove('selectedTheme');
+    element.classList.add('selectedTheme');
+    selectedThemeRef.current = element;
+  }
+
+  function SetTheme(){
+    // console.log(selectedThemeRef.current)
   }
 
   function LoadVenues(){
@@ -259,7 +282,12 @@ const Settings = props => {
             <h3>Themes</h3>
             <div id='themesContainer'>
               {themeElementsRef.current}
-            </div>    
+            </div>
+            <div>
+              <div id='themeOptionsDiv'>
+                <button id='setThemeButton' onClick={(e) => SetTheme(e.target)}>Update Theme</button>
+              </div>
+            </div>
           </div>
           <div id='venueSettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[2]}>
             <h3>Venues</h3>
