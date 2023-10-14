@@ -271,7 +271,7 @@ a.activeLink{
 }
 
 #skeeterSocialsDiv{
-  height: fit-content;
+  /* height: max-content; */
   position: absolute;
   bottom: 0;
   display: grid;
@@ -280,7 +280,7 @@ a.activeLink{
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr;
   line-height: 100%;
-  padding-bottom: 5%;
+  padding-bottom: 7.5vh;
 }
 
 .skeeterSocialDivContainer{
@@ -525,6 +525,10 @@ a.activeLink{
 
   #signoutButton{
     font-size: 14px;
+  }
+
+  #skeeterSocialsDiv{
+    padding-bottom: 15vh;
   }
 }
 
