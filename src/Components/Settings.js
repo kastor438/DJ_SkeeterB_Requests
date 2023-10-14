@@ -33,6 +33,7 @@ const Settings = props => {
   // DOM Refs
   const logoPreviewImageRef = useRef();
   const selectedThemeRef = useRef(null);
+  const setThemeButtonRef = useRef();
   const newVenueNameRef = useRef();
   const newVenueAddressRef = useRef();
   const newVenueImageRef = useRef();
@@ -55,10 +56,6 @@ const Settings = props => {
       SetNavigateToHome(true);
     }
   }, [props.authUser])
-  
-  useEffect(() => {
-    // console.log(selectedThemeRef.current);
-  }, [selectedThemeRef.current])
 
   function LoadThemes(){
     get(child(dbRef, '/Settings/Themes/')).then((snapshot) => {
@@ -67,7 +64,7 @@ const Settings = props => {
         Object.entries(snapshot.val()).forEach(([themeKey, themeData]) => {
           // console.log(themeData);
           var themeElement =
-            React.createElement('div', {key : 'theme' + themeKey, id : 'theme' + themeKey, className : 'themePreviewDiv' + (themeData.ActiveTheme ? ' activeTheme' : ''), 'data-themedata' : themeData, onClick : (e) => SelectTheme(e.target)},
+            React.createElement('div', {key : 'theme' + themeKey, id : 'theme' + themeKey, className : 'themePreviewDiv' + (themeData.ActiveTheme ? ' activeTheme' : ''), 'data-themekey' : themeKey, 'data-themedata' : themeData, onClick : (e) => SelectTheme(e.target)},
               React.createElement('div', {className : 'themePreviewDivColourSquare', style : {borderColor : `#${themeData.FocusedUI} #${themeData.AccentColour} #${themeData.UnfocusedUI} #${themeData.BackgroundColour}`}}),
               themeData.ActiveTheme ?
               React.createElement('p', {className : 'activeThemeTag'}, 'ACTIVE')
@@ -75,9 +72,6 @@ const Settings = props => {
               null
             );
           newThemeElements.push(themeElement);
-          // if(themeData.ActiveTheme){
-          //   selectedThemeRef.current = themeElement;
-          // }
         });
         SetThemeElements(newThemeElements);
       }
@@ -88,14 +82,35 @@ const Settings = props => {
   }
 
   function SelectTheme(element){
+    // Set selectedTheme and respective class to newly selected theme.
     if(selectedThemeRef.current != null)
       selectedThemeRef.current.classList.remove('selectedTheme');
     element.classList.add('selectedTheme');
     selectedThemeRef.current = element;
+
+    // Update theme button active or disabled.
+    if(selectedThemeRef.current.className.includes('activeTheme')){
+      setThemeButtonRef.current.disabled = true;
+      setThemeButtonRef.current.removeEventListener('click', SetTheme);
+    }
+    else{
+      setThemeButtonRef.current.disabled = false;
+      setThemeButtonRef.current.addEventListener('click', SetTheme);
+    }
   }
 
   function SetTheme(){
+    setThemeButtonRef.current.disabled = true;
+    setThemeButtonRef.current.removeEventListener('click', SetTheme);
+    var currActiveThemeKey = document.querySelector('.activeTheme').dataset['themekey'];
+    var newActiveThemeKey = document.querySelector('.selectedTheme').dataset['themekey'];
+    
+    console.log(currActiveThemeKey);
+    console.log(newActiveThemeKey);
     // console.log(selectedThemeRef.current)
+    set(ref(db, `/Settings/Themes/${currActiveThemeKey}/ActiveTheme`), false);
+    set(ref(db, `/Settings/Themes/${newActiveThemeKey}/ActiveTheme`), true);
+    LoadThemes();
   }
 
   function LoadVenues(){
@@ -285,7 +300,7 @@ const Settings = props => {
             </div>
             <div>
               <div id='themeOptionsDiv'>
-                <button id='setThemeButton' onClick={(e) => SetTheme(e.target)}>Update Theme</button>
+                <button id='setThemeButton' ref={setThemeButtonRef} disabled='disabled' onClick={(e) => SetTheme(e.target)}>Update Theme</button>
               </div>
             </div>
           </div>

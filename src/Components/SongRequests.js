@@ -137,6 +137,9 @@ const SongRequests = props => {
     }
 
     InitializeSpotify();
+
+    console.log(props.activeThemeData);
+    document.querySelector('body').style.backgroundColor = `#${localStorage.getItem('ActiveBackgroundColour')}`;
   }, []);
 
   useEffect(() => {

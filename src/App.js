@@ -3,7 +3,7 @@ import skeeterLogo from './skeeterB-Logo.png'
 import React, { Component } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, onValue, onChildAdded, set, update } from "firebase/database";
+import { getDatabase, ref, child, onValue, onChildAdded, set, update, get } from "firebase/database";
 import addNotification from 'react-push-notification';
 
 import NavBar from "./Components/NavBar";
@@ -27,6 +27,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
   
 const db = getDatabase();
+const dbRef = ref(db);
 
 class App extends Component {
   constructor(props) {
@@ -34,7 +35,19 @@ class App extends Component {
     this.state = {
       signedIn: false,
       authUser: null,
-      upcomingEventID : ''
+      upcomingEventID : '',
+      activeThemeData : {
+        ActiveThemeKey : '',
+        ActiveBackgroundColour : '',
+        ActiveAccentColour : '',
+        ActiveAccentColour_Faded : '',
+        ActiveFocusedUI : '',
+        ActiveUnfocusedUI : '',
+        ActiveTextColour : '',
+        ActiveTextColour_Faded : '',
+        ActiveAccentTextColour : '',
+        ActiveAccentTextColour_Faded : ''    
+      }
     };
     this.Setup = this.Setup.bind(this);
     this.SignInHandler = this.SignInHandler.bind(this);
@@ -53,6 +66,19 @@ class App extends Component {
       icon: skeeterLogo,
       native: true
     })
+  }
+
+  StoreActiveTheme = (activeThemeKey, activeThemeData) =>{
+    localStorage.setItem('ActiveThemeKey', activeThemeKey);
+    localStorage.setItem('ActiveBackgroundColour', activeThemeData.BackgroundColour);
+    localStorage.setItem('ActiveAccentColour', activeThemeData.AccentColour);
+    localStorage.setItem('ActiveAccentColour_Faded', activeThemeData.AccentColour_Faded);
+    localStorage.setItem('ActiveFocusedUI', activeThemeData.FocusedUI);
+    localStorage.setItem('ActiveUnfocusedUI', activeThemeData.UnfocusedUI);
+    localStorage.setItem('ActiveTextColour', activeThemeData.TextColour);
+    localStorage.setItem('ActiveTextColour_Faded', activeThemeData.TextColour_Faded);
+    localStorage.setItem('ActiveAccentTextColour', activeThemeData.AccentTextColour);
+    localStorage.setItem('ActiveAccentTextColour_Faded', activeThemeData.AccentTextColour_Faded);    
   }
 
   async Setup(){
@@ -78,6 +104,37 @@ class App extends Component {
         this.SignOutHandler();
       }
     });
+    var localStorageThemeKey = localStorage.getItem('ActiveThemeKey');
+    // console.log(localStorageThemeKey);
+    var activeThemeKey = ''
+    var activeThemeData = {};
+    get(child(dbRef, '/Settings/Themes/')).then((snapshot) => {
+      if(snapshot.val() != null){
+        Object.entries(snapshot.val()).forEach(([themeKey, themeData]) => {
+          if(themeData.ActiveTheme){
+            activeThemeKey = themeKey;
+            activeThemeData = themeData;
+          }
+        });
+        if(localStorageThemeKey != activeThemeKey){
+          this.StoreActiveTheme(activeThemeKey, activeThemeData);
+        }
+        this.setState({
+          ActiveThemeData : {
+            ActiveThemeKey : activeThemeKey,
+            ActiveBackgroundColour : activeThemeData.BackgroundColour,
+            ActiveAccentColour : activeThemeData.AccentColour,
+            ActiveAccentColour_Faded : activeThemeData.AccentColour_Faded,
+            ActiveFocusedUI : activeThemeData.FocusedUI,
+            ActiveUnfocusedUI : activeThemeData.UnfocusedUI,
+            ActiveTextColour : activeThemeData.TextColour,
+            ActiveTextColour_Faded : activeThemeData.TextColour_Faded,
+            ActiveAccentTextColour : activeThemeData.AccentTextColour,
+            ActiveAccentTextColour_Faded : activeThemeData.AccentTextColour_Faded    
+          }
+        });
+      }
+    });
   }
 
   SignInHandler(user) {
@@ -99,12 +156,16 @@ class App extends Component {
       <div>
         <div className="App">
           <header className="App-header">
-            <NavBar signoutHandler={() => this.SignOutHandler()} authUser={this.state.authUser} />
+            <NavBar
+            signoutHandler={() => this.SignOutHandler()}
+            authUser={this.state.authUser}
+            activeThemeData={this.state.activeThemeData}/>
             <Main 
             signinHandler={(authUser) => this.SignInHandler(authUser)} 
             upcomingEventHandler={(eventID) => this.UpcomingEventSelectedHandler(eventID)}
             authUser={this.state.authUser}
-            eventID={this.state.upcomingEventID}/>
+            eventID={this.state.upcomingEventID}
+            activeThemeData={this.state.activeThemeData}/>
           </header>
         </div>
       </div>

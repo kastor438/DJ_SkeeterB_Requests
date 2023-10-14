@@ -18,7 +18,7 @@ const Main = props => {
   return (
     <div id='mainDiv'>
       <Routes>
-        <Route index element={<SongRequests authUser={props.authUser}/>}/>
+        <Route index element={<SongRequests authUser={props.authUser} activeThemeData={props.activeThemeData}/>}/>
         <Route path='/History' element={<History authUser={props.authUser}/>}/>
         <Route path='/Settings' element={<Settings authUser={props.authUser}/>}/>
         <Route path='/Upcoming' element={<Upcoming authUser={props.authUser} upcomingEventHandler={(eventID) => props.upcomingEventHandler(eventID)}/>}/>
