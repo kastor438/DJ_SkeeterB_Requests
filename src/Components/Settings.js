@@ -105,9 +105,6 @@ const Settings = props => {
     var currActiveThemeKey = document.querySelector('.activeTheme').dataset['themekey'];
     var newActiveThemeKey = document.querySelector('.selectedTheme').dataset['themekey'];
     
-    console.log(currActiveThemeKey);
-    console.log(newActiveThemeKey);
-    // console.log(selectedThemeRef.current)
     set(ref(db, `/Settings/Themes/${currActiveThemeKey}/ActiveTheme`), false);
     set(ref(db, `/Settings/Themes/${newActiveThemeKey}/ActiveTheme`), true);
     LoadThemes();
