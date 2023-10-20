@@ -670,7 +670,7 @@ const RequestLineup = props => {
           SpotifyImageURL: songData.SpotifyImageURL,
           Upvotes: songData.Upvotes,
           Downvotes: songData.Downvotes,
-          Voters: songData.Voters,
+          Voters: songData.Voters ? songData.Voters : null,
           RequestedBy: songData.RequestedBy,
           DateTime : requestDateTime.toString(),
           RequestNotes : songData.RequestNotes

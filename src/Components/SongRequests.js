@@ -137,10 +137,18 @@ const SongRequests = props => {
     }
 
     InitializeSpotify();
-
-    console.log(props.activeThemeData);
-    document.querySelector('body').style.backgroundColor = `#${localStorage.getItem('ActiveBackgroundColour')}`;
+    if(localStorage.getItem('ActiveThemeKey') != ''){
+      document.querySelector('body').style.backgroundColor = `#${localStorage.getItem('ActiveBackgroundColour')}`;
+    }
   }, []);
+
+  useEffect(() => {
+    // console.log(props.activeThemeData);
+    if(props.activeThemeData.ActiveThemeKey != ''){
+      // console.log(localStorage.getItem('ActiveBackgroundColour'))
+      SetDynamicThemes();
+    }
+  }, [props.activeThemeData])
 
   useEffect(() => {
     CheckValidInput();
@@ -175,6 +183,10 @@ const SongRequests = props => {
         set(ref(db, 'Visitors/' + res.data['country_code'] + '/' + res.data.city), (visitorCount+1));
       });
     }
+  }
+
+  function SetDynamicThemes(){
+    document.querySelector('body').style.backgroundColor = `#${props.activeThemeData.ActiveBackgroundColour}`;
   }
 
   function InitializeSpotify(){

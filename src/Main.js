@@ -29,7 +29,7 @@ const Main = props => {
         <Route path='/Login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login/ForgotPassword' element={<ForgotPassword signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         {/* <Route path='/Feature/FoundFridays' element={<FoundFridays/>}/>         */}
-        {/* <Route path='/Feature/BarbieNight' element={<BarbieNight/>}/>         */}
+        <Route path='/Feature/BarbieNight' element={<BarbieNight/>}/>        
         <Route path='*' element={<Navigate to="/" replace />}/>
       </Routes>
     </div>

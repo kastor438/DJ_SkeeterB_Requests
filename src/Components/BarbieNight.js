@@ -49,15 +49,57 @@ const BarbieNight = props => {
       <div className='featureHeaderDiv'>
         <h1 className='featureHeader'>Hey Barbie!!!</h1>
       </div>
-      <div className='featureInfoDiv'>
-        {/* <p>Congratulations on discovering your secret ticket to Found Fridays at Hide&Seek! Immerse yourself in our red-themed haven and prepare for an unforgettable experience.</p>
-        <p><b>If you've found a physical QR Code, bring it to the DJ Booth for a free Drink Ticket and guarantee your first song request.</b></p>
-        <p>Didn't find a QR Code? No worries! Click the link below to make song requests and get your friends to vote so you have enough votes for an approved request! Ask your DJ about how many you need! OR mention it to another seeker at the bar!  Let's create an unforgettable night of music, drinks, and new friendships.</p>
-        <span>You Found Music, You Found Drinks, You Found Friends, You Found Fridays.</span> */}
-      
+      <div className='featureContentDiv'>
+        <div className='featureInfoDiv info1'>
+          <h3>🎀👠💄 Welcome to Barbie's Ultimate Glam Night! 💄👠🎀</h3>
+          <p>Darlings, you've just stepped into a world of glitz, glam, and pure Barbie magic! As you prepare to embark on this dazzling journey, our Barbie's Dreamland just got even more fabulous upon your arrival!</p>
+          <p>🌟<b>Unlock the Magic</b>🌟</p>
+        </div>
+        <div className='featureInfoDiv info2'>
+          <p>📸 <b>Barbie Box Photo Wall:</b> Strike a pose, darlings! Our life-sized Barbie Box Photo Wall is a must-visit. Snap your most glamorous photos and share them with the world. Remember, Barbie always knows how to work the camera!</p>
+          <p>👠 <b>The Runway:</b> It's your time to shine on our Barbie-inspired runway! Channel your inner supermodel, flaunt your best Barbie-inspired attire, and strut your stuff. Confidence is your accessory, and the spotlight is all yours!</p>
+          <p>🪄 <b>Barbie Donation Center:</b> True beauty is found in kindness. At our event, we're spreading the Barbie love beyond the glamour. Discover the Barbie Donation Center at the back bar, where you can bring any old or new dolls to be donated to North End Parent Resource Centre. All donations, big or small, are welcome. Let's make the world a little brighter, one Barbie at a time.</p>
+          <p>🎵 <b>Song Requests:</b> Your wish is our command! Be the DJ for a moment and curate the soundtrack of our dreamy night. Head to the "Requests" section and choose the tunes that make your Barbie heart sing. We're taking your requests live and keeping the dance floor hot!</p>
+        </div>
+        <div className='featureInfoDiv info3'>
+          <h4>Now, here's how to navigate our Barbie Dreamland Interactive Website:</h4>
+          <ol>
+            <li><b>Scan:</b> You've already simply scanned the QR code on your phone, just like a glamorous Barbie! Not all QR Codes are equal though so make sure to scan some of the others for a surprise! Encourage your friends to do the same, and together, you'll be whisked away to our enchanting Barbie paradise.</li>
+            <li><b>Click:</b> Click the link below to discover the dazzling main Request Page. Think of it as your backstage pass to control the music and bring your Barbie fantasy to life.</li>
+            <li><b>Search:</b> Use the Spotify Search Engine to find your favorite tunes and click 'Submit Request!' Remember, the DJ will be using this as a reference to search through our limited offline library. While Barbie's options are vast, not all songs are guaranteed to be playable. Choose something you think or know the DJ would have available, just like a true Barbie fashionista!</li>
+            <li><b>Vote:</b> Be the star of the show by choosing whether a song deserves more or less attention. Upvote and downvote to make your voice heard! The songs with the most votes are most likely to get played and steal the spotlight, just like Barbie herself!</li>
+          </ol>
+          <p>Remember, darlings, tonight is all about celebrating the glamour, the fun, and the nostalgia of Barbie. So, bring your A-game, and let's make this night sparkle like never before!</p>
+          <p>Are you ready to dive into Barbie's Dreamland? Let's paint the town pink and dance the night away in true Barbie style! 💖👑💃🎉 #BarbieAndKaisDreamhouse</p>
+          <p>💖 Get Ready to Rock Your Barbie World! 💖</p>
+        </div>
+        <div className='featureInfoDiv info4'>
+          <p>Barbie enthusiasts, your glamorous adventure begins here! Before we dive into the night, here are a few Barbie-tastic extras to elevate your experience:</p>
+          <p>🎶 DJ Skeeter-B's Barbie Playlist: Step into Barbie's world with a playlist specially curated by DJ Skeeter-B on Spotify. Feel the vibes, soak in the nostalgia, and discover the essence of Barbie. It's the perfect soundtrack to fuel your Barbie spirit and set the stage for a glamorous night ahead!</p>
+          <div className='featureImageDiv'>
+            <a href='https://open.spotify.com/playlist/2iwX8ELQMpIDvU2eDi1Kzf?si=06eed8c19af541c9' target='blank' title='Go To DJ-SkeeterB&apos;s Barbie Playlist!'>
+              <img src='/Barbie_Playlist_Cover_Photo.jpeg' className='featureImage' alt='A promotional photo representing the barbie playlist.'/>
+            </a>
+          </div>
+          <p>🎵 Groove to the '90s Dance Classics: DJ Skeeter-B is taking you on a nostalgia trip! Check out his throwback mix on Mixcloud to rediscover the '90s dance classics. Get ready to dance the night away to the beats that'll take you back in time.</p>
+          <div className='featureImageDiv'>
+            <a href='https://www.mixcloud.com/djskeeterb/music-monday-vol-7-sept-18-2017-90s-power-mix/' target='blank' title='Go To DJ-SkeeterB&apos;s Mixcloud'>
+              <img src='/MixCloudLogo.png' className='featureImage' alt='A mixcloud logo photo.'/>
+            </a>
+          </div>
+          <p>🎧 Unleash Your Inner Barbie on Spotify: Have a Spotify playlist that's your secret source of inspiration? Link up to your Spotify account for quick access to your own beloved playlists. After all, every Barbie needs her anthem!</p>
+          <div className='featureImageDiv'>
+            <a href='https://open.spotify.com/?' target='blank' title='Open Spotify'>
+              <img src='/SpotifyLogo.png' className='featureImage' alt='The Spotify logo.'/>
+            </a>
+          </div>
+        </div>
       </div>
-      <div className='featureImageDiv'>
-        <img className='featureImage' src='/BarbieNightPromoImage_2.jpg' alt='Feature promotional image.'></img>
+      {/* <div className='headerFeatureImageDiv'>
+        <img className='headerFeatureImage' src='/Barbie_Playlist_Cover_Photo.jpeg' alt='Feature promotional image.'></img>
+      </div> */}
+      <div>
+          <h4>Now, darlings, let's make sure you're all set for an unforgettable Barbie-themed soirée! 💃👠</h4>
       </div>
       <div className='featureToHomeLinkDiv'>
         <NavLink className='featureToHomeLink' to='/'><h4>Request Songs</h4></NavLink>

@@ -118,9 +118,10 @@ class App extends Component {
         });
         if(localStorageThemeKey != activeThemeKey){
           this.StoreActiveTheme(activeThemeKey, activeThemeData);
+          // document.querySelector('body').style.backgroundColor = `#${localStorage.getItem('ActiveBackgroundColour')}`;
         }
         this.setState({
-          ActiveThemeData : {
+          activeThemeData : {
             ActiveThemeKey : activeThemeKey,
             ActiveBackgroundColour : activeThemeData.BackgroundColour,
             ActiveAccentColour : activeThemeData.AccentColour,
@@ -132,9 +133,13 @@ class App extends Component {
             ActiveAccentTextColour : activeThemeData.AccentTextColour,
             ActiveAccentTextColour_Faded : activeThemeData.AccentTextColour_Faded    
           }
+          
         });
       }
     });
+    if(localStorage.getItem('ActiveThemeKey') != ''){
+      // document.querySelector('body').style.backgroundColor = `#${localStorage.getItem('ActiveBackgroundColour')}`;
+    }
   }
 
   SignInHandler(user) {
