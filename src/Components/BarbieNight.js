@@ -32,14 +32,14 @@ const BarbieNight = props => {
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
-      get(child(dbRef, 'Features/BarbieNight/')).then((snapshot) => {
-        var visits = 1;
-        if(snapshot.exists()){
-          visits = parseInt(snapshot.val().Visits) + 1;
-        }
-        set(ref(db, 'Features/BarbieNight/Visits'), visits);
-      });
-  }, )
+    get(child(dbRef, 'Features/BarbieNight/')).then((snapshot) => {
+      var visits = 1;
+      if(snapshot.exists()){
+        visits = parseInt(snapshot.val().Visits) + 1;
+      }
+      set(ref(db, 'Features/BarbieNight/Visits'), visits);
+    });
+  }, [])
 
   if(navigateToHome === true){
     return <Navigate to='/'/>;
@@ -53,7 +53,7 @@ const BarbieNight = props => {
         <div className='featureInfoDiv info1'>
           <div className='firstLineHeaderDiv'>
             <h3>🎀👠💄</h3>
-            <h3>Welcome to Barbie's Ultimate Glam Night!</h3>
+            <h3 className='firstLineHeader'>Welcome to Barbie's Ultimate Glam Night!</h3>
             <h3>💄👠🎀</h3>
           </div>
           <p>Darlings, you've just stepped into a world of glitz, glam, and pure Barbie magic! As you prepare to embark on this dazzling journey, our Barbie's Dreamland just got even more fabulous upon your arrival!</p>
@@ -63,11 +63,11 @@ const BarbieNight = props => {
           <p>📸 <b>Barbie Box Photo Wall:</b> Strike a pose, darlings! Our life-sized Barbie Box Photo Wall is a must-visit. Snap your most glamorous photos and share them with the world. Remember, Barbie always knows how to work the camera!</p>
           <p>👠 <b>The Runway:</b> It's your time to shine on our Barbie-inspired runway! Channel your inner supermodel, flaunt your best Barbie-inspired attire, and strut your stuff. Confidence is your accessory, and the spotlight is all yours!</p>
           <p>🪄 <b>Barbie Donation Center:</b> True beauty is found in kindness. At our event, we're spreading the Barbie love beyond the glamour. Discover the Barbie Donation Center at the back bar, where you can bring any old or new dolls to be donated to North End Parent Resource Centre. All donations, big or small, are welcome. Let's make the world a little brighter, one Barbie at a time.</p>
-          <p className='liveWednesday'>🎵 <b>Song Requests:</b> Your wish is our command! Be the DJ for a moment and curate the soundtrack of our dreamy night. Head to the "Requests" section and choose the tunes that make your Barbie heart sing. We're taking your requests live and keeping the dance floor hot!</p>
+          <p className={(new Date() < new Date('October 25, 2023 05:00:00') ? ' liveWednesday' : '')}>🎵 <b>Song Requests:</b> Your wish is our command! Be the DJ for a moment and curate the soundtrack of our dreamy night. Head to the "Requests" section and choose the tunes that make your Barbie heart sing. We're taking your requests live and keeping the dance floor hot!</p>
         </div>
         <div className='featureInfoDiv info3'>
-          <h4 className='liveWednesday'>Now, here's how to navigate our Barbie Dreamland Interactive Website:</h4>
-          <ol className='liveWednesday'>
+          <h4 className={(new Date() < new Date('October 25, 2023 05:00:00') ? ' liveWednesday' : '')}>Now, here's how to navigate our Barbie Dreamland Interactive Website:</h4>
+          <ol className={(new Date() < new Date('October 25, 2023 05:00:00') ? ' liveWednesday' : '')}>
             <li><b>Scan:</b> You've already simply scanned the QR code on your phone, just like a glamorous Barbie! Not all QR Codes are equal though so make sure to scan some of the others for a surprise! Encourage your friends to do the same, and together, you'll be whisked away to our enchanting Barbie paradise.</li>
             <li><b>Click:</b> Click the link below to discover the dazzling main Request Page. Think of it as your backstage pass to control the music and bring your Barbie fantasy to life.</li>
             <li><b>Search:</b> Use the Spotify Search Engine to find your favorite tunes and click 'Submit Request!' Remember, the DJ will be using this as a reference to search through our limited offline library. While Barbie's options are vast, not all songs are guaranteed to be playable. Choose something you think or know the DJ would have available, just like a true Barbie fashionista!</li>
@@ -105,7 +105,7 @@ const BarbieNight = props => {
       <div>
           <h4>Now, darlings, let's make sure you're all set for an unforgettable Barbie-themed soirée! 💃👠</h4>
       </div>
-      <div className='featureToHomeLinkDiv liveWednesday'>
+      <div className={'featureToHomeLinkDiv' + (new Date() < new Date('October 25, 2023 05:00:00') ? ' liveWednesday' : '')}>
         <NavLink className='featureToHomeLink' to='/'><h4>Request Songs</h4></NavLink>
       </div>
     </div>
