@@ -2,6 +2,10 @@ div, h1{
   /* border: 1px solid black; */
 }
 
+.liveWednesday{
+  display: none;
+}
+
 #barbieNightDiv{
   background-color: rgba(201, 0, 40, 0.911);
   width: 100vw;
@@ -53,6 +57,15 @@ div, h1{
   /* grid-template-columns: 1fr; */
 }
 
+.firstLineHeaderDiv{
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+}
+
+.firstLineHeader{
+  text-wrap: wrap;
+}
+
 .info2{
   grid-column: 2;
 }
@@ -97,14 +110,14 @@ div, h1{
   width: 65%;
 }
 
-.featureImageDiv{
+.barbieNightFeatureImageDiv{
   display: flex;
   justify-content: center;
-  vertical-align: middle;
-  width: 30vw;
+  align-items: center;
+  width: 50vw;
 }
 
-.featureImage{
+.barbieNightFeatureImage{
   width: 100%;
 }
 
@@ -128,21 +141,6 @@ div, h1{
     grid-template-columns: 1fr;
     overflow-y: scroll;
   }
-
-  /* .featureHeaderDiv{
-    grid-column: 1;
-    grid-row: 1;
-  } */
-
-  /* .headerFeatureImageDiv{
-    width: 100%;
-    grid-column: 1;
-    grid-row:  2;
-  }
-  
-  .headerFeatureImage{
-    width: 65%;
-  } */
 
   .featureContentDiv{
     display: grid;
