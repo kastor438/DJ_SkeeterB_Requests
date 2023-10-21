@@ -7,12 +7,15 @@ import Settings from './Components/Settings';
 import Upcoming from './Components/Upcoming';
 import Signup from './Components/Signup';
 import Login from './Components/Login';
-import FoundFridays from './Components/FoundFridays';
-import BarbieNight from './Components/BarbieNight';
 import ForgotPassword from './Components/ForgotPassword';
 import UpcomingEvent from './Components/UpcomingEvent';
 import NewEvent from './Components/NewEvent';
 import ModifyEvent from './Components/ModifyEvent';
+
+// Feature Imports
+import FoundFridays from './Components/FoundFridays';
+import BarbieNight from './Components/BarbieNight';
+import BarbieWin from './Components/BarbieWin';
 
 const Main = props => {
   return (
@@ -29,7 +32,8 @@ const Main = props => {
         <Route path='/Login' element={<Login signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         <Route path='/Login/ForgotPassword' element={<ForgotPassword signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         {/* <Route path='/Feature/FoundFridays' element={<FoundFridays/>}/>         */}
-        <Route path='/Feature/BarbieNight' element={<BarbieNight/>}/>        
+        <Route path='/Feature/BarbieNight' element={<BarbieNight/>}/>
+        <Route path='/Feature/BarbieWin' element={<BarbieWin/>}/>
         <Route path='*' element={<Navigate to="/" replace />}/>
       </Routes>
     </div>
