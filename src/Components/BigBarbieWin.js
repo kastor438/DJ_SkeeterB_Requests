@@ -49,6 +49,12 @@ const BarbieNight = props => {
       <div className='featureHeaderDiv'>
         <h1 className='featureHeader'>Hey Barbie!!!</h1>
       </div>
+      <div>
+        <h3>🌟 Congratulations, Darling! 🌟</h3>
+        <p>You're one LUCKY Barbie (or Ken)! 😉 You've found one of our spectacular, ever-giving Special Codes! Here's what to do next:</p>
+        <p>👑 Take the physical copy of the QR Code you just scanned directly to tonight's DJ for a special adventure just for you!</p>
+        <p>👑 He'll present you with your first special Quest, then guide you further on your enchanting journey for some glamorous goodies and Glitter! 🌠💎</p>
+      </div>
       <div className='featureContentDiv'>
         <div className='featureInfoDiv info1'>
           <div className='firstLineHeaderDiv'>

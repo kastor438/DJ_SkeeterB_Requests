@@ -15,7 +15,8 @@ import ModifyEvent from './Components/ModifyEvent';
 // Feature Imports
 import FoundFridays from './Components/FoundFridays';
 import BarbieNight from './Components/BarbieNight';
-import BarbieWin from './Components/BarbieWin';
+import BarbieWin from './Components/BigBarbieWin';
+import BigBarbieWin from './Components/BigBarbieWin';
 
 const Main = props => {
   return (
@@ -33,7 +34,8 @@ const Main = props => {
         <Route path='/Login/ForgotPassword' element={<ForgotPassword signinHandler={(authUser) => props.signinHandler(authUser)}/>}/>
         {/* <Route path='/Feature/FoundFridays' element={<FoundFridays/>}/>         */}
         <Route path='/Feature/BarbieNight' element={<BarbieNight/>}/>
-        <Route path='/Feature/BarbieWin' element={<BarbieWin/>}/>
+        <Route path='/Feature/BarbieWin' element={<BarbieNight/>}/>
+        <Route path='/Feature/BigBarbieWin' element={<BigBarbieWin/>}/>
         <Route path='*' element={<Navigate to="/" replace />}/>
       </Routes>
     </div>

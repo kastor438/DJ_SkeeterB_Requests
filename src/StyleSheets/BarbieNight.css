@@ -28,12 +28,9 @@ div, h1{
   display: inline;
   font-family: 'Brush Script MT', cursive;
   font-size: 4em;
-  font-weight: bold;
-  background: linear-gradient(to right, #c75ac7, #9938d1, #c75ac7);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 0.001px rgb(250, 248, 248);
+  font-weight: 100;
+  color: aliceblue;
+  -webkit-font-smoothing: subpixel-antialiased !important;
 }
 
 .featureContentDiv{
