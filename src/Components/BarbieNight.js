@@ -74,7 +74,7 @@ const BarbieNight = props => {
             <li><b>Vote:</b> Be the star of the show by choosing whether a song deserves more or less attention. Upvote and downvote to make your voice heard! The songs with the most votes are most likely to get played and steal the spotlight, just like Barbie herself!</li>
           </ol>
           <p>Remember, darlings, tonight is all about celebrating the glamour, the fun, and the nostalgia of Barbie. So, bring your A-game, and let's make this night sparkle like never before!</p>
-          <p>Are you ready to dive into Barbie's Dreamland? Let's paint the town pink and dance the night away in true Barbie style! 💖👑💃🎉 #BarbieAndKaisDreamhouse</p>
+          <p>Are you ready to dive into Barbie's Dreamland? Let's paint the town pink and dance the night away in true Barbie style! 💖👑💃🎉 <br/><b>#BarbieAndKaisDreamhouse</b></p>
           <p>💖 Get Ready to Rock Your Barbie World! 💖</p>
         </div>
         <div className='featureInfoDiv info4'>
