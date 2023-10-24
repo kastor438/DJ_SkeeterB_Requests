@@ -49,9 +49,9 @@ const BarbieNight = props => {
       <div className='featureHeaderDiv'>
         <h1 className='featureHeader'>Hey Barbie!!!</h1>
       </div>
-      <div>
+      <div className='congratsBarbieContentDiv'>
         <h3>🌟 Congratulations, Darling! 🌟</h3>
-        <p>You're one LUCKY Barbie (or Ken)! 😉 You've found one of our spectacular, ever-giving Special Codes! Here's what to do next:</p>
+        <p>You're one <b>LUCKY</b> Barbie (or Ken)! 😉 You've found one of our spectacular, ever-giving Special Codes! Here's what to do next:</p>
         <p>👑 Take the physical copy of the QR Code you just scanned directly to tonight's DJ for a special adventure just for you!</p>
         <p>👑 He'll present you with your first special Quest, then guide you further on your enchanting journey for some glamorous goodies and Glitter! 🌠💎</p>
       </div>
@@ -80,7 +80,7 @@ const BarbieNight = props => {
             <li><b>Vote:</b> Be the star of the show by choosing whether a song deserves more or less attention. Upvote and downvote to make your voice heard! The songs with the most votes are most likely to get played and steal the spotlight, just like Barbie herself!</li>
           </ol>
           <p>Remember, darlings, tonight is all about celebrating the glamour, the fun, and the nostalgia of Barbie. So, bring your A-game, and let's make this night sparkle like never before!</p>
-          <p>Are you ready to dive into Barbie's Dreamland? Let's paint the town pink and dance the night away in true Barbie style! 💖👑💃🎉 #BarbieAndKaisDreamhouse</p>
+          <p>Are you ready to dive into Barbie's Dreamland? Let's paint the town pink and dance the night away in true Barbie style! 💖👑💃🎉 <br/><b>#BarbieAndKaisDreamhouse</b></p>
           <p>💖 Get Ready to Rock Your Barbie World! 💖</p>
         </div>
         <div className='featureInfoDiv info4'>
@@ -108,7 +108,7 @@ const BarbieNight = props => {
       {/* <div className='headerbarbieNightFeatureImageDiv'>
         <img className='headerbarbieNightFeatureImage' src='/Barbie_Playlist_Cover_Photo.jpeg' alt='Feature promotional image.'></img>
       </div> */}
-      <div>
+      <div className='barbieNightCloserDiv'>
           <h4>Now, darlings, let's make sure you're all set for an unforgettable Barbie-themed soirée! 💃👠</h4>
       </div>
       <div className={'featureToHomeLinkDiv' + (new Date() < new Date('October 25, 2023 05:00:00') ? ' liveWednesday' : '')}>

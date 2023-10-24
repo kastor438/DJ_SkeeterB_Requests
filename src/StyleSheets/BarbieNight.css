@@ -11,7 +11,7 @@ div, h1{
   width: 100vw;
   height: fit-content;
   margin: 0;
-  padding: 0;
+  padding: 0 0 10vh 0;
   background: 
   linear-gradient(45deg,  transparent 0%, transparent 57%, #9c5fc5 100%),
   linear-gradient(-45deg, #cd53d8 0%,  #ae35b9 0.3%, #7f0d8a 112%,  transparent 11% ),
@@ -29,8 +29,19 @@ div, h1{
   font-family: 'Brush Script MT', cursive;
   font-size: 4em;
   font-weight: 100;
+  stroke: 1px aliceblue;
+  -webkit-text-stroke: 1px aliceblue;
   color: aliceblue;
   -webkit-font-smoothing: subpixel-antialiased !important;
+}
+
+.congratsBarbieContentDiv{
+  width: 80%;
+  margin-left: 10%;
+}
+
+#barbieNightDiv .congratsBarbieContentDiv p{
+  text-align: center;
 }
 
 .featureContentDiv{
@@ -72,10 +83,28 @@ div, h1{
   grid-column-end: 3;
 }
 
-#barbieNightDiv p, #barbieNightDiv ol, #barbieNightDiv li {
-  color: rgb(205, 216, 226);
-  font-weight: 500;
+#barbieNightDiv .info3{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#barbieNightDiv .info3 ol li{
+  text-align: center;
+}
+
+.info4{
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+#barbieNightDiv .info99 p, #barbieNightDiv .info2 p{
   text-align: left;
+}
+
+#barbieNightDiv p, #barbieNightDiv ol, #barbieNightDiv li {
+  color: rgb(208, 216, 223);
+  font-weight: 500;
   font-size: 20px;
 }
 
@@ -111,11 +140,16 @@ div, h1{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50vw;
+  width: 100%;
 }
 
 .barbieNightFeatureImage{
-  width: 100%;
+  width: 70%;
+}
+
+.barbieNightCloserDiv{
+  width: 85%;
+  margin-left: 7.5%;
 }
 
 .featureToHomeLink{
@@ -137,6 +171,10 @@ div, h1{
     height: 100%;
     grid-template-columns: 1fr;
     overflow-y: scroll;
+  }
+
+  #barbieNightDiv .info99 p, #barbieNightDiv .info2 p{
+    text-align: center;
   }
 
   .featureContentDiv{
