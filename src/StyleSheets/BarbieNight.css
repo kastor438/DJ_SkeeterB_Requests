@@ -29,8 +29,8 @@ div, h1{
   font-family: 'Brush Script MT', cursive;
   font-size: 4em;
   font-weight: 100;
-  stroke: 1px aliceblue;
-  -webkit-text-stroke: 1px aliceblue;
+  stroke: 2px aliceblue;
+  -webkit-text-stroke: 2px aliceblue;
   color: aliceblue;
   -webkit-font-smoothing: subpixel-antialiased !important;
 }
@@ -232,6 +232,10 @@ div, h1{
 @media only screen and (max-width: 600px){
   #barbieNightDiv{
     padding-bottom: 3vh;
+  }
+
+  .featureHeader{
+    font-size: 3.4em;
   }
 
   #barbieNightDiv h3{
