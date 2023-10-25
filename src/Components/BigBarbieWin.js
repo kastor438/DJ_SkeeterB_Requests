@@ -103,6 +103,12 @@ const BarbieNight = props => {
               <img src='/SpotifyLogo.png' className='barbieNightFeatureImage' alt='The Spotify logo.'/>
             </a>
           </div>
+          <p> 🎀💄👑 Barbie and Kai's Dreamhouse at Kai Brady's Fancy Diver Bar! 👑💄🎀 Get ready for a magical transformation as we turn your favorite bar into a world of Barbie dreams. We're bringing the glamour, nostalgia, and pure fantasy of Barbie to life only at Kai Brady's Fancy Dive Bar Thursday, October 26th! With dazzling decor, a Barbie Box photobooth, and a sprinkle of rose petals, we're about to make your dreams come true. So join us for a night of enchantment and style! 💖🥂🌟</p>
+          <div className='barbieNightFeatureImageDiv barbieNightKaiImageDiv'>
+            <a href='https://www.instagram.com/kaibradys/' target='blank' title={`Kai Brady's Instagram`}>
+              <img src='/Kai-Brady-Icon-Large-270x270.png' className='barbieNightFeatureImage barbieNightKaiImage' alt={`Kai Brady's logo.`}/>
+            </a>
+          </div>
         </div>
       </div>
       {/* <div className='headerbarbieNightFeatureImageDiv'>
