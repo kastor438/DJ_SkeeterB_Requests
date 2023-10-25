@@ -147,6 +147,16 @@ div, h1{
   width: 70%;
 }
 
+.barbieNightMixCloudImageDiv{
+  scale: 1.8;
+  padding: 8vh 0 6vh 0;
+}
+
+.barbieNightKaiImageDiv{
+  scale: 2;
+  padding: 10vh 0 8vh 0;
+}
+
 .barbieNightCloserDiv{
   width: 85%;
   margin-left: 7.5%;
@@ -226,6 +236,16 @@ div, h1{
   
   .featureToHomeLinkDiv{
 
+  }
+
+  .barbieNightMixCloudImageDiv{
+    scale: 1;
+    padding: 0;
+  }
+  
+  .barbieNightKaiImageDiv{
+    scale: 1;
+    padding: 0;
   }
 }
 

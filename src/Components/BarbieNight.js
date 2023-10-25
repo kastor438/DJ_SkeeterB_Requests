@@ -86,15 +86,21 @@ const BarbieNight = props => {
             </a>
           </div>
           <p>🎵 Groove to the '90s Dance Classics: DJ Skeeter-B is taking you on a nostalgia trip! Check out his throwback mix on Mixcloud to rediscover the '90s dance classics. Get ready to dance the night away to the beats that'll take you back in time.</p>
-          <div className='barbieNightFeatureImageDiv'>
+          <div className='barbieNightFeatureImageDiv barbieNightMixCloudImageDiv'>
             <a href='https://www.mixcloud.com/djskeeterb/music-monday-vol-7-sept-18-2017-90s-power-mix/' target='blank' title='Go To DJ-SkeeterB&apos;s Mixcloud'>
-              <img src='/MixCloudLogoAlphaBackground.png' className='barbieNightFeatureImage' alt='A mixcloud logo photo.'/>
+              <img src='/MixCloudLogoAlphaBackground.png' className='barbieNightFeatureImage barbieNightMixCloudImage' alt='A mixcloud logo photo.'/>
             </a>
           </div>
           <p>🎧 Unleash Your Inner Barbie on Spotify: Have a Spotify playlist that's your secret source of inspiration? Link up to your Spotify account for quick access to your own beloved playlists. After all, every Barbie needs her anthem!</p>
           <div className='barbieNightFeatureImageDiv'>
             <a href='https://open.spotify.com/?' target='blank' title='Open Spotify'>
               <img src='/SpotifyLogo.png' className='barbieNightFeatureImage' alt='The Spotify logo.'/>
+            </a>
+          </div>
+          <p> 🎀💄👑 Barbie and Kai's Dreamhouse at Kai Brady's Fancy Diver Bar! 👑💄🎀 Get ready for a magical transformation as we turn your favorite bar into a world of Barbie dreams. We're bringing the glamour, nostalgia, and pure fantasy of Barbie to life only at Kai Brady's Fancy Dive Bar Thursday, October 26th! With dazzling decor, a Barbie Box photobooth, and a sprinkle of rose petals, we're about to make your dreams come true. So join us for a night of enchantment and style! 💖🥂🌟</p>
+          <div className='barbieNightFeatureImageDiv barbieNightKaiImageDiv'>
+            <a href='https://www.instagram.com/kaibradys/' target='blank' title={`Kai Brady's Instagram`}>
+              <img src='/Kai-Brady-Icon-Large-270x270.png' className='barbieNightFeatureImage barbieNightKaiImage' alt={`Kai Brady's logo.`}/>
             </a>
           </div>
         </div>
