@@ -123,40 +123,71 @@ const History = props => {
         var historyDateSectionElements = [];
         for(var i = 0; i < historyDateData.length; i++){
           var historyRequestsElements = [];
+          var historyRequestKeys = [];
+          var historyRequestValues = [];
           Object.values(historyDateData[i].historyRequests).forEach(historyRequest => {
+            historyRequestKeys.push(historyRequest[0]);
+            historyRequestValues.push(historyRequest[1]);
+          });
+          for(var j = 0; j < historyRequestKeys.length; j++){
             // console.log(historyRequest);
-            var historyRequestKey = historyRequest[0];
-            var historyRequestValue = historyRequest[1];
-            var historyRequestElement = React.createElement('div', {className : 'historyRequestDiv', key : `historyRequest${historyRequestKey}`}, 
-              React.createElement('p', {className : 'historyRequestDataText historyRequestSongName'}, historyRequestValue.SongName),
-              React.createElement('p', {className : 'historyRequestDataText historyRequestArtistName'}, historyRequestValue.ArtistName),
-              React.createElement('div', {className : 'historyRequestVoterCountDiv'}, 
-                React.createElement('p', {className : 'historyRequestDataText historyRequestVotersHeader'}, 'Voters'),
-                React.createElement('p', {className : 'historyRequestDataText historyRequestVoterCount'}, parseInt(historyRequestValue.Upvotes) + parseInt(historyRequestValue.Downvotes))
+            var historyRequestKey = historyRequestKeys[j];
+            var historyRequestValue = historyRequestValues[j];
+            var historyRequestElement = 
+              React.createElement('div', {className : 'historyRequestDiv', key : `historyRequest${historyRequestKey}`}, 
+                React.createElement('div', {className : 'historyRequestDataTextDiv historyRequestSongNameDiv'}, 
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestSongName'}, historyRequestValue.SongName),
+                ),
+                React.createElement('div', {className : `${j == historyRequestKeys.length-1 ? 'historyRequestDataTextDiv historyRequestArtistNameDiv dateFinalRequest' : 'historyRequestDataTextDiv historyRequestArtistNameDiv'}`}, 
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestArtistName'}, historyRequestValue.ArtistName),
+                ),
+                React.createElement('div', {className : 'historyRequestDataTextDiv historyRequestVoterCountDiv'}, 
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestVotersHeader'}, 'Voters'),
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestVoterCount'}, parseInt(historyRequestValue.Upvotes) + parseInt(historyRequestValue.Downvotes))
+                ),
+                React.createElement('div', {className : 'historyRequestDataTextDiv historyRequestVoterRatingDiv'}, 
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRatingHeader'}, 'Rating'),
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRating'}, parseInt(historyRequestValue.Upvotes) - parseInt(historyRequestValue.Downvotes))
+                ),
+                React.createElement('div', {className : `${j == historyRequestKeys.length-1 ? 'historyRequestDataTextDiv historyRequestRequestedByNameDiv dateFinalRequest' : 'historyRequestDataTextDiv historyRequestRequestedByNameDiv'}`}, 
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByNameHeader'}, 'Requested By'),
+                  React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByName'}, historyRequestValue.RequestedBy == '' ? 'Non-User' : snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName ? snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName : historyRequestValue.RequestedBy)
+                )
+              );
+            historyRequestsElements.push(historyRequestElement);
+          }
+          var dateSectionElement =
+            React.createElement('div', {className : 'historyRequestSection', key : `historyRequestSection${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`},
+              React.createElement('div', {className : 'historyRequestSectionHeaderDiv', },
+                React.createElement('h3', {className : 'historyRequestSectionHeader'}, `${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`),
+                React.createElement('div', {className : 'requestDropDownDiv', onClick : (e) => ToggleDateSectionDropDown(e.target)},
+                  React.createElement('div', {className : 'requestDropDownBar1'}),
+                  React.createElement('div', {className : 'requestDropDownBar2'}),
+                  React.createElement('div', {className : 'requestDropDownBar3'}),
+                  React.createElement('div', {className : 'requestDropDownBar4'}),
+                  React.createElement('div', {className : 'requestDropDownBar5'}),
+                  React.createElement('div', {className : 'requestDropDownBar6'})
+                )              
               ),
-              React.createElement('div', {className : 'historyRequestVoterRatingDiv'}, 
-                React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRatingHeader'}, 'Rating'),
-                React.createElement('p', {className : 'historyRequestDataText historyRequestVoterRating'}, parseInt(historyRequestValue.Upvotes) - parseInt(historyRequestValue.Downvotes))
-              ),
-              React.createElement('div', {className : 'historyRequestRequestedByNameDiv'}, 
-                React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByNameHeader'}, 'Requested By'),
-                React.createElement('p', {className : 'historyRequestDataText historyRequestRequestedByName'}, historyRequestValue.RequestedBy == '' ? 'Non-User' : snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName ? snapshot.val().Users[historyRequestValue.RequestedBy].DisplayName : historyRequestValue.RequestedBy)
+              React.createElement('div', {className : 'historyRequestsElementsContainer'},
+                React.createElement('div', {className : 'historyRequestsElementsClosedDiv'}, 
+                  React.createElement('p', {className : ''}, `[${historyRequestsElements.length} ${historyRequestsElements.length > 1 ? 'Requests' : 'Request'}]`)
+                ),
+                historyRequestsElements
               )
             );
-            historyRequestsElements.push(historyRequestElement);
-          });
-          var dateSectionElement = React.createElement('div', {key : `historyRequestSection${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`},
-            React.createElement('div', {className : 'historyRequestSection', },
-              React.createElement('h3', {}, `Date: ${historyDateData[i].day}-${historyDateData[i].month}-${historyDateData[i].year}`)
-            ),
-            historyRequestsElements
-          );
           historyDateSectionElements.push(dateSectionElement);
         }
         SetHistoryDataElements(historyDateSectionElements);
         // console.log(historyDateData);
       }
     });
+  }
+
+  function ToggleDateSectionDropDown(element){
+    element.classList.toggle('openRequestSectionDropDown');
+    element.parentNode.parentNode.children[1].classList.toggle('openHistoryDateSection');
+    // console.log(element.parentNode.parentNode.children[1].classList);
   }
 
   if(navigateToHome === true){
@@ -202,7 +233,7 @@ const History = props => {
 
         </div>
       </div>
-      <div id='requestHistorySectionDiv'>
+      <div id='requestHistoryContainerDiv'>
         {historyDataElementsRef.current}
       </div>
     </div>
