@@ -1,7 +1,7 @@
 :root {
-  --requestDropdownBar_Width: 3vmax;
-  --requestDropdownBar_Height: 0.3vmax;
-  --requestDropdownBar_Margin: 0.9vmax;
+  --requestDropdownBar_Width: 2vmax;
+  --requestDropdownBar_Height: 0.2vmax;
+  --requestDropdownBar_Margin: 0.6vmax;
 }
 
 #historyDiv{
@@ -61,11 +61,11 @@
 
 .requestDropDownDiv{
   z-index: 200;
-  position: absolute;
   cursor: pointer;
-  width: max-content;
-  right: 5%;
-  /* top: 12.5%; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* right: 2vmin; */
+  /* top: 1.5vmin; */
   /* top: calc(var(--requestDropdownBar_Width)); */
   transition: transform .4s cubic-bezier(0, .52, 0, 1);
 }
@@ -81,7 +81,7 @@
   margin: var(--requestDropdownBar_Margin) 0;
   transition: .4s;
   border-radius: 15px;
-  background-color: #7f27f0;
+  background-color: #FFFFFF;
   /* border: 1px solid red; */
 }
 
