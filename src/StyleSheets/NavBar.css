@@ -13,6 +13,11 @@
   display: grid;
   grid-template-columns: 4fr 1fr 1fr;
   align-items: center;
+  /* border: 1px solid black; */
+}
+
+#navBar.hideNav{
+  display: none;
 }
 
 /* #navBar, #navBar div{
@@ -20,15 +25,27 @@
 } */
 
 #logoTitleDiv{
-  display: flex;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: fit-content;
+  /* height: fit-content; */
   /* border: 1px solid red; */
 }
 
+#navBarLogoDiv{
+  width: 100%;
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid black; */
+}
+
 #navBarLogo{
-  width: 18%;
+  width: 70%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -40,11 +57,13 @@
 #logoTitleDiv a{
   text-decoration: none;
   color: white;
+  grid-row: 1;
 }
 
 #pageHeader{
+  text-align: start;
   font-family: 'Merienda';
-  font-size: 68px;
+  font-size: 60px;
   /* border: 1px solid red; */
 }
 
@@ -99,7 +118,7 @@
 
 #signoutButton{
   background-color: rgb(255, 255, 255);
-  color: rgb(128, 50, 202);
+  color: #7f27f0;
   font-size: 80%;
   font-weight: 900;
   border: 1px solid rgb(56, 171, 224);
@@ -108,13 +127,13 @@
 
 #signoutButton:hover{
   background-color: rgb(184, 184, 184);
-  color: rgb(92, 35, 145);
+  color: #5c2391;
   border: 1px solid rgb(42, 127, 167);
 }
 
 #signoutButton:active{
   background-color: rgb(151, 151, 151);
-  color: rgb(113, 12, 207);
+  color: #710ccf;
   border: 1px solid rgb(10, 173, 248);
 }
 
@@ -209,7 +228,7 @@
 #navBarLinks{
   margin-left: 0;
   margin: auto;
-  margin-top: 30%;
+  margin-top: 13vh;
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -247,15 +266,84 @@
 }
 
 a.activeLink{
-  color: rgba(59, 24, 75, 0.534);
+  color: #3b184b88;
   /* font-size: 32px; */
 }
 
-@media only screen and (max-width: 1465px){
-  #navBarLogo{
-    width: 20%;
-  }
+#skeeterSocialsDiv{
+  /* height: max-content; */
+  position: absolute;
+  bottom: 0;
+  display: grid;
+  width: 50%;
+  margin-left: 25%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  line-height: 100%;
+  padding-bottom: 7.5vh;
+}
 
+.skeeterSocialDivContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skeeterSocialsLink{
+  text-decoration: none;
+}
+
+.skeeterSocialsLink:visited *{
+  color: aliceblue;
+}
+
+.skeeterSocialsLink:hover *{
+  text-decoration: none;
+  color: rgb(64, 92, 117);
+}
+
+.skeeterSocialsLink:active *{
+  text-decoration: none;
+  color: rgb(41, 41, 43);
+}
+
+.skeeterSocialLinkDiv{
+  height: fit-content;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+  border-radius: 100px;
+  overflow: hidden;
+  background-color: cadetblue;
+  border: 3px solid rgb(77, 77, 77);
+}
+
+.skeeterSocialImageDiv{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.skeeterSocialImage{
+  width: 100%;
+  border: 2px solid rgb(77, 77, 77);
+  border-radius: 1000px;
+  scale: 1.2;
+}
+
+.socialLinkTextDiv{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.socialLinkText{
+  font-size: 1em;
+}
+
+@media only screen and (max-width: 1465px){
   #pageHeader{
     font-size: 56px;
   }
@@ -268,16 +356,12 @@ a.activeLink{
     font-size: 70%;
   }
 
-  #navBarLinks{
-    margin-top: 40%;
+  .socialLinkText{
+    font-size: 0.9em;
   }
 }
 
 @media only screen and (max-width: 1250px){
-  #navBarLogo{
-    width: 22%;
-  }
-
   #pageHeader{
     font-size: 52px;
   }
@@ -316,18 +400,6 @@ a.activeLink{
     transform: translate3d(0, 0, 0);
   }
 
-  #loginSignupDiv{
-    
-  }
-  
-  #loginSignupOptions{
-    
-  }
-
-  #userDiv{
-
-  }
-
   #userDisplayName{
     text-overflow: ellipsis;
   }
@@ -336,9 +408,17 @@ a.activeLink{
     padding: 1px 3px;
     font-size: 14px;
   }
+
+  .socialLinkText{
+    font-size: 0.8em;
+  }
 }
 
 @media only screen and (max-width: 1100px){
+  #navBarLogo{
+    width: 90%;
+  }
+
   #pageHeader{
     font-size: 44px;
   }
@@ -348,26 +428,15 @@ a.activeLink{
     right: 30vw;
     transition: all 2s ease ease-in-out;
   }
+
+  .socialLinkText{
+    font-size: 0.7em;
+  }
 }
 
 @media only screen and (max-width: 1000px){
-  #menuButtonDiv.openMenuPanel .bar1,
-  #menuButtonDiv.openMenuPanel .bar2,
-  #menuButtonDiv.openMenuPanel .bar3{
-
-  }
-
-  #slidingMenuPanel{
-    /* width: 30vw;
-    right: -30vw; */
-  }
-
   #menuButtonDiv.openMenuPanel{
     transform: translateX(0vw, 0, 0);
-  }
-  
-  #slidingMenuPanel.openMenuPanel{
-    /* transform: translate3d(-30vw, 0, 0); */
   }
   
   #menuButtonDiv.closedMenuPanel, #slidingMenuPanel.closedMenuPanel{
@@ -381,7 +450,7 @@ a.activeLink{
 
 @media only screen and (max-width: 800px){
   #navBarLogo{
-    width: 25%;
+    width: 80%;
   }
 
   #pageHeader{
@@ -422,6 +491,10 @@ a.activeLink{
   #signoutButton{
     font-size: 14px;
   }
+
+  #skeeterSocialsDiv{
+    padding-bottom: 15vh;
+  }
 }
 
 @media only screen and (max-width: 660px){
@@ -431,7 +504,7 @@ a.activeLink{
   }
 
   #navBarLogo{
-    width: 30%;
+    width: 90%;
   }
 
   #pageHeader{
@@ -444,6 +517,14 @@ a.activeLink{
 }
 
 @media only screen and (max-width: 575px){
+  #navBarLogo{
+    width: 100%;
+  }
+
+  #pageHeader{
+    margin-left: 5px;
+  }
+
   .bar1, .bar2, .bar3{
     width: 45px;
     height: 7px;
@@ -508,6 +589,10 @@ a.activeLink{
 
   .navBarLink a{
     font-size: 200%;
+  }
+
+  .socialLinkText{
+    font-size: 1em;
   }
 }
 

@@ -1,23 +1,22 @@
 import '../StyleSheets/SongRequests.css';
-import '../StyleSheets/SkeeterSpecificsSongRequests.css'
+import '../StyleSheets/SkeeterSpecificsSongRequests.css';
+import '../StyleSheets/QRMenu.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, set, remove, child, get, onValue, update } from "firebase/database";
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Fade from '@mui/material/Zoom';
 import axios from 'axios';
+import { Tooltip } from 'react-tooltip';
 import fontawesome from '@fortawesome/fontawesome'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage, faClipboard, faNoteSticky, faComments, faClose} from '@fortawesome/free-solid-svg-icons'
+import { faMessage, faClipboard, faNoteSticky, faComments, faClose, faLink, faLinkSlash} from '@fortawesome/free-solid-svg-icons'
 
 // Component Imports
 import RequestLineup from './RequestLineup';
 import SkeeterPanel from './SkeeterPanel';
 
-fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments, faClose);
+fontawesome.library.add(faMessage, faClipboard, faNoteSticky, faComments, faClose, faLink, faLinkSlash);
 
 
 require('upvote/lib/jquery.upvote.js');
@@ -97,6 +96,7 @@ const SongRequests = props => {
   trackStatsRef.current = trackStats;
 
   const notesInputSectionDivOpenRef = useRef(false);
+  const isQRMenuOpenRef = useRef(false);
 
   const db = getDatabase();
   const dbRef = ref(getDatabase());
@@ -119,6 +119,9 @@ const SongRequests = props => {
   const popupDivRef = useRef();
   const popupSpanRef = useRef();
   const notesInputSectionDivRef = useRef();
+  const QRCodeDivRef = useRef();
+  const QRCodeButtonRef = useRef();
+  const QRMenuBackgroundOverlayDivRef = useRef();
 
   useEffect(() => {
     var currentUrl = window.location.href;
@@ -134,7 +137,18 @@ const SongRequests = props => {
     }
 
     InitializeSpotify();
+    if(localStorage.getItem('ActiveThemeKey') != ''){
+      document.querySelector('body').style.backgroundColor = `#${localStorage.getItem('ActiveBackgroundColour')}`;
+    }
   }, []);
+
+  useEffect(() => {
+    // console.log(props.activeThemeData);
+    if(props.activeThemeData.ActiveThemeKey != ''){
+      // console.log(localStorage.getItem('ActiveBackgroundColour'))
+      SetDynamicThemes();
+    }
+  }, [props.activeThemeData])
 
   useEffect(() => {
     CheckValidInput();
@@ -169,6 +183,10 @@ const SongRequests = props => {
         set(ref(db, 'Visitors/' + res.data['country_code'] + '/' + res.data.city), (visitorCount+1));
       });
     }
+  }
+
+  function SetDynamicThemes(){
+    document.querySelector('body').style.backgroundColor = `#${props.activeThemeData.ActiveBackgroundColour}`;
   }
 
   function InitializeSpotify(){
@@ -242,6 +260,18 @@ const SongRequests = props => {
       SetSpotifyActive(false);
       SetCustomActive(true);
     }
+  }
+
+  function ToggleQRMenu(){
+    if(isQRMenuOpenRef.current == true){
+      QRCodeDivRef.current.classList.remove('openMenu');
+      QRMenuBackgroundOverlayDivRef.current.classList.remove('openMenu');      
+    }
+    else{
+      QRCodeDivRef.current.classList.add('openMenu');
+      QRMenuBackgroundOverlayDivRef.current.classList.add('openMenu');
+    }
+    isQRMenuOpenRef.current = !isQRMenuOpenRef.current;
   }
 
   function UpdateSongName(value){
@@ -659,12 +689,31 @@ const SongRequests = props => {
                 </div>
               </div>
             </div>
-            <div>
-              {/* <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 300 }} title="Must provide a song and artist name." placement="top-start"> */}
-                  <span>
-                    <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
-                  </span>
-              {/* </Tooltip> */}
+            <div id='submitAndShareDiv'>
+              <div id='submissionDiv'>
+                <span>
+                  <button type='submit' id='submitBtn' ref={submitSongRequestButtonRef} disabled='disabled'>Submit Request</button>
+                </span>
+              </div>
+              <div id='QRCodeDiv' ref={QRCodeDivRef}>
+                {/* <button>test</button> */}
+                <img id='QRCodeButton' ref={QRCodeButtonRef} src='./qr-code-12-256.png' className='QRCodeButton' onClick={() => ToggleQRMenu()}/>
+                <div id='QRMenuBackgroundOverlayDiv' className='QRMenuBackgroundOverlayDiv' ref={QRMenuBackgroundOverlayDivRef} onClick={() => ToggleQRMenu()}/>
+                <div className='QRMenuPopupDiv'>
+                  <div className='QRCodeImageDiv'>
+                    <img id='QRCodeImage' src='./Skeeter-B_Request_Web_App_QR_Code_-_Gen_2.png'/>
+                  </div>
+                  <div id='QRMenuLowerSection'>
+                    <Tooltip id='copiedWebsiteURLTooltip' openOnClick={true} anchorSelect='#copyLinkDiv' place={'bottom'} position='' delayHide={3000}>
+                      <b><p className='copiedWebsiteURLTooltip'>Copied To Clipboard</p></b>
+                    </Tooltip>
+                    <div id='copyLinkDiv' data-tooltip-id='copiedWebsiteURLTooltip' onClick={() => {navigator.clipboard.writeText('https://dj-skeeterb.web.app/')}}>
+                      <h4 id='websiteLinkText'>https://dj-skeeterb.web.app/</h4>
+                      <FontAwesomeIcon id='skeeterBLinkIcon' icon={faLink} />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div id='submissionTextDiv'>
               <h4 id='submissionText' ref={submissionTextRef}></h4>

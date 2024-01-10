@@ -23,18 +23,24 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 
 const Settings = props => {
+  const [themeElements, SetThemeElements] = useState([]);
   const [venuesElements, SetVenuesElements] = useState([]);
   const [newVenueSubmitHasListener, SetNewVenueSubmitHasListener] = useState(false);
   const settingsSectionHeaders = ['NavBar', 'Theme', 'Venues', 'Socials', 'Security'];
   const [navigateToHome, SetNavigateToHome] = useState(false);
   const [previewObjectURL, SetPreviewObjectURL] = useState(null);
+
   // DOM Refs
   const logoPreviewImageRef = useRef();
+  const selectedThemeRef = useRef(null);
+  const setThemeButtonRef = useRef();
   const newVenueNameRef = useRef();
   const newVenueAddressRef = useRef();
   const newVenueImageRef = useRef();
   const newVenueImageInputRef = useRef();
   const newVenueSubmiButtonRef = useRef();
+  const themeElementsRef = useRef();
+  themeElementsRef.current = themeElements;
 
   // DB Refs
   const db = getDatabase();
@@ -42,6 +48,7 @@ const Settings = props => {
 
   useEffect(() => {
     LoadVenues();
+    LoadThemes();
   }, [])
 
   useEffect(() => {
@@ -49,7 +56,60 @@ const Settings = props => {
       SetNavigateToHome(true);
     }
   }, [props.authUser])
-  
+
+  function LoadThemes(){
+    get(child(dbRef, '/Settings/Themes/')).then((snapshot) => {
+      if(snapshot.exists()){
+        var newThemeElements = [];
+        Object.entries(snapshot.val()).forEach(([themeKey, themeData]) => {
+          // console.log(themeData);
+          var themeElement =
+            React.createElement('div', {key : 'theme' + themeKey, id : 'theme' + themeKey, className : 'themePreviewDiv' + (themeData.ActiveTheme ? ' activeTheme' : ''), 'data-themekey' : themeKey, 'data-themedata' : themeData, onClick : (e) => SelectTheme(e.target)},
+              React.createElement('div', {className : 'themePreviewDivColourSquare', style : {borderColor : `#${themeData.FocusedUI} #${themeData.AccentColour} #${themeData.UnfocusedUI} #${themeData.BackgroundColour}`}}),
+              themeData.ActiveTheme ?
+              React.createElement('p', {className : 'activeThemeTag'}, 'ACTIVE')
+              :
+              null
+            );
+          newThemeElements.push(themeElement);
+        });
+        SetThemeElements(newThemeElements);
+      }
+      else{
+        SetThemeElements([React.createElement('h4', {id : 'noThemesFoundSpan', key : 'noThemesFound'}, 'No Themes Found')])
+      }
+    });
+  }
+
+  function SelectTheme(element){
+    // Set selectedTheme and respective class to newly selected theme.
+    if(selectedThemeRef.current != null)
+      selectedThemeRef.current.classList.remove('selectedTheme');
+    element.classList.add('selectedTheme');
+    selectedThemeRef.current = element;
+
+    // Update theme button active or disabled.
+    if(selectedThemeRef.current.className.includes('activeTheme')){
+      setThemeButtonRef.current.disabled = true;
+      setThemeButtonRef.current.removeEventListener('click', SetTheme);
+    }
+    else{
+      setThemeButtonRef.current.disabled = false;
+      setThemeButtonRef.current.addEventListener('click', SetTheme);
+    }
+  }
+
+  function SetTheme(){
+    setThemeButtonRef.current.disabled = true;
+    setThemeButtonRef.current.removeEventListener('click', SetTheme);
+    var currActiveThemeKey = document.querySelector('.activeTheme').dataset['themekey'];
+    var newActiveThemeKey = document.querySelector('.selectedTheme').dataset['themekey'];
+    
+    set(ref(db, `/Settings/Themes/${currActiveThemeKey}/ActiveTheme`), false);
+    set(ref(db, `/Settings/Themes/${newActiveThemeKey}/ActiveTheme`), true);
+    LoadThemes();
+  }
+
   function LoadVenues(){
     get(child(dbRef, '/Venues/')).then((snapshot) => {
       if(snapshot.exists()){
@@ -231,8 +291,14 @@ const Settings = props => {
             </div>
           </div>
           <div id='themeSettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[1]}>
+            <h3>Themes</h3>
+            <div id='themesContainer'>
+              {themeElementsRef.current}
+            </div>
             <div>
-              <h3>Themes</h3>
+              <div id='themeOptionsDiv'>
+                <button id='setThemeButton' ref={setThemeButtonRef} disabled='disabled' onClick={(e) => SetTheme(e.target)}>Update Theme</button>
+              </div>
             </div>
           </div>
           <div id='venueSettingsDiv' className='settingsSectionContainer inactiveSection' data-settings_section={settingsSectionHeaders[2]}>

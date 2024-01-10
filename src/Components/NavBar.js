@@ -4,7 +4,7 @@ import '../StyleSheets/NotificationSystem.css'
 import { initializeApp } from 'firebase/app';
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useEffect, useState, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, Link, useLocation } from 'react-router-dom';
 import { getDatabase, ref, onValue, get, child, set, update } from 'firebase/database';
 
 const firebaseConfig = {
@@ -40,12 +40,25 @@ const NavBar = props => {
   const songRequestsLinkRef = useRef();
   const upcomingLinkRef = useRef();
   const newEventLinkRef = useRef();
+  const historyLinkRef = useRef();
   const settingsLinkRef = useRef();
   const notificationBellRef = useRef();
   const notificationBackgroundOverlayDivRef = useRef();
-  
+  const navBarRef = useRef();
+
   const db = getDatabase();
   const dbRef = ref(getDatabase());
+  const location = useLocation();
+
+  useEffect(() => {
+    // console.log(location.pathname);
+    if(location.pathname.includes("Feature", 1)){
+      navBarRef.current.classList.add('hideNav');
+    }
+    else{
+      navBarRef.current.classList.remove('hideNav');
+    }
+  })
 
   useEffect(() => {
     SetNavBar();
@@ -63,6 +76,9 @@ const NavBar = props => {
         var skeeterLinks = 
           [React.createElement('li', {key : 'newEventLink', className : 'navBarLink'}, 
             React.createElement(NavLink, {ref : newEventLinkRef, to : '/NewEvent', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'New Event')
+          ),
+          React.createElement('li', {key : 'historyLink', className : 'navBarLink'}, 
+            React.createElement(NavLink, {ref : historyLinkRef, to : '/History', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'History')
           ),
           React.createElement('li', {key : 'settingsLink', className : 'navBarLink'}, 
             React.createElement(NavLink, {ref : settingsLinkRef, to : '/Settings', className : (({isActive}) => isActive ? 'activeLink' : ''), onClick : (e) => ToggleMenuPanel(e.target)}, 'Settings')
@@ -115,7 +131,7 @@ const NavBar = props => {
     }
   }
 
-  async function SignOutUser(element){
+  async function SignOutUser(){
     try{
       await signOut(auth);
     }
@@ -267,10 +283,12 @@ const NavBar = props => {
 
   return (
     <div>
-      <nav id='navBar'>
+      <nav id='navBar' ref={navBarRef}>
         <div id='logoTitleDiv'>
-          <img id='navBarLogo' src={logo} alt='Skeeters logo.'></img>
-          <NavLink to='/' onClick={e => SetNavBar(e.target)}>
+          <div id='navBarLogoDiv'>
+            <img id='navBarLogo' src={logo} alt='Skeeters logo.'/>
+          </div>
+          <NavLink id='navLinkPageHeader' to='/' onClick={e => SetNavBar(e.target)}>
             <h2 id='pageHeader'>DJSkeeterB</h2>
           </NavLink>
             {/* <h4 id='liveStatus'>Live at: Kai Brady's Fancy Dive Bar</h4> */}
@@ -300,7 +318,42 @@ const NavBar = props => {
             <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
             {skeeterSpecificLinks}
           </ul>
+          <div id='skeeterSocialsDiv'>
+            <div id='skeeterInstagramDivContainer' className='skeeterSocialDivContainer'>
+              <a className='skeeterSocialsLink' target='blank' href='https://www.instagram.com/djskeeterb/'>
+              <div id='skeeterInstagramLinkDiv' className='skeeterSocialLinkDiv'>
+                <div id='instagramLinkImageDiv' className='skeeterSocialImageDiv'>
+                  <img id='instagramLinkImage' className='skeeterSocialImage' src='./InstagramLogo.png'/>
+                </div>
+                <div id='instagramLinkTextDiv' className='socialLinkTextDiv'>
+                  <h4 id='instagramLinkText' className='socialLinkText'>Instagram</h4>
+                </div>
+              </div>
+              </a>
+            </div>
+            <div id='skeeterMixCloudDivContainer' className='skeeterSocialDivContainer'>
+              <a className='skeeterSocialsLink' target='blank' href='https://www.mixcloud.com/djskeeterb/'>
+              <div id='skeeterMixCloudLinkDiv' className='skeeterSocialLinkDiv'>
+                <div id='mixCloudLinkImageDiv' className='skeeterSocialImageDiv'>
+                  <img id='mixCloudLinkImage' className='skeeterSocialImage' src='./MixCloudLogo.png'/>
+                </div>
+                <div id='mixCloudLinkTextDiv' className='socialLinkTextDiv'>
+                  <h4 id='mixCloudLinkText' className='socialLinkText'>MixCloud</h4>
+                </div>
+              </div>
+              </a>
+            </div>
+          </div>
         </div>
+        {/* <div id='menuBackgroundFade' ref={menuBackgroundFadeRef}></div>
+        <div id='slidingMenuPanel' className={isMenuPanelOpenRef.current ? 'openMenuPanel' : 'closedMenuPanel'}>
+          {userInfo}
+          <ul id='navBarLinks'>
+            <li className='navBarLink'><NavLink ref={songRequestsLinkRef} to='/' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Song Requests</NavLink></li>
+            <li className='navBarLink'><NavLink ref={upcomingLinkRef} to='/Upcoming' className={({isActive}) => isActive ? 'activeLink' : ''} onClick={(e) => ToggleMenuPanel(e.target)}>Upcoming</NavLink></li>
+            {skeeterSpecificLinks}
+          </ul>
+        </div> */}
       </nav>
     </div>
   );

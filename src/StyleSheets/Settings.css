@@ -1,4 +1,4 @@
-#settingsDiv div{
+#settingsDiv div:not(#themesContainer div, .themePreviewDivColourSquare, .ActiveTheme){
   border: 1px solid red;
 }
 
@@ -39,7 +39,78 @@
   Theme Settings Section
 */
 #themeSettingsDiv{
+  /* height: max-content; */
+}
 
+#themesContainer{
+  display: grid;
+  /* row-gap: 2%; */
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 10px solid black;
+  padding-bottom: 5vh;
+}
+
+.themePreviewDiv{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  flex-direction: column;
+  /* width: 100%; */
+  padding: 2.5% 0;
+  /* border: 3px solid black; */
+  border-radius: 10px;
+}
+
+.themePreviewDiv *{
+  pointer-events: none;
+}
+
+.themePreviewDiv.activeTheme{
+  border: none;
+  border-radius: 10px;
+  border: double .2em transparent;
+  background-image: linear-gradient(transparent, transparent), linear-gradient(to right bottom, #268ff1, #a053df);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.themePreviewDiv.activeTheme{
+  border: none;
+  border-radius: 10px;
+  border: double .2em transparent;
+  background-image: linear-gradient(transparent, transparent), linear-gradient(to right bottom, #268ff1, #a053df);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.themePreviewDiv.activeTheme:not(.selectedTheme){
+  background-image: linear-gradient(transparent, transparent), linear-gradient(to right bottom, #1c6ab3af, #713a9ea8);
+}
+
+.themePreviewDiv.selectedTheme:not(.activeTheme){
+  border-radius: 10px;
+  border: double 4px white;
+  background-image: linear-gradient(transparent, transparent), linear-gradient(to right bottom, black, black);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.activeThemeTag{
+  position: absolute;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: antiquewhite;
+  z-index: 100;
+  bottom: 0;
+  left: 25%;
+}
+
+.themePreviewDivColourSquare{
+  border-width: 3.5em ;
+  border-radius: 10px;
+  border-style: solid;
+  z-index: 5;
 }
 
 /* 

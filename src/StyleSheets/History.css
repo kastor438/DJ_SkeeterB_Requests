@@ -1,0 +1,238 @@
+:root {
+  --requestDropdownBar_Width: 2vmax;
+  --requestDropdownBar_Height: 0.2vmax;
+  --requestDropdownBar_Margin: 0.6vmax;
+}
+
+#historyDiv{
+  /* border: 1px solid black; */
+}
+
+#searchAndFilterSectionDiv{
+  background-color: rgb(84, 114, 148);
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 90vw;
+  padding: 2.5vh 0;
+  /* margin-left: 5vw; */
+}
+
+#requestFilterDiv{
+
+}
+
+.requestInfoFilterDiv{
+  
+}
+
+#requestHistoryContainerDiv{
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 2vh;
+  width: 90vw;
+  margin-left: 0;
+  margin-top: 5vh;
+  padding-bottom: 10vh;
+}
+
+.historyRequestSection{
+  border-radius: 30px;
+  /* overflow: hidden; */
+  /* border: 1px solid black; */
+}
+
+.historyRequestSection *{
+  /* pointer-events: none; */
+}
+
+.historyRequestSectionHeaderDiv{
+  position: relative;
+  background-color: #36393f;
+  border-radius: 30px 30px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.historyRequestSectionHeader{
+  grid-column: 2;
+}
+
+.requestDropDownDiv{
+  z-index: 200;
+  cursor: pointer;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* right: 2vmin; */
+  /* top: 1.5vmin; */
+  /* top: calc(var(--requestDropdownBar_Width)); */
+  transition: transform .4s cubic-bezier(0, .52, 0, 1);
+}
+
+.requestDropDownDiv *{
+  pointer-events: none;
+}
+
+.requestDropDownBar1, .requestDropDownBar2, .requestDropDownBar3,
+.requestDropDownBar4, .requestDropDownBar5, .requestDropDownBar6{
+  width: var(--requestDropdownBar_Width);
+  height: var(--requestDropdownBar_Height);
+  margin: var(--requestDropdownBar_Margin) 0;
+  transition: .4s;
+  border-radius: 15px;
+  background-color: #FFFFFF;
+  /* border: 1px solid red; */
+}
+
+.requestDropDownDiv.openRequestSectionDropDown .requestDropDownBar1 {
+  --requestDropdownBar1_Y: calc(var(--requestDropdownBar_Margin) + var(--requestDropdownBar_Height));
+  --requestDropdownBar1_X: calc(var(--requestDropdownBar_Width) * cos(120)/4 + 0.125 * var(--requestDropdownBar_Height));
+  transform: translate(var(--requestDropdownBar1_X), var(--requestDropdownBar1_Y)) rotate(-120deg);
+}
+
+.requestDropDownDiv.openRequestSectionDropDown .requestDropDownBar2 {
+  --requestDropdownBar2_X: calc(var(--requestDropdownBar_Width) * cos(60)/4 - 0.125 * var(--requestDropdownBar_Height));
+  transform: translate(var(--requestDropdownBar2_X), 0px) rotate(120deg);
+}
+
+.requestDropDownDiv.openRequestSectionDropDown .requestDropDownBar3 {
+  --requestDropdownBar3_X: calc(var(--requestDropdownBar_Width) * cos(120)/4 + 0.125 * var(--requestDropdownBar_Height));
+  transform: translate(var(--requestDropdownBar3_X), 0) rotate(-120deg);
+}
+
+.requestDropDownDiv.openRequestSectionDropDown .requestDropDownBar4 {
+  --requestDropdownBar4_Y: calc(-1 * (var(--requestDropdownBar_Margin) + var(--requestDropdownBar_Height)));
+  --requestDropdownBar4_X: calc(var(--requestDropdownBar_Width) * cos(60)/4 - 0.125 * var(--requestDropdownBar_Height));
+  transform: translate(var(--requestDropdownBar4_X), var(--requestDropdownBar4_Y)) rotate(120deg);
+}
+
+.requestDropDownDiv.openRequestSectionDropDown .requestDropDownBar5 {
+  --requestDropdownBar5_Y: calc(-1 * (var(--requestDropdownBar_Margin) + var(--requestDropdownBar_Height)));
+  --requestDropdownBar5_X: calc(-1 * (var(--requestDropdownBar_Height) + 0.125 * var(--requestDropdownBar_Width) * cos(120)));
+  transform: translate(var(--requestDropdownBar5_X), var(--requestDropdownBar5_Y)) rotate(-90deg);
+}
+
+.requestDropDownDiv.openRequestSectionDropDown .requestDropDownBar6 {
+  --requestDropdownBar6_Y: calc(-2 * (var(--requestDropdownBar_Margin) + var(--requestDropdownBar_Height)));
+  --requestDropdownBar6_X: calc(0.75 * var(--requestDropdownBar_Height) + 0.125 * var(--requestDropdownBar_Width) * cos(120));
+  transform: translate(var(--requestDropdownBar6_X), var(--requestDropdownBar6_Y)) rotate(90deg);
+}
+
+.historyRequestsElementsClosedDiv{
+  display: none;
+}
+
+.historyRequestsElementsContainer{
+
+}
+
+.historyRequestsElementsContainer:not(.openHistoryDateSection) .historyRequestsElementsClosedDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #292b30;
+  border-width: 0 1px 1px 1px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 0 0 30px 30px;
+}
+
+.historyRequestsElementsContainer.openHistoryDateSection .historyRequestDiv{
+  display: grid;
+}
+
+.historyRequestDiv{
+  background-color: #292b30;
+  display: none;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+  /* border: 1px solid black; */
+}
+
+.historyRequestDiv.closedHistoryDateSection{
+  
+}
+
+.historyRequestDiv div{
+  /* border: 1px solid black; */
+}
+
+.historyRequestDataTextDiv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3% 2%;
+  border-width: 0px;
+  border-style: solid;
+  border-color: black;
+}
+
+.historyRequestDataText{
+  font-size: 12px;
+  margin: 0;
+}
+
+.historyRequestSongNameDiv{
+  grid-column: 1;
+  grid-row: 1;
+  border-width: 0 1px 0 1px;
+}
+
+.historyRequestArtistNameDiv{
+  grid-column: 1;
+  grid-row: 2;
+  border-width: 0 1px 1px 1px;
+}
+
+.historyRequestArtistNameDiv.dateFinalRequest{
+  border-radius: 0 0 0 30px;
+}
+
+.historyRequestVoterCountDiv{
+  grid-column: 2;
+  grid-row: 1;
+  border-width: 0 1px 0 0;
+}
+
+.historyRequestVotersHeader{
+
+}
+
+.historyRequestVoterCount{
+
+}
+
+.historyRequestVoterRatingDiv{
+  grid-column: 3;
+  grid-row: 1;
+  border-width: 0 1px 0 0;
+}
+.historyRequestVoterRatingHeader{
+
+}
+
+.historyRequestVoterRating{
+
+}
+
+.historyRequestRequestedByNameDiv{
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row: 2;
+  border-width: 1px 1px 1px 0;
+}
+
+.historyRequestRequestedByNameDiv.dateFinalRequest{
+  border-radius: 0 0 30px 0;
+}
+
+.historyRequestRequestedByNameHeader{
+
+}
+
+.historyRequestRequestedByName{
+  
+}
+

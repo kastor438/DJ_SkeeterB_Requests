@@ -1,0 +1,173 @@
+#QRCodeDiv{
+  
+}
+
+#QRCodeButtonDiv{
+  grid-column: 3;
+  padding: 0.6vmax;
+}
+
+#QRCodeButton{
+  width: 100%;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+#QRCodeButton:active{
+  animation: ShrinkQRCode 20ms ease-in-out 1 forwards;
+  opacity: 60%;
+}
+
+@keyframes ShrinkQRCode {
+  to {
+    transform: scale(0.8);
+  }
+}
+
+.QRMenuBackgroundOverlayDiv{
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 9998;
+  background-color: #00000070;
+}
+
+.QRMenuBackgroundOverlayDiv.openMenu{
+  display: block;
+}
+
+.QRMenuPopupDiv{
+  width: 30vw;
+  height: 0px;
+  /* box-sizing: content-box; */
+  /* border-width: 20px; */
+  /* border-style: solid; */
+  /* border-image: linear-gradient(to bottom, #8646bb, #43126b); */
+  /* border-image-slice: 1; */
+  border-radius: 10px;
+  transition: 0.5s;
+  position: absolute;
+  padding: 0px;
+  left: 35vw;
+  top: 15vh;
+  background-color: #B4B4B4;
+  -webkit-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+  box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+  cursor: context-menu;
+  z-index: 9999;
+  display: none;
+  overflow: hidden;
+}
+
+#QRCodeDiv.openMenu .QRMenuPopupDiv{
+  height: 50vh;
+  display: block;
+}
+
+#QRCodeImageDiv{
+  /* width: 100%; */
+}
+
+#QRCodeImage{
+  width: 90%;
+  max-width: 30vh;
+  margin-top: 5%;
+  border-radius: 10px;
+}
+
+#QRMenuLowerSection{
+  /* border: 1px solid black; */
+  margin-top: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#copyLinkDiv{
+  /* position: relative; */
+  width: max-content;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid red; */
+  border-radius: 50px;
+  background-color: #4c5e68;
+  overflow: hidden;
+  padding: 2%;
+  font-size: 0.7em;
+}
+
+#websiteLinkText{
+  padding: 2%;
+  color: aliceblue;
+  white-space: nowrap;
+}
+
+#skeeterBLinkIcon{
+  background-color: #4c5e68;
+  border: none;
+  border-left: 1px solid black;
+  height: 100%;
+  color: aliceblue;
+  width: 10%;
+  padding: 2%;
+}
+
+#copyLinkDiv:active #skeeterBLinkIcon,
+#copyLinkDiv:active #websiteLinkText{
+    color: rgb(154, 160, 167);
+}
+
+.copiedWebsiteURLTooltip{
+  padding: 0px;
+  font-size: 0.6em;
+}
+
+@media only screen and (max-width: 1080px){
+  .QRMenuPopupDiv{
+    width: 50vw;
+    left: 25vw;
+  }
+
+  .copiedWebsiteURLTooltip{
+    padding: 0px;
+    font-size: 0.7em;
+  }
+}
+
+@media only screen and (max-width: 575px){
+  .QRMenuPopupDiv{
+    width: 70vw;
+    left: 15vw;
+  }
+
+  #copyLinkDiv{
+    font-size: 0.8em;
+  }
+
+  .copiedWebsiteURLTooltip{
+    padding: 0px;
+    font-size: 0.8em;
+  }
+}
+
+@media only screen and (max-width: 450px){
+  .QRMenuPopupDiv{
+    width: 80vw;
+    left: 10vw;
+  }
+
+  #copyLinkDiv{
+    font-size: 0.85em;
+  }
+
+  .copiedWebsiteURLTooltip{
+    padding: 0px;
+    font-size: 1em;
+  }
+}
